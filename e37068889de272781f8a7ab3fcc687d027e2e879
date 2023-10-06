@@ -159,6 +159,24 @@
       "parentUuid": "b6ad0db0_98260c60",
       "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a40b1e9_2ad037d4",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-06T22:13:22Z",
+      "side": 1,
+      "message": "no, my suggestion is basically this (only with deletion rather than `#if 0`, obviously):\n```\n--- a/libc/include/bits/ctype_inlines.h\n+++ b/libc/include/bits/ctype_inlines.h\n@@ -35,6 +35,7 @@\n #define __BIONIC_CTYPE_INLINE static __inline\n #endif\n \n+#if 0\n /** Internal implementation detail. Do not use. */\n #define _CTYPE_U 0x01\n /** Internal implementation detail. Do not use. */\n@@ -57,21 +58,13 @@\n #define _CTYPE_A (_CTYPE_L|_CTYPE_U)\n /** Internal implementation detail. Do not use. */\n #define _CTYPE_N _CTYPE_D\n+#endif\n \n __BEGIN_DECLS\n \n+#if 0\n /** Internal implementation detail. Do not use. */\n extern const char* _Nonnull _ctype_;\n+#endif\n \n-/** Returns true if `ch` is in `[A-Za-z0-9]`. */\n-__BIONIC_CTYPE_INLINE int isalnum(int __ch) {\n-  // `isalnum(c)` is `isalpha(c) || isdigit(c)`, but there\u0027s no obvious way\n-  // to simplify that, and the table lookup is just slightly faster...\n-  // Note that this is unsafe for inputs less than -1 (EOF) or greater than\n-  // 0xff. This is true of other C libraries too.\n-  return (_ctype_[__ch + 1] \u0026 (_CTYPE_U|_CTYPE_L|_CTYPE_N));\n-}\n-\n /** Returns true if `ch` is in `[A-Za-z]`. */\n __BIONIC_CTYPE_INLINE int isalpha(int __ch) {\n   return (__ch \u003e\u003d \u0027A\u0027 \u0026\u0026 __ch \u003c\u003d \u0027Z\u0027) || (__ch \u003e\u003d \u0027a\u0027 \u0026\u0026 __ch \u003c\u003d \u0027z\u0027);\n@@ -107,13 +100,22 @@ __BIONIC_CTYPE_INLINE int isprint(int __ch) {\n   return (__ch \u003e\u003d \u0027 \u0027 \u0026\u0026 __ch \u003c\u003d \u0027~\u0027);\n }\n \n+/** Returns true if `ch` is in `[A-Za-z0-9]`. */\n+__BIONIC_CTYPE_INLINE int isalnum(int __ch) {\n+  // `isalnum(c)` is `isalpha(c) || isdigit(c)`, but there\u0027s no obvious way\n+  // to simplify that, and the table lookup is just slightly faster...\n+  // Note that this is unsafe for inputs less than -1 (EOF) or greater than\n+  // 0xff. This is true of other C libraries too.\n+  return isalpha(__ch) || isdigit(__ch); // (_ctype_[__ch + 1] \u0026 (_CTYPE_U|_CTYPE_L|_CTYPE_N));\n+}\n+\n /** Returns true if `ch` is punctuation. */\n __BIONIC_CTYPE_INLINE int ispunct(int __ch) {\n   // `ispunct(c)` is `isgraph(c) \u0026\u0026 !isalnum(c)`, but there\u0027s no obvious way\n   // to simplify that, and the table lookup is just slightly faster...\n   // Note that this is unsafe for inputs less than -1 (EOF) or greater than\n   // 0xff. This is true of other C libraries too.\n-  return (_ctype_[__ch + 1] \u0026 _CTYPE_P);\n+  return isgraph(__ch) \u0026\u0026 !isalnum(__ch); //(_ctype_[__ch + 1] \u0026 _CTYPE_P);\n }\n \n /** Returns true if `ch` is in `[ \\f\\n\\r\\t\\v]`. */\n```",
+      "parentUuid": "182c090c_789ca38e",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
