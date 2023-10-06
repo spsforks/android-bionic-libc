@@ -143,6 +143,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbee0750_c0d930cd",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-06T14:28:27Z",
+      "side": 1,
+      "message": "ack, thanks for the heads up.",
+      "parentUuid": "eca3860e_183f1ea6",
+      "range": {
+        "startLine": 355,
+        "startChar": 0,
+        "endLine": 355,
+        "endChar": 66
+      },
+      "revId": "9187e3bd5977fee705b7373f0a3faaf7c117aabe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e128b3aa_a5c07f62",
