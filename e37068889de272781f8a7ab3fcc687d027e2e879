@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "30d03fe5_5b45a98f",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-06T19:50:38Z",
+      "side": 1,
+      "message": "Not really, which is why I\u0027d pre-resolved the comment. Hiding from the docs will help, but I suspect no one reads docs anyway, and this will still show up in their auto-complete. The leading `_` is probably as good as we can do (short of naming it `_CTYPE_U_PRIVATE_PLEASE_BREAK_MY_APP` or whatever)",
+      "parentUuid": "af5988ef_7f83eaf6",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "950dfc63_2f9d5bb2",
         "filename": "libc/include/ctype.h",
         "patchSetId": 5
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "that would be more expensive than just replacing it with `isalpha() || isdigit()`, so that would be the worst of all choices... but, yeah, maybe i should come back and just stop using `_ctype_`.\n\nto be clear: i\u0027m not against removing `_ctype_` and the `_CTYPE_*` macros from the header (even if the former has to stay in libc for another decade), if you want to have that fight with your users :-) (i was under the impression that libc++ still used this stuff directly, but a local hack to rip this out seems to build fine. so maybe no-one cares any more?)",
       "parentUuid": "950dfc63_2f9d5bb2",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e139103_37b981f1",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-06T19:50:38Z",
+      "side": 1,
+      "message": "Is it meaningfully more expensive if the check is marked as the unlikely branch?",
+      "parentUuid": "5af05a9f_8d5926a7",
       "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
