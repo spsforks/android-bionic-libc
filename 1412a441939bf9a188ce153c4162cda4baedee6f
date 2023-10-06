@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0a99282_11815f14",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3209,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-06T21:20:47Z",
+      "side": 1,
+      "message": "This code is reading stack as d_val, and globals as d_ptr, and I think it is correct. But the spec at https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#dynamic-section is the opposite. Is there a typo in the spec?",
+      "revId": "1412a441939bf9a188ce153c4162cda4baedee6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
