@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "af5988ef_7f83eaf6",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-06T19:46:34Z",
+      "side": 1,
+      "message": "i was about to say \"but i can\u0027t do better, right?\" ... but is that true for doxygen? if i make this a `/* */` comment rather than a `/** */` comment, does that mean it won\u0027t appear in the docs?\n\n(even if your answer is \"yes\", i\u0027ll do that in a separate change because (a) not a regression and (b) not the only file that has this.)",
+      "parentUuid": "2e62d896_6cdd0050",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "950dfc63_2f9d5bb2",
         "filename": "libc/include/ctype.h",
         "patchSetId": 5
@@ -31,6 +49,24 @@
       "writtenOn": "2023-10-06T19:05:12Z",
       "side": 1,
       "message": "Add the check and abort?\n\n(resolved because not new code, but maybe something worth adding)",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5af05a9f_8d5926a7",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-06T19:46:34Z",
+      "side": 1,
+      "message": "that would be more expensive than just replacing it with `isalpha() || isdigit()`, so that would be the worst of all choices... but, yeah, maybe i should come back and just stop using `_ctype_`.\n\nto be clear: i\u0027m not against removing `_ctype_` and the `_CTYPE_*` macros from the header (even if the former has to stay in libc for another decade), if you want to have that fight with your users :-) (i was under the impression that libc++ still used this stuff directly, but a local hack to rip this out seems to build fine. so maybe no-one cares any more?)",
+      "parentUuid": "950dfc63_2f9d5bb2",
       "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
