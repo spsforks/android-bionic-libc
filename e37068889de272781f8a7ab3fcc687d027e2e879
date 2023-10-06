@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e62d896_6cdd0050",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-06T19:05:12Z",
+      "side": 1,
+      "message": "I\u0027m a sign, not a cop",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "950dfc63_2f9d5bb2",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-06T19:05:12Z",
+      "side": 1,
+      "message": "Add the check and abort?\n\n(resolved because not new code, but maybe something worth adding)",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
