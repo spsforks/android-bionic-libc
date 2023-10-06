@@ -141,6 +141,24 @@
       "parentUuid": "0e139103_37b981f1",
       "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "182c090c_789ca38e",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-06T21:18:15Z",
+      "side": 1,
+      "message": "Oh, I hadn\u0027t caught that that was the interesting question here. The only way to do that is by removing the inlines and making it out of line only, I assume. If you\u0027re worrying about single instructions, is that actually an option?",
+      "parentUuid": "b6ad0db0_98260c60",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
