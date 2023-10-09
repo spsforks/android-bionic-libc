@@ -177,6 +177,24 @@
       "parentUuid": "182c090c_789ca38e",
       "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e50c09fe_651ea1b0",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-09T19:17:22Z",
+      "side": 1,
+      "message": "I think that makes for a much clearer implementation anyway. Is there a benchmark or bug that\u0027s making you attempt to shave off individual instructions here? This doesn\u0027t seem like the kind of thing that would be in hot code.",
+      "parentUuid": "7a40b1e9_2ad037d4",
+      "revId": "e37068889de272781f8a7ab3fcc687d027e2e879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
