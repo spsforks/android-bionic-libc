@@ -16,6 +16,24 @@
       "message": "I don\u0027t suppose you\u0027ve checked these work on musl and glibc? Those are pretty far gone but it would be nice to not make them worse 😊",
       "revId": "76a3ad4e448a7a05d7816e85b9a1686a04cef218",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59110fcc_fb04e24f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-10T20:28:52Z",
+      "side": 1,
+      "message": "at the risk of sounding like Donald Knuth, i haven\u0027t _run_ the tests, but musl definitely uses the same good \"the function that sets us up for writing sets the error indicator\" pattern. (i\u0027ve kicked off a run now, since the bionic _fix_ needs to go in before the tests do anyway. it\u0027ll be a while because i didn\u0027t have a current x86-64 build lying around.)",
+      "parentUuid": "2fcdcfa3_72dbdf7d",
+      "revId": "76a3ad4e448a7a05d7816e85b9a1686a04cef218",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
