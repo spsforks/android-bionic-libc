@@ -70,7 +70,19 @@ struct vring {
 #ifndef VIRTIO_RING_NO_LEGACY
 #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
 #define vring_avail_event(vr) (* (__virtio16 *) & (vr)->used->ring[(vr)->num])
+static inline void vring_init(struct vring * vr, unsigned int num, void * p, unsigned long align) {
+  vr->num = num;
+  vr->desc = p;
+  vr->avail = (struct vring_avail *) ((char *) p + num * sizeof(struct vring_desc));
+  vr->used = (void *) (((uintptr_t) & vr->avail->ring[num] + sizeof(__virtio16) + align - 1) & ~(align - 1));
+}
+static inline unsigned vring_size(unsigned int num, unsigned long align) {
+  return((sizeof(struct vring_desc) * num + sizeof(__virtio16) * (3 + num) + align - 1) & ~(align - 1)) + sizeof(__virtio16) * 3 + sizeof(struct vring_used_elem) * num;
+}
 #endif
+static inline int vring_need_event(__u16 event_idx, __u16 new_idx, __u16 old) {
+  return(__u16) (new_idx - event_idx - 1) < (__u16) (new_idx - old);
+}
 struct vring_packed_desc_event {
   __le16 off_wrap;
   __le16 flags;

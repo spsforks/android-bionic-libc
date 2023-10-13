@@ -87,6 +87,13 @@ struct autofs_dev_ioctl {
   };
   char path[];
 };
+static inline void init_autofs_dev_ioctl(struct autofs_dev_ioctl * in) {
+  memset(in, 0, AUTOFS_DEV_IOCTL_SIZE);
+  in->ver_major = AUTOFS_DEV_IOCTL_VERSION_MAJOR;
+  in->ver_minor = AUTOFS_DEV_IOCTL_VERSION_MINOR;
+  in->size = AUTOFS_DEV_IOCTL_SIZE;
+  in->ioctlfd = - 1;
+}
 enum {
   AUTOFS_DEV_IOCTL_VERSION_CMD = 0x71,
   AUTOFS_DEV_IOCTL_PROTOVER_CMD,

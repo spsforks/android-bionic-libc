@@ -37,6 +37,12 @@ struct fsmap_head {
   struct fsmap fmh_keys[2];
   struct fsmap fmh_recs[];
 };
+static inline __kernel_size_t fsmap_sizeof(unsigned int nr) {
+  return sizeof(struct fsmap_head) + nr * sizeof(struct fsmap);
+}
+static inline void fsmap_advance(struct fsmap_head * head) {
+  head->fmh_keys[0] = head->fmh_recs[head->fmh_entries - 1];
+}
 #define FMH_IF_VALID 0
 #define FMH_OF_DEV_T 0x1
 #define FMR_OF_PREALLOC 0x1

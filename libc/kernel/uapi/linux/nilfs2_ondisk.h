@@ -255,7 +255,7 @@ enum {
 } static inline int nilfs_checkpoint_ ##name(const struct nilfs_checkpoint * cp) \
 { return ! ! (__le32_to_cpu(cp->cp_flags) & (1UL << NILFS_CHECKPOINT_ ##flag)); \
 }
-struct nilfs_cpfile_header {
+NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot) NILFS_CHECKPOINT_FNS(INVALID, invalid) NILFS_CHECKPOINT_FNS(MINOR, minor) struct nilfs_cpfile_header {
   __le64 ch_ncheckpoints;
   __le64 ch_nsnapshots;
   struct nilfs_snapshot_list ch_snapshot_list;
@@ -278,6 +278,15 @@ enum {
 { su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) & ~(1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
 } static inline int nilfs_segment_usage_ ##name(const struct nilfs_segment_usage * su) \
 { return ! ! (__le32_to_cpu(su->su_flags) & (1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
+}
+NILFS_SEGMENT_USAGE_FNS(ACTIVE, active) NILFS_SEGMENT_USAGE_FNS(DIRTY, dirty) NILFS_SEGMENT_USAGE_FNS(ERROR, error)
+static inline void nilfs_segment_usage_set_clean(struct nilfs_segment_usage * su) {
+  su->su_lastmod = __cpu_to_le64(0);
+  su->su_nblocks = __cpu_to_le32(0);
+  su->su_flags = __cpu_to_le32(0);
+}
+static inline int nilfs_segment_usage_clean(const struct nilfs_segment_usage * su) {
+  return ! __le32_to_cpu(su->su_flags);
 }
 struct nilfs_sufile_header {
   __le64 sh_ncleansegs;

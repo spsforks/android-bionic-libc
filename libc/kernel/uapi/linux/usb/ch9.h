@@ -256,6 +256,58 @@ struct usb_endpoint_descriptor {
 #define USB_ENDPOINT_USAGE_DATA 0x00
 #define USB_ENDPOINT_USAGE_FEEDBACK 0x10
 #define USB_ENDPOINT_USAGE_IMPLICIT_FB 0x20
+static inline int usb_endpoint_num(const struct usb_endpoint_descriptor * epd) {
+  return epd->bEndpointAddress & USB_ENDPOINT_NUMBER_MASK;
+}
+static inline int usb_endpoint_type(const struct usb_endpoint_descriptor * epd) {
+  return epd->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK;
+}
+static inline int usb_endpoint_dir_in(const struct usb_endpoint_descriptor * epd) {
+  return((epd->bEndpointAddress & USB_ENDPOINT_DIR_MASK) == USB_DIR_IN);
+}
+static inline int usb_endpoint_dir_out(const struct usb_endpoint_descriptor * epd) {
+  return((epd->bEndpointAddress & USB_ENDPOINT_DIR_MASK) == USB_DIR_OUT);
+}
+static inline int usb_endpoint_xfer_bulk(const struct usb_endpoint_descriptor * epd) {
+  return((epd->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) == USB_ENDPOINT_XFER_BULK);
+}
+static inline int usb_endpoint_xfer_control(const struct usb_endpoint_descriptor * epd) {
+  return((epd->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) == USB_ENDPOINT_XFER_CONTROL);
+}
+static inline int usb_endpoint_xfer_int(const struct usb_endpoint_descriptor * epd) {
+  return((epd->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) == USB_ENDPOINT_XFER_INT);
+}
+static inline int usb_endpoint_xfer_isoc(const struct usb_endpoint_descriptor * epd) {
+  return((epd->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) == USB_ENDPOINT_XFER_ISOC);
+}
+static inline int usb_endpoint_is_bulk_in(const struct usb_endpoint_descriptor * epd) {
+  return usb_endpoint_xfer_bulk(epd) && usb_endpoint_dir_in(epd);
+}
+static inline int usb_endpoint_is_bulk_out(const struct usb_endpoint_descriptor * epd) {
+  return usb_endpoint_xfer_bulk(epd) && usb_endpoint_dir_out(epd);
+}
+static inline int usb_endpoint_is_int_in(const struct usb_endpoint_descriptor * epd) {
+  return usb_endpoint_xfer_int(epd) && usb_endpoint_dir_in(epd);
+}
+static inline int usb_endpoint_is_int_out(const struct usb_endpoint_descriptor * epd) {
+  return usb_endpoint_xfer_int(epd) && usb_endpoint_dir_out(epd);
+}
+static inline int usb_endpoint_is_isoc_in(const struct usb_endpoint_descriptor * epd) {
+  return usb_endpoint_xfer_isoc(epd) && usb_endpoint_dir_in(epd);
+}
+static inline int usb_endpoint_is_isoc_out(const struct usb_endpoint_descriptor * epd) {
+  return usb_endpoint_xfer_isoc(epd) && usb_endpoint_dir_out(epd);
+}
+static inline int usb_endpoint_maxp(const struct usb_endpoint_descriptor * epd) {
+  return __le16_to_cpu(epd->wMaxPacketSize) & USB_ENDPOINT_MAXP_MASK;
+}
+static inline int usb_endpoint_maxp_mult(const struct usb_endpoint_descriptor * epd) {
+  int maxp = __le16_to_cpu(epd->wMaxPacketSize);
+  return USB_EP_MAXP_MULT(maxp) + 1;
+}
+static inline int usb_endpoint_interrupt_type(const struct usb_endpoint_descriptor * epd) {
+  return epd->bmAttributes & USB_ENDPOINT_INTRTYPE;
+}
 struct usb_ssp_isoc_ep_comp_descriptor {
   __u8 bLength;
   __u8 bDescriptorType;
@@ -271,6 +323,14 @@ struct usb_ss_ep_comp_descriptor {
   __le16 wBytesPerInterval;
 } __attribute__((packed));
 #define USB_DT_SS_EP_COMP_SIZE 6
+static inline int usb_ss_max_streams(const struct usb_ss_ep_comp_descriptor * comp) {
+  int max_streams;
+  if(! comp) return 0;
+  max_streams = comp->bmAttributes & 0x1f;
+  if(! max_streams) return 0;
+  max_streams = 1 << max_streams;
+  return max_streams;
+}
 #define USB_SS_MULT(p) (1 + ((p) & 0x3))
 #define USB_SS_SSP_ISOC_COMP(p) ((p) & (1 << 7))
 struct usb_qualifier_descriptor {

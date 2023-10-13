@@ -41,6 +41,13 @@ struct ethtool_cmd {
   __u32 lp_advertising;
   __u32 reserved[2];
 };
+static inline void ethtool_cmd_speed_set(struct ethtool_cmd * ep, __u32 speed) {
+  ep->speed = (__u16) (speed & 0xFFFF);
+  ep->speed_hi = (__u16) (speed >> 16);
+}
+static inline __u32 ethtool_cmd_speed(const struct ethtool_cmd * ep) {
+  return(ep->speed_hi << 16) | ep->speed;
+}
 #define ETH_MDIO_SUPPORTS_C22 1
 #define ETH_MDIO_SUPPORTS_C45 2
 #define ETHTOOL_FWVERS_LEN 32
@@ -423,6 +430,12 @@ struct ethtool_rx_flow_spec {
 #define ETHTOOL_RX_FLOW_SPEC_RING 0x00000000FFFFFFFFLL
 #define ETHTOOL_RX_FLOW_SPEC_RING_VF 0x000000FF00000000LL
 #define ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF 32
+static inline __u64 ethtool_get_flow_spec_ring(__u64 ring_cookie) {
+  return ETHTOOL_RX_FLOW_SPEC_RING & ring_cookie;
+}
+static inline __u64 ethtool_get_flow_spec_ring_vf(__u64 ring_cookie) {
+  return(ETHTOOL_RX_FLOW_SPEC_RING_VF & ring_cookie) >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF;
+}
 struct ethtool_rxnfc {
   __u32 cmd;
   __u32 flow_type;
@@ -823,9 +836,18 @@ enum ethtool_link_mode_bit_indices {
 #define SPEED_400000 400000
 #define SPEED_800000 800000
 #define SPEED_UNKNOWN - 1
+static inline int ethtool_validate_speed(__u32 speed) {
+  return speed <= INT_MAX || speed == (__u32) SPEED_UNKNOWN;
+}
 #define DUPLEX_HALF 0x00
 #define DUPLEX_FULL 0x01
 #define DUPLEX_UNKNOWN 0xff
+static inline int ethtool_validate_duplex(__u8 duplex) {
+  switch(duplex) {
+    case DUPLEX_HALF : case DUPLEX_FULL : case DUPLEX_UNKNOWN : return 1;
+  }
+  return 0;
+}
 #define MASTER_SLAVE_CFG_UNSUPPORTED 0
 #define MASTER_SLAVE_CFG_UNKNOWN 1
 #define MASTER_SLAVE_CFG_MASTER_PREFERRED 2

@@ -37,6 +37,33 @@ struct cec_msg {
   __u8 tx_low_drive_cnt;
   __u8 tx_error_cnt;
 };
+static inline __u8 cec_msg_initiator(const struct cec_msg * msg) {
+  return msg->msg[0] >> 4;
+}
+static inline __u8 cec_msg_destination(const struct cec_msg * msg) {
+  return msg->msg[0] & 0xf;
+}
+static inline int cec_msg_opcode(const struct cec_msg * msg) {
+  return msg->len > 1 ? msg->msg[1] : - 1;
+}
+static inline int cec_msg_is_broadcast(const struct cec_msg * msg) {
+  return(msg->msg[0] & 0xf) == 0xf;
+}
+static inline void cec_msg_init(struct cec_msg * msg, __u8 initiator, __u8 destination) {
+  memset(msg, 0, sizeof(* msg));
+  msg->msg[0] = (initiator << 4) | destination;
+  msg->len = 1;
+}
+static inline void cec_msg_set_reply_to(struct cec_msg * msg, struct cec_msg * orig) {
+  msg->msg[0] = (cec_msg_destination(orig) << 4) | cec_msg_initiator(orig);
+  msg->reply = msg->timeout = 0;
+}
+static inline int cec_msg_recv_is_tx_result(const struct cec_msg * msg) {
+  return msg->sequence && msg->tx_status && ! msg->rx_status;
+}
+static inline int cec_msg_recv_is_rx_result(const struct cec_msg * msg) {
+  return msg->sequence && ! msg->tx_status && msg->rx_status;
+}
 #define CEC_MSG_FL_REPLY_TO_FOLLOWERS (1 << 0)
 #define CEC_MSG_FL_RAW (1 << 1)
 #define CEC_TX_STATUS_OK (1 << 0)
@@ -51,6 +78,12 @@ struct cec_msg {
 #define CEC_RX_STATUS_TIMEOUT (1 << 1)
 #define CEC_RX_STATUS_FEATURE_ABORT (1 << 2)
 #define CEC_RX_STATUS_ABORTED (1 << 3)
+static inline int cec_msg_status_is_ok(const struct cec_msg * msg) {
+  if(msg->tx_status && ! (msg->tx_status & CEC_TX_STATUS_OK)) return 0;
+  if(msg->rx_status && ! (msg->rx_status & CEC_RX_STATUS_OK)) return 0;
+  if(! msg->tx_status && ! msg->rx_status) return 0;
+  return ! (msg->rx_status & CEC_RX_STATUS_FEATURE_ABORT);
+}
 #define CEC_LOG_ADDR_INVALID 0xff
 #define CEC_PHYS_ADDR_INVALID 0xffff
 #define CEC_MAX_LOG_ADDRS 4
@@ -86,6 +119,33 @@ struct cec_msg {
 #define CEC_LOG_ADDR_MASK_BACKUP ((1 << CEC_LOG_ADDR_BACKUP_1) | (1 << CEC_LOG_ADDR_BACKUP_2))
 #define CEC_LOG_ADDR_MASK_SPECIFIC (1 << CEC_LOG_ADDR_SPECIFIC)
 #define CEC_LOG_ADDR_MASK_UNREGISTERED (1 << CEC_LOG_ADDR_UNREGISTERED)
+static inline int cec_has_tv(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_TV;
+}
+static inline int cec_has_record(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_RECORD;
+}
+static inline int cec_has_tuner(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_TUNER;
+}
+static inline int cec_has_playback(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_PLAYBACK;
+}
+static inline int cec_has_audiosystem(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_AUDIOSYSTEM;
+}
+static inline int cec_has_backup(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_BACKUP;
+}
+static inline int cec_has_specific(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_SPECIFIC;
+}
+static inline int cec_is_unregistered(__u16 log_addr_mask) {
+  return log_addr_mask & CEC_LOG_ADDR_MASK_UNREGISTERED;
+}
+static inline int cec_is_unconfigured(__u16 log_addr_mask) {
+  return log_addr_mask == 0;
+}
 #define CEC_VENDOR_ID_NONE 0xffffffff
 #define CEC_MODE_NO_INITIATOR (0x0 << 0)
 #define CEC_MODE_INITIATOR (0x1 << 0)
@@ -619,4 +679,16 @@ struct cec_event {
 #define CEC_OP_HPD_ERROR_INITIATOR_WRONG_STATE 2
 #define CEC_OP_HPD_ERROR_OTHER 3
 #define CEC_OP_HPD_ERROR_NONE_NO_VIDEO 4
+static inline int cec_is_2nd_tv(const struct cec_log_addrs * las) {
+  return las->num_log_addrs && las->log_addr[0] >= CEC_LOG_ADDR_SPECIFIC && las->primary_device_type[0] == CEC_OP_PRIM_DEVTYPE_TV;
+}
+static inline int cec_is_processor(const struct cec_log_addrs * las) {
+  return las->num_log_addrs && las->log_addr[0] >= CEC_LOG_ADDR_BACKUP_1 && las->primary_device_type[0] == CEC_OP_PRIM_DEVTYPE_PROCESSOR;
+}
+static inline int cec_is_switch(const struct cec_log_addrs * las) {
+  return las->num_log_addrs == 1 && las->log_addr[0] == CEC_LOG_ADDR_UNREGISTERED && las->primary_device_type[0] == CEC_OP_PRIM_DEVTYPE_SWITCH && ! (las->flags & CEC_LOG_ADDRS_FL_CDC_ONLY);
+}
+static inline int cec_is_cdc_only(const struct cec_log_addrs * las) {
+  return las->num_log_addrs == 1 && las->log_addr[0] == CEC_LOG_ADDR_UNREGISTERED && las->primary_device_type[0] == CEC_OP_PRIM_DEVTYPE_SWITCH && (las->flags & CEC_LOG_ADDRS_FL_CDC_ONLY);
+}
 #endif

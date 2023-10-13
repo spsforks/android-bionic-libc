@@ -120,12 +120,14 @@ enum vmmdev_hgcm_service_location_type {
 struct vmmdev_hgcm_service_location_localhost {
   char service_name[128];
 };
+VMMDEV_ASSERT_SIZE(vmmdev_hgcm_service_location_localhost, 128);
 struct vmmdev_hgcm_service_location {
   enum vmmdev_hgcm_service_location_type type;
   union {
     struct vmmdev_hgcm_service_location_localhost localhost;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vmmdev_hgcm_service_location, 128 + 4);
 enum vmmdev_hgcm_function_parameter_type {
   VMMDEV_HGCM_PARM_TYPE_INVALID = 0,
   VMMDEV_HGCM_PARM_TYPE_32BIT = 1,
@@ -158,6 +160,7 @@ struct vmmdev_hgcm_function_parameter32 {
     } page_list;
   } u;
 } __attribute__((__packed__));
+VMMDEV_ASSERT_SIZE(vmmdev_hgcm_function_parameter32, 4 + 8);
 struct vmmdev_hgcm_function_parameter64 {
   enum vmmdev_hgcm_function_parameter_type type;
   union {
@@ -176,6 +179,7 @@ struct vmmdev_hgcm_function_parameter64 {
     } page_list;
   } __attribute__((__packed__)) u;
 } __attribute__((__packed__));
+VMMDEV_ASSERT_SIZE(vmmdev_hgcm_function_parameter64, 4 + 12);
 #if __BITS_PER_LONG == 64
 #define vmmdev_hgcm_function_parameter vmmdev_hgcm_function_parameter64
 #else
@@ -191,4 +195,5 @@ struct vmmdev_hgcm_pagelist {
   __u16 page_count;
   __u64 pages[1];
 };
+VMMDEV_ASSERT_SIZE(vmmdev_hgcm_pagelist, 4 + 2 + 2 + 8);
 #endif

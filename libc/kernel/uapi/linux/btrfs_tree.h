@@ -118,6 +118,9 @@ enum btrfs_csum_type {
 #define BTRFS_FT_XATTR 8
 #define BTRFS_FT_MAX 9
 #define BTRFS_FT_ENCRYPTED 0x80
+static inline __u8 btrfs_dir_flags_to_ftype(__u8 flags) {
+  return flags & ~BTRFS_FT_ENCRYPTED;
+}
 #define BTRFS_INODE_NODATASUM (1U << 0)
 #define BTRFS_INODE_NODATACOW (1U << 1)
 #define BTRFS_INODE_READONLY (1U << 2)
@@ -406,6 +409,9 @@ struct btrfs_root_item {
   struct btrfs_timespec rtime;
   __le64 reserved[8];
 } __attribute__((__packed__));
+static inline __u32 btrfs_legacy_root_item_size(void) {
+  return offsetof(struct btrfs_root_item, generation_v2);
+}
 struct btrfs_root_ref {
   __le64 dirid;
   __le64 sequence;
@@ -501,6 +507,13 @@ struct btrfs_dev_replace_item {
 #define BTRFS_AVAIL_ALLOC_BIT_SINGLE (1ULL << 48)
 #define BTRFS_SPACE_INFO_GLOBAL_RSV (1ULL << 49)
 #define BTRFS_EXTENDED_PROFILE_MASK (BTRFS_BLOCK_GROUP_PROFILE_MASK | BTRFS_AVAIL_ALLOC_BIT_SINGLE)
+static inline __u64 chunk_to_extended(__u64 flags) {
+  if((flags & BTRFS_BLOCK_GROUP_PROFILE_MASK) == 0) flags |= BTRFS_AVAIL_ALLOC_BIT_SINGLE;
+  return flags;
+}
+static inline __u64 extended_to_chunk(__u64 flags) {
+  return flags & ~BTRFS_AVAIL_ALLOC_BIT_SINGLE;
+}
 struct btrfs_block_group_item {
   __le64 used;
   __le64 chunk_objectid;
@@ -512,6 +525,9 @@ struct btrfs_free_space_info {
 } __attribute__((__packed__));
 #define BTRFS_FREE_SPACE_USING_BITMAPS (1ULL << 0)
 #define BTRFS_QGROUP_LEVEL_SHIFT 48
+static inline __u16 btrfs_qgroup_level(__u64 qgroupid) {
+  return(__u16) (qgroupid >> BTRFS_QGROUP_LEVEL_SHIFT);
+}
 #define BTRFS_QGROUP_STATUS_FLAG_ON (1ULL << 0)
 #define BTRFS_QGROUP_STATUS_FLAG_RESCAN (1ULL << 1)
 #define BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT (1ULL << 2)

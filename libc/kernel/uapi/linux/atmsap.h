@@ -100,4 +100,7 @@ struct atm_sap {
   struct atm_bhli bhli;
   struct atm_blli blli[ATM_MAX_BLLI] __ATM_API_ALIGN;
 };
+static __inline__ int blli_in_use(struct atm_blli blli) {
+  return blli.l2_proto || blli.l3_proto;
+}
 #endif

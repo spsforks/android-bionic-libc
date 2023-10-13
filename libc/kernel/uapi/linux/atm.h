@@ -137,6 +137,12 @@ struct sockaddr_atmsvc {
     __u32 lij_id;
   } sas_addr __ATM_API_ALIGN;
 };
+static __inline__ int atmsvc_addr_in_use(struct sockaddr_atmsvc addr) {
+  return * addr.sas_addr.prv || * addr.sas_addr.pub;
+}
+static __inline__ int atmpvc_addr_in_use(struct sockaddr_atmpvc addr) {
+  return addr.sap_addr.itf || addr.sap_addr.vpi || addr.sap_addr.vci;
+}
 struct atmif_sioc {
   int number;
   int length;

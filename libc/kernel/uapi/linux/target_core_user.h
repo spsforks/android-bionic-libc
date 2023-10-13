@@ -50,6 +50,20 @@ struct tcmu_cmd_entry_hdr {
   __u8 uflags;
 } __attribute__((__packed__));
 #define TCMU_OP_MASK 0x7
+static inline enum tcmu_opcode tcmu_hdr_get_op(__u32 len_op) {
+  return len_op & TCMU_OP_MASK;
+}
+static inline void tcmu_hdr_set_op(__u32 * len_op, enum tcmu_opcode op) {
+  * len_op &= ~TCMU_OP_MASK;
+  * len_op |= (op & TCMU_OP_MASK);
+}
+static inline __u32 tcmu_hdr_get_len(__u32 len_op) {
+  return len_op & ~TCMU_OP_MASK;
+}
+static inline void tcmu_hdr_set_len(__u32 * len_op, __u32 len) {
+  * len_op &= TCMU_OP_MASK;
+  * len_op |= len;
+}
 #define TCMU_SENSE_BUFFERSIZE 96
 struct tcmu_cmd_entry {
   struct tcmu_cmd_entry_hdr hdr;

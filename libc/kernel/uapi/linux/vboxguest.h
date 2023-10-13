@@ -32,6 +32,7 @@ struct vbg_ioctl_hdr {
   __u32 size_out;
   __u32 reserved;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_hdr, 24);
 #define VBG_IOC_VERSION 0x00010000u
 struct vbg_ioctl_driver_version_info {
   struct vbg_ioctl_hdr hdr;
@@ -51,6 +52,7 @@ struct vbg_ioctl_driver_version_info {
     } out;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_driver_version_info, 24 + 20);
 #define VBG_IOCTL_DRIVER_VERSION_INFO _IOWR('V', 0, struct vbg_ioctl_driver_version_info)
 #define VBG_IOCTL_VMMDEV_REQUEST(s) _IOC(_IOC_READ | _IOC_WRITE, 'V', 2, s)
 #define VBG_IOCTL_VMMDEV_REQUEST_BIG _IO('V', 3)
@@ -65,6 +67,7 @@ struct vbg_ioctl_hgcm_connect {
     } out;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_hgcm_connect, 24 + 132);
 #define VBG_IOCTL_HGCM_CONNECT _IOWR('V', 4, struct vbg_ioctl_hgcm_connect)
 struct vbg_ioctl_hgcm_disconnect {
   struct vbg_ioctl_hdr hdr;
@@ -74,6 +77,7 @@ struct vbg_ioctl_hgcm_disconnect {
     } in;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_hgcm_disconnect, 24 + 4);
 #define VBG_IOCTL_HGCM_DISCONNECT _IOWR('V', 5, struct vbg_ioctl_hgcm_disconnect)
 struct vbg_ioctl_hgcm_call {
   struct vbg_ioctl_hdr hdr;
@@ -84,6 +88,7 @@ struct vbg_ioctl_hgcm_call {
   __u8 reserved;
   __u16 parm_count;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_hgcm_call, 24 + 16);
 #define VBG_IOCTL_HGCM_CALL_32(s) _IOC(_IOC_READ | _IOC_WRITE, 'V', 6, s)
 #define VBG_IOCTL_HGCM_CALL_64(s) _IOC(_IOC_READ | _IOC_WRITE, 'V', 7, s)
 #if __BITS_PER_LONG == 64
@@ -112,6 +117,7 @@ struct vbg_ioctl_wait_for_events {
     } out;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_wait_for_events, 24 + 8);
 #define VBG_IOCTL_WAIT_FOR_EVENTS _IOWR('V', 10, struct vbg_ioctl_wait_for_events)
 #define VBG_IOCTL_INTERRUPT_ALL_WAIT_FOR_EVENTS _IOWR('V', 11, struct vbg_ioctl_hdr)
 struct vbg_ioctl_change_filter {
@@ -123,6 +129,7 @@ struct vbg_ioctl_change_filter {
     } in;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_change_filter, 24 + 8);
 #define VBG_IOCTL_CHANGE_FILTER_MASK _IOWR('V', 12, struct vbg_ioctl_change_filter)
 struct vbg_ioctl_acquire_guest_caps {
   struct vbg_ioctl_hdr hdr;
@@ -134,6 +141,7 @@ struct vbg_ioctl_acquire_guest_caps {
     } in;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_acquire_guest_caps, 24 + 12);
 #define VBGL_IOC_AGC_FLAGS_CONFIG_ACQUIRE_MODE 0x00000001
 #define VBGL_IOC_AGC_FLAGS_VALID_MASK 0x00000001
 #define VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES _IOWR('V', 13, struct vbg_ioctl_acquire_guest_caps)
@@ -150,6 +158,7 @@ struct vbg_ioctl_set_guest_caps {
     } out;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_set_guest_caps, 24 + 8);
 #define VBG_IOCTL_CHANGE_GUEST_CAPABILITIES _IOWR('V', 14, struct vbg_ioctl_set_guest_caps)
 struct vbg_ioctl_check_balloon {
   struct vbg_ioctl_hdr hdr;
@@ -161,6 +170,7 @@ struct vbg_ioctl_check_balloon {
     } out;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_check_balloon, 24 + 8);
 #define VBG_IOCTL_CHECK_BALLOON _IOWR('V', 17, struct vbg_ioctl_check_balloon)
 struct vbg_ioctl_write_coredump {
   struct vbg_ioctl_hdr hdr;
@@ -170,5 +180,6 @@ struct vbg_ioctl_write_coredump {
     } in;
   } u;
 };
+VMMDEV_ASSERT_SIZE(vbg_ioctl_write_coredump, 24 + 4);
 #define VBG_IOCTL_WRITE_CORE_DUMP _IOWR('V', 19, struct vbg_ioctl_write_coredump)
 #endif

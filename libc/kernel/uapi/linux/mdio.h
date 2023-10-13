@@ -332,6 +332,9 @@
 #define MDIO_PHY_ID_PRTAD 0x03e0
 #define MDIO_PHY_ID_DEVAD 0x001f
 #define MDIO_PHY_ID_C45_MASK (MDIO_PHY_ID_C45 | MDIO_PHY_ID_PRTAD | MDIO_PHY_ID_DEVAD)
+static inline __u16 mdio_phy_id_c45(int prtad, int devad) {
+  return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
+}
 #define MDIO_USXGMII_EEE_CLK_STP 0x0080
 #define MDIO_USXGMII_EEE 0x0100
 #define MDIO_USXGMII_SPD_MASK 0x0e00

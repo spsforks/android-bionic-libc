@@ -36,31 +36,7 @@
 #     configuration macro like CONFIG_FOO from the clean headers.
 #
 #
-# 2. Remove variable and function declarations:
-#
-#   This pass scans non-directive text and only keeps things that look like a
-#   typedef/struct/union/enum declaration. This allows us to get rid of any
-#   variables or function declarations that should only be used within the
-#   kernel anyway (and which normally *should* be guarded by an #ifdef
-#   __KERNEL__ ...  #endif block, if the kernel writers were not so messy).
-#
-#   There are, however, a few exceptions: it is seldom useful to keep the
-#   definition of some static inline functions performing very simple
-#   operations. A good example is the optimized 32-bit byte-swap function
-#   found in:
-#
-#     arch-arm/asm/byteorder.h
-#
-#   The list of exceptions is in tools/defaults.py in case you need to update
-#   it in the future.
-#
-#   Note that we do *not* remove macro definitions, including these macro that
-#   perform a call to one of these kernel-header functions, or even define other
-#   functions. We consider it safe since userland applications have no business
-#   using them anyway.
-#
-#
-# 3. Add a standard disclaimer:
+# 2. Add a standard disclaimer:
 #
 #   The message:
 #
@@ -112,7 +88,6 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     blocks.removeStructs(kernel_structs_to_remove)
     blocks.optimizeMacros(macros)
     blocks.optimizeIf01()
-    blocks.removeVarsAndFuncs(kernel_known_generic_statics)
     blocks.replaceTokens(kernel_token_replacements)
 
     out = StringOutput()

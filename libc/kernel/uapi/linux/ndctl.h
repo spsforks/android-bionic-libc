@@ -114,6 +114,31 @@ enum {
   ND_ARS_RETURN_PREV_DATA = 1 << 1,
   ND_CONFIG_LOCKED = 1,
 };
+static inline const char * nvdimm_bus_cmd_name(unsigned cmd) {
+  switch(cmd) {
+    case ND_CMD_ARS_CAP : return "ars_cap";
+    case ND_CMD_ARS_START : return "ars_start";
+    case ND_CMD_ARS_STATUS : return "ars_status";
+    case ND_CMD_CLEAR_ERROR : return "clear_error";
+    case ND_CMD_CALL : return "cmd_call";
+    default : return "unknown";
+  }
+}
+static inline const char * nvdimm_cmd_name(unsigned cmd) {
+  switch(cmd) {
+    case ND_CMD_SMART : return "smart";
+    case ND_CMD_SMART_THRESHOLD : return "smart_thresh";
+    case ND_CMD_DIMM_FLAGS : return "flags";
+    case ND_CMD_GET_CONFIG_SIZE : return "get_size";
+    case ND_CMD_GET_CONFIG_DATA : return "get_data";
+    case ND_CMD_SET_CONFIG_DATA : return "set_data";
+    case ND_CMD_VENDOR_EFFECT_LOG_SIZE : return "effect_size";
+    case ND_CMD_VENDOR_EFFECT_LOG : return "effect_log";
+    case ND_CMD_VENDOR : return "vendor";
+    case ND_CMD_CALL : return "cmd_call";
+    default : return "unknown";
+  }
+}
 #define ND_IOCTL 'N'
 #define ND_IOCTL_DIMM_FLAGS _IOWR(ND_IOCTL, ND_CMD_DIMM_FLAGS, struct nd_cmd_dimm_flags)
 #define ND_IOCTL_GET_CONFIG_SIZE _IOWR(ND_IOCTL, ND_CMD_GET_CONFIG_SIZE, struct nd_cmd_get_config_size)

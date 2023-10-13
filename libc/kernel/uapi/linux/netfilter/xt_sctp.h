@@ -52,5 +52,19 @@ struct xt_sctp_info {
 #define SCTP_CHUNKMAP_SET_ALL(chunkmap) memset((chunkmap), ~0U, sizeof(chunkmap))
 #define SCTP_CHUNKMAP_COPY(destmap,srcmap) memcpy((destmap), (srcmap), sizeof(srcmap))
 #define SCTP_CHUNKMAP_IS_CLEAR(chunkmap) __sctp_chunkmap_is_clear((chunkmap), ARRAY_SIZE(chunkmap))
+static inline _Bool __sctp_chunkmap_is_clear(const __u32 * chunkmap, unsigned int n) {
+  unsigned int i;
+  for(i = 0;
+  i < n;
+  ++ i) if(chunkmap[i]) return 0;
+  return 1;
+}
 #define SCTP_CHUNKMAP_IS_ALL_SET(chunkmap) __sctp_chunkmap_is_all_set((chunkmap), ARRAY_SIZE(chunkmap))
+static inline _Bool __sctp_chunkmap_is_all_set(const __u32 * chunkmap, unsigned int n) {
+  unsigned int i;
+  for(i = 0;
+  i < n;
+  ++ i) if(chunkmap[i] != ~0U) return 0;
+  return 1;
+}
 #endif

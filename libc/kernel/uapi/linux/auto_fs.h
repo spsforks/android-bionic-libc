@@ -71,6 +71,33 @@ enum {
 #define AUTOFS_TYPE_INDIRECT 1U
 #define AUTOFS_TYPE_DIRECT 2U
 #define AUTOFS_TYPE_OFFSET 4U
+static inline void set_autofs_type_indirect(unsigned int * type) {
+  * type = AUTOFS_TYPE_INDIRECT;
+}
+static inline unsigned int autofs_type_indirect(unsigned int type) {
+  return(type == AUTOFS_TYPE_INDIRECT);
+}
+static inline void set_autofs_type_direct(unsigned int * type) {
+  * type = AUTOFS_TYPE_DIRECT;
+}
+static inline unsigned int autofs_type_direct(unsigned int type) {
+  return(type == AUTOFS_TYPE_DIRECT);
+}
+static inline void set_autofs_type_offset(unsigned int * type) {
+  * type = AUTOFS_TYPE_OFFSET;
+}
+static inline unsigned int autofs_type_offset(unsigned int type) {
+  return(type == AUTOFS_TYPE_OFFSET);
+}
+static inline unsigned int autofs_type_trigger(unsigned int type) {
+  return(type == AUTOFS_TYPE_DIRECT || type == AUTOFS_TYPE_OFFSET);
+}
+static inline void set_autofs_type_any(unsigned int * type) {
+  * type = AUTOFS_TYPE_ANY;
+}
+static inline unsigned int autofs_type_any(unsigned int type) {
+  return(type == AUTOFS_TYPE_ANY);
+}
 enum autofs_notify {
   NFY_NONE,
   NFY_MOUNT,

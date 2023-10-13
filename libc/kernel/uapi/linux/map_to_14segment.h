@@ -40,6 +40,10 @@
 struct seg14_conversion_map {
   __be16 table[128];
 };
+static __inline__ int map_to_seg14(struct seg14_conversion_map * map, int c) {
+  if(c < 0 || c >= sizeof(map->table) / sizeof(map->table[0])) return - EINVAL;
+  return __be16_to_cpu(map->table[c]);
+}
 #define SEG14_CONVERSION_MAP(_name,_map) struct seg14_conversion_map _name = {.table = { _map } }
 #define MAP_TO_SEG14_SYSFS_FILE "map_seg14"
 #define _SEG14(sym,a,b,c,d,e,f,g1,g2,h,j,k,l,m,n) __cpu_to_be16(a << BIT_SEG14_A | b << BIT_SEG14_B | c << BIT_SEG14_C | d << BIT_SEG14_D | e << BIT_SEG14_E | f << BIT_SEG14_F | g1 << BIT_SEG14_G1 | g2 << BIT_SEG14_G2 | h << BIT_SEG14_H | j << BIT_SEG14_I | k << BIT_SEG14_J | l << BIT_SEG14_K | m << BIT_SEG14_L | n << BIT_SEG14_M)

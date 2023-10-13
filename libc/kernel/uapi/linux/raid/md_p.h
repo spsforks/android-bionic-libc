@@ -119,6 +119,10 @@ typedef struct mdp_superblock_s {
   __u32 reserved[MD_SB_RESERVED_WORDS];
   mdp_disk_t this_disk;
 } mdp_super_t;
+static inline __u64 md_event(mdp_super_t * sb) {
+  __u64 ev = sb->events_hi;
+  return(ev << 32) | sb->events_lo;
+}
 #define MD_SUPERBLOCK_1_TIME_SEC_MASK ((1ULL << 40) - 1)
 struct mdp_superblock_1 {
   __le32 magic;

@@ -100,37 +100,6 @@ kernel_token_replacements = {
     }
 
 
-# This is the set of known static inline functions that we want to keep
-# in the final kernel headers.
-kernel_known_generic_statics = set(
-        [
-          "ipt_get_target",  # uapi/linux/netfilter_ipv4/ip_tables.h
-          "ip6t_get_target", # uapi/linux/netfilter_ipv6/ip6_tables.h
-          # Byte swapping inlines from uapi/linux/swab.h
-          # The below functions are the ones we are guaranting we export.
-          "__swab16",
-          "__swab32",
-          "__swab64",
-          "__swab16p",
-          "__swab32p",
-          "__swab64p",
-          "__swab16s",
-          "__swab32s",
-          "__swab64s",
-          "__swahw32",
-          "__swahb32",
-          "__swahw32p",
-          "__swahb32p",
-          "__swahw32s",
-          "__swahb32s",
-          # These are required to support the above functions.
-          "__fswahw32",
-          "__fswahb32",
-          # This is used by various macros in <linux/ioprio.h>.
-          "ioprio_value",
-        ]
-    )
-
 # this is the standard disclaimer
 #
 kernel_disclaimer = """\

@@ -147,6 +147,10 @@ struct fc_tlv_desc {
 #define FC_TLV_DESC_HDR_SZ sizeof(struct fc_tlv_desc)
 #define FC_TLV_DESC_LENGTH_FROM_SZ(desc) (sizeof(desc) - FC_TLV_DESC_HDR_SZ)
 #define FC_TLV_DESC_SZ_FROM_LENGTH(tlv) (__be32_to_cpu((tlv)->desc_len) + FC_TLV_DESC_HDR_SZ)
+static inline void * fc_tlv_next_desc(void * desc) {
+  struct fc_tlv_desc * tlv = desc;
+  return(desc + FC_TLV_DESC_SZ_FROM_LENGTH(tlv));
+}
 struct fc_els_lsri_desc {
   __be32 desc_tag;
   __be32 desc_len;

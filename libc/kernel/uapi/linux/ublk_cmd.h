@@ -123,6 +123,12 @@ struct ublksrv_io_desc {
   __u64 start_sector;
   __u64 addr;
 };
+static inline __u8 ublksrv_get_op(const struct ublksrv_io_desc * iod) {
+  return iod->op_flags & 0xff;
+}
+static inline __u32 ublksrv_get_flags(const struct ublksrv_io_desc * iod) {
+  return iod->op_flags >> 8;
+}
 struct ublksrv_io_cmd {
   __u16 q_id;
   __u16 tag;

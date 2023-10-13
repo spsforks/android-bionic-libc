@@ -40,6 +40,9 @@ static const struct {
 #undef ___DEPRECATED
 #define ___C(a,b) (0)
 #define ___DEPRECATED(a,b) (1)
+static const __u8 cxl_deprecated_commands[] __attribute__((__unused__)) = {
+  CXL_CMDS
+};
 #undef ___C
 #undef ___DEPRECATED
 struct cxl_command_info {

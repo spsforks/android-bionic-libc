@@ -82,4 +82,47 @@ struct sockaddr_pn {
   __u8 spn_zero[sizeof(struct sockaddr) - sizeof(__kernel_sa_family_t) - 3];
 } __attribute__((packed));
 #define PN_DEV_PC 0x10
+static inline __u16 pn_object(__u8 addr, __u16 port) {
+  return(addr << 8) | (port & 0x3ff);
+}
+static inline __u8 pn_obj(__u16 handle) {
+  return handle & 0xff;
+}
+static inline __u8 pn_dev(__u16 handle) {
+  return handle >> 8;
+}
+static inline __u16 pn_port(__u16 handle) {
+  return handle & 0x3ff;
+}
+static inline __u8 pn_addr(__u16 handle) {
+  return(handle >> 8) & 0xfc;
+}
+static inline void pn_sockaddr_set_addr(struct sockaddr_pn * spn, __u8 addr) {
+  spn->spn_dev &= 0x03;
+  spn->spn_dev |= addr & 0xfc;
+}
+static inline void pn_sockaddr_set_port(struct sockaddr_pn * spn, __u16 port) {
+  spn->spn_dev &= 0xfc;
+  spn->spn_dev |= (port >> 8) & 0x03;
+  spn->spn_obj = port & 0xff;
+}
+static inline void pn_sockaddr_set_object(struct sockaddr_pn * spn, __u16 handle) {
+  spn->spn_dev = pn_dev(handle);
+  spn->spn_obj = pn_obj(handle);
+}
+static inline void pn_sockaddr_set_resource(struct sockaddr_pn * spn, __u8 resource) {
+  spn->spn_resource = resource;
+}
+static inline __u8 pn_sockaddr_get_addr(const struct sockaddr_pn * spn) {
+  return spn->spn_dev & 0xfc;
+}
+static inline __u16 pn_sockaddr_get_port(const struct sockaddr_pn * spn) {
+  return((spn->spn_dev & 0x03) << 8) | spn->spn_obj;
+}
+static inline __u16 pn_sockaddr_get_object(const struct sockaddr_pn * spn) {
+  return pn_object(spn->spn_dev, spn->spn_obj);
+}
+static inline __u8 pn_sockaddr_get_resource(const struct sockaddr_pn * spn) {
+  return spn->spn_resource;
+}
 #endif

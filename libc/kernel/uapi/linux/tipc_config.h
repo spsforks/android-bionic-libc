@@ -130,10 +130,59 @@ struct tlv_desc {
 #define TLV_LENGTH(datalen) (sizeof(struct tlv_desc) + (datalen))
 #define TLV_SPACE(datalen) (TLV_ALIGN(TLV_LENGTH(datalen)))
 #define TLV_DATA(tlv) ((void *) ((char *) (tlv) + TLV_LENGTH(0)))
+static inline int TLV_OK(const void * tlv, __u16 space) {
+  return(space >= TLV_SPACE(0)) && (__be16_to_cpu(((struct tlv_desc *) tlv)->tlv_len) <= space);
+}
+static inline int TLV_CHECK(const void * tlv, __u16 space, __u16 exp_type) {
+  return TLV_OK(tlv, space) && (__be16_to_cpu(((struct tlv_desc *) tlv)->tlv_type) == exp_type);
+}
+static inline int TLV_GET_LEN(struct tlv_desc * tlv) {
+  return __be16_to_cpu(tlv->tlv_len);
+}
+static inline void TLV_SET_LEN(struct tlv_desc * tlv, __u16 len) {
+  tlv->tlv_len = __cpu_to_be16(len);
+}
+static inline int TLV_CHECK_TYPE(struct tlv_desc * tlv, __u16 type) {
+  return(__be16_to_cpu(tlv->tlv_type) == type);
+}
+static inline void TLV_SET_TYPE(struct tlv_desc * tlv, __u16 type) {
+  tlv->tlv_type = __cpu_to_be16(type);
+}
+static inline int TLV_SET(void * tlv, __u16 type, void * data, __u16 len) {
+  struct tlv_desc * tlv_ptr;
+  int tlv_len;
+  tlv_len = TLV_LENGTH(len);
+  tlv_ptr = (struct tlv_desc *) tlv;
+  tlv_ptr->tlv_type = __cpu_to_be16(type);
+  tlv_ptr->tlv_len = __cpu_to_be16(tlv_len);
+  if(len && data) {
+    memcpy(TLV_DATA(tlv_ptr), data, len);
+    memset((char *) TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - tlv_len);
+  }
+  return TLV_SPACE(len);
+}
 struct tlv_list_desc {
   struct tlv_desc * tlv_ptr;
   __u32 tlv_space;
 };
+static inline void TLV_LIST_INIT(struct tlv_list_desc * list, void * data, __u32 space) {
+  list->tlv_ptr = (struct tlv_desc *) data;
+  list->tlv_space = space;
+}
+static inline int TLV_LIST_EMPTY(struct tlv_list_desc * list) {
+  return(list->tlv_space == 0);
+}
+static inline int TLV_LIST_CHECK(struct tlv_list_desc * list, __u16 exp_type) {
+  return TLV_CHECK(list->tlv_ptr, list->tlv_space, exp_type);
+}
+static inline void * TLV_LIST_DATA(struct tlv_list_desc * list) {
+  return TLV_DATA(list->tlv_ptr);
+}
+static inline void TLV_LIST_STEP(struct tlv_list_desc * list) {
+  __u16 tlv_space = TLV_ALIGN(__be16_to_cpu(list->tlv_ptr->tlv_len));
+  list->tlv_ptr = (struct tlv_desc *) ((char *) list->tlv_ptr + tlv_space);
+  list->tlv_space -= tlv_space;
+}
 #define TIPC_GENL_NAME "TIPC"
 #define TIPC_GENL_VERSION 0x1
 #define TIPC_GENL_CMD 0x1
@@ -155,4 +204,18 @@ struct tipc_cfg_msg_hdr {
 #define TCM_LENGTH(datalen) (sizeof(struct tipc_cfg_msg_hdr) + datalen)
 #define TCM_SPACE(datalen) (TCM_ALIGN(TCM_LENGTH(datalen)))
 #define TCM_DATA(tcm_hdr) ((void *) ((char *) (tcm_hdr) + TCM_LENGTH(0)))
+static inline int TCM_SET(void * msg, __u16 cmd, __u16 flags, void * data, __u16 data_len) {
+  struct tipc_cfg_msg_hdr * tcm_hdr;
+  int msg_len;
+  msg_len = TCM_LENGTH(data_len);
+  tcm_hdr = (struct tipc_cfg_msg_hdr *) msg;
+  tcm_hdr->tcm_len = __cpu_to_be32(msg_len);
+  tcm_hdr->tcm_type = __cpu_to_be16(cmd);
+  tcm_hdr->tcm_flags = __cpu_to_be16(flags);
+  if(data_len && data) {
+    memcpy(TCM_DATA(msg), data, data_len);
+    memset((char *) TCM_DATA(msg) + data_len, 0, TCM_SPACE(data_len) - msg_len);
+  }
+  return TCM_SPACE(data_len);
+}
 #endif

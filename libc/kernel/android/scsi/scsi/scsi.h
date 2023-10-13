@@ -45,4 +45,10 @@ struct ccs_modesel_head {
 #define SCSI_IOCTL_PROBE_HOST 0x5385
 #define SCSI_IOCTL_GET_BUS_NUMBER 0x5386
 #define SCSI_IOCTL_GET_PCI 0x5387
+static inline bool scsi_status_is_good(int status) {
+  if(status < 0) return false;
+  if(host_byte(status) == DID_NO_CONNECT) return false;
+  status &= 0xfe;
+  return((status == SAM_STAT_GOOD) || (status == SAM_STAT_CONDITION_MET) || (status == SAM_STAT_INTERMEDIATE) || (status == SAM_STAT_INTERMEDIATE_CONDITION_MET) || (status == SAM_STAT_COMMAND_TERMINATED));
+}
 #endif

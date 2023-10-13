@@ -141,7 +141,7 @@ struct virtio_net_hdr_mrg_rxbuf {
 };
 #endif
 struct virtio_net_ctrl_hdr {
-  __u8 class;
+  __u8 __linux_class;
   __u8 cmd;
 } __attribute__((packed));
 typedef __u8 virtio_net_ctrl_ack;

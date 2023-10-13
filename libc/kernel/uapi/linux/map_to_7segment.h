@@ -30,6 +30,9 @@
 struct seg7_conversion_map {
   unsigned char table[128];
 };
+static __inline__ int map_to_seg7(struct seg7_conversion_map * map, int c) {
+  return c >= 0 && c < sizeof(map->table) ? map->table[c] : - EINVAL;
+}
 #define SEG7_CONVERSION_MAP(_name,_map) struct seg7_conversion_map _name = {.table = { _map } }
 #define MAP_TO_SEG7_SYSFS_FILE "map_seg7"
 #define _SEG7(l,a,b,c,d,e,f,g) (a << BIT_SEG7_A | b << BIT_SEG7_B | c << BIT_SEG7_C | d << BIT_SEG7_D | e << BIT_SEG7_E | f << BIT_SEG7_F | g << BIT_SEG7_G)

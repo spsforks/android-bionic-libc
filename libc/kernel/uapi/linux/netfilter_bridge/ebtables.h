@@ -134,6 +134,9 @@ struct ebt_entry {
   unsigned int next_offset;
   unsigned char elems[0] __attribute__((aligned(__alignof__(struct ebt_replace))));
 };
+static __inline__ struct ebt_entry_target * ebt_get_target(struct ebt_entry * e) {
+  return(struct ebt_entry_target *) ((char *) e + e->target_offset);
+}
 #define EBT_BASE_CTL 128
 #define EBT_SO_SET_ENTRIES (EBT_BASE_CTL)
 #define EBT_SO_SET_COUNTERS (EBT_SO_SET_ENTRIES + 1)

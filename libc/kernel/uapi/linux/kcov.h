@@ -42,4 +42,8 @@ enum {
 #define KCOV_SUBSYSTEM_USB (0x01ull << 56)
 #define KCOV_SUBSYSTEM_MASK (0xffull << 56)
 #define KCOV_INSTANCE_MASK (0xffffffffull)
+static inline __u64 kcov_remote_handle(__u64 subsys, __u64 inst) {
+  if(subsys & ~KCOV_SUBSYSTEM_MASK || inst & ~KCOV_INSTANCE_MASK) return 0;
+  return subsys | inst;
+}
 #endif

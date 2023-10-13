@@ -605,6 +605,9 @@ struct v4l2_buffer {
     __u32 reserved;
   };
 };
+static inline __u64 v4l2_timeval_to_ns(const struct timeval * tv) {
+  return(__u64) tv->tv_sec * 1000000000ULL + tv->tv_usec * 1000;
+}
 #define V4L2_BUF_FLAG_MAPPED 0x00000001
 #define V4L2_BUF_FLAG_QUEUED 0x00000002
 #define V4L2_BUF_FLAG_DONE 0x00000004

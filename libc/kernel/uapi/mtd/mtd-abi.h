@@ -168,4 +168,7 @@ enum mtd_file_modes {
   MTD_FILE_MODE_OTP_USER = MTD_OTP_USER,
   MTD_FILE_MODE_RAW,
 };
+static inline int mtd_type_is_nand_user(const struct mtd_info_user * mtd) {
+  return mtd->type == MTD_NANDFLASH || mtd->type == MTD_MLCNANDFLASH;
+}
 #endif

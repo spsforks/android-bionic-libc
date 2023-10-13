@@ -628,6 +628,7 @@ typedef struct mixer_vol_table {
 #define TMR_TIMESIG 11
 #define LOCL_STARTAUDIO 1
 #define SEQ_DECLAREBUF() SEQ_USE_EXTBUF()
+void seqbuf_dump(void);
 #define SEQ_PM_DEFINES int __foo_bar___
 #define SEQ_LOAD_GMINSTR(dev,instr)
 #define SEQ_LOAD_GMDRUM(dev,drum)
