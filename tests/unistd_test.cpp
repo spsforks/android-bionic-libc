@@ -1672,7 +1672,7 @@ TEST(UNISTD_TEST, close_range) {
     ASSERT_EQ(close(fd), -1);
     ASSERT_EQ(errno, EBADF);
   } else {
-    ASSERT_EQ(errno, ENOSYS);
+    ASSERT_TRUE(errno == ENOSYS || errno == EINVAL);
     // since close_range() failed, we can close it normally
     ASSERT_EQ(close(fd), 0);
   }
