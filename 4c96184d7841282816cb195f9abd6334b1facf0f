@@ -16,6 +16,23 @@
       "message": "Updated the commit message - any further comments here?",
       "revId": "4c96184d7841282816cb195f9abd6334b1facf0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a2cb9fe_795c0413",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-16T17:58:32Z",
+      "side": 1,
+      "message": "(copy and paste the BSD license for the tests. we\u0027d like to make it as easy as possible for the BSDs to take any of our tests.)",
+      "revId": "4c96184d7841282816cb195f9abd6334b1facf0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
