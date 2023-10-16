@@ -34,6 +34,24 @@
       "parentUuid": "b0a99282_11815f14",
       "revId": "1412a441939bf9a188ce153c4162cda4baedee6f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2a6f323_dcbf0ad5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3209,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-16T16:47:19Z",
+      "side": 1,
+      "message": "Fix hasn\u0027t landed upstream but I\u0027ve put some placeholder comments explaining the discrepancy.\n\nUpstream will change to `DT_AARCH64_MEMTAG_STACK -\u003e d_ptr` and `DT_AARCH64_MEMTAG_GLOBALS -\u003e d_val` because that\u0027s what LLD actually did all along (`addInSec` is `d_ptr` vs. `addInt` is `d_val`): \n\n`lld/ELF/SyntheticSections.cpp:1453`\n\n```\n    if (config-\u003eandroidMemtagMode !\u003d ELF::NT_MEMTAG_LEVEL_NONE) {\n      addInt(DT_AARCH64_MEMTAG_MODE, config-\u003eandroidMemtagMode \u003d\u003d NT_MEMTAG_LEVEL_ASYNC);\n      addInt(DT_AARCH64_MEMTAG_HEAP, config-\u003eandroidMemtagHeap);\n      addInt(DT_AARCH64_MEMTAG_STACK, config-\u003eandroidMemtagStack);\n      if (mainPart-\u003ememtagDescriptors-\u003eisNeeded()) {\n        addInSec(DT_AARCH64_MEMTAG_GLOBALS, *mainPart-\u003ememtagDescriptors);\n        addInt(DT_AARCH64_MEMTAG_GLOBALSSZ, mainPart-\u003ememtagDescriptors-\u003egetSize());\n      }\n    }\n```\n\nNo need IMHO to block this patch on the aarch64 ABI upstream review.",
+      "parentUuid": "6bc28443_fde2ebf3",
+      "revId": "1412a441939bf9a188ce153c4162cda4baedee6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
