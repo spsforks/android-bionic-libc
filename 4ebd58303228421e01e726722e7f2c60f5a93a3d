@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbb928ab_9ab24c3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-16T15:20:58Z",
+      "side": 1,
+      "message": "well, that\u0027s quite misleading --- this *enables* its use in bionic, so it\u0027s actually turning on a new feature.\n\nalso, if we add this, we should change bionic/tests/headers/posix/netdb_h.c\n\n(probably worth mentioning here that this _isn\u0027t_ in glibc, and motivating why we should enable this feature.)",
+      "revId": "4ebd58303228421e01e726722e7f2c60f5a93a3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
