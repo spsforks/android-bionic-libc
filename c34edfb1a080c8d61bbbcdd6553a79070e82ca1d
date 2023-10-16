@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c32f2f64_c205fcb2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-10-16T07:03:54Z",
+      "side": 1,
+      "message": "bionic/libc/dns/net/getnameinfo.c\nbionic/libc/dns/net/getnameinfo.c:422:18: error: comparison of integers of different signs: \u0027int\u0027 and \u0027size_t\u0027 (aka \u0027unsigned long\u0027) [-Werror,-Wsign-compare]\nif (n \u003c 0 || n \u003e\u003d bufsiz)\n~ ^  ~~~~~~\n1 error generated.",
+      "revId": "c34edfb1a080c8d61bbbcdd6553a79070e82ca1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
