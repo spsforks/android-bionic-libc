@@ -189,6 +189,7 @@ struct addrinfo {
 #if 0 /* obsolete */
 #define NI_WITHSCOPEID	0x00000020
 #endif
+#define	NI_NUMERICSCOPE	0x00000100
 
 /*
  * Scope delimit character
