@@ -16,6 +16,23 @@
       "message": "Any further comments here?",
       "revId": "2c7e79554b7154468a4b82dd3d1bca5a80879d04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d963d80d_d54c4e14",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-16T17:44:44Z",
+      "side": 1,
+      "message": "I\u0027m confused - `__get_tagging_level` will attempt to read environment variables, but the comment above says that it can not be done pre-relocation.\n\nRename the function to something like `__libc_init_mte_pre_relocation`.\n\nShould this function also MTE-remap stack? I think, at least on some existing h/w, that would cause permanent performance hit even if prctl disables tag checking later.\n\nIf we do not PROT_MTE stack now, and linker code executes any stack-instrumented functions, I believe stack can not be set PROT_MTE later at all, because in the existing frames pointers will be tagged but memory won\u0027t be. Right?",
+      "revId": "2c7e79554b7154468a4b82dd3d1bca5a80879d04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
