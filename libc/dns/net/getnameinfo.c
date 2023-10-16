@@ -419,7 +419,7 @@ ip6_sa2str(const struct sockaddr_in6 *sa6, char *buf, size_t bufsiz, int flags)
 #ifdef NI_NUMERICSCOPE
 	if ((flags & NI_NUMERICSCOPE) != 0) {
 		n = snprintf(buf, bufsiz, "%u", sa6->sin6_scope_id);
-		if (n < 0 || n >= bufsiz)
+		if (n < 0 || n >= (int)bufsiz)
 			return -1;
 		else
 			return n;
