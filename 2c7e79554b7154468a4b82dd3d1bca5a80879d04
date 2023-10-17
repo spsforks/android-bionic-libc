@@ -33,6 +33,24 @@
       "message": "I\u0027m confused - `__get_tagging_level` will attempt to read environment variables, but the comment above says that it can not be done pre-relocation.\n\nRename the function to something like `__libc_init_mte_pre_relocation`.\n\nShould this function also MTE-remap stack? I think, at least on some existing h/w, that would cause permanent performance hit even if prctl disables tag checking later.\n\nIf we do not PROT_MTE stack now, and linker code executes any stack-instrumented functions, I believe stack can not be set PROT_MTE later at all, because in the existing frames pointers will be tagged but memory won\u0027t be. Right?",
       "revId": "2c7e79554b7154468a4b82dd3d1bca5a80879d04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "163ca406_17e833c0",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-17T11:51:49Z",
+      "side": 1,
+      "message": "I\u0027ve removed this helper function as it\u0027s vestigal (and as you point out, wouldn\u0027t work with this series of patches). It\u0027s originally intended to enable MTE in the loader itself, but that\u0027s going to require a whole other set of annotations to GVs that are accessed in the loader before it relocates itself, and that\u0027s going to be much more fragile until we make mte-globals-everywhere.\n\nThat\u0027s a good point about MTE stack potentially hurting performance, but I wouldn\u0027t expect MTE stack to be on in the loader for anything other than a _fullmte product.",
+      "parentUuid": "d963d80d_d54c4e14",
+      "revId": "2c7e79554b7154468a4b82dd3d1bca5a80879d04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
