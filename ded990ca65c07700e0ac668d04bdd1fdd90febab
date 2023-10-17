@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "523b2ee2_5bc6995c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-17T15:37:52Z",
+      "side": 1,
+      "message": "+2 to unblock you, but +cferris (who\u0027s touched this code the most) in case he has a different idea longer term. (but function-like macros seem different enough to functions that i\u0027m not optimistic.)",
+      "revId": "ded990ca65c07700e0ac668d04bdd1fdd90febab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
