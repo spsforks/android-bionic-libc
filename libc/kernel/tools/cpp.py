@@ -1471,9 +1471,30 @@ class BlockList(object):
                             made_change = True
                     i += 1
 
-                if b.isDefine() and b.define_id in replacements:
-                    b.define_id = replacements[b.define_id]
-                    made_change = True
+                if b.isDefine():
+                    if b.define_id in replacements:
+                        b.define_id = replacements[b.define_id]
+                        made_change = True
+                    else:
+                        idx = b.define_id.find('(') + 1
+                        new_id = [b.define_id[:idx]]
+                        macro_args_changed = False
+                        done = idx == 0
+                        while not done:
+                            next_idx = b.define_id.find(',', idx)
+                            if next_idx == -1:
+                                next_idx = b.define_id.find(')', idx)
+                                done = True
+                            token = b.define_id[idx:next_idx]
+                            if token in replacements:
+                                new_id.append(replacements[token] + b.define_id[next_idx])
+                                macro_args_changed = True
+                            else:
+                                new_id.append(b.define_id[idx:next_idx+1])
+                            idx = next_idx + 1
+                        if macro_args_changed:
+                            b.define_id = "".join(new_id)
+                            made_change = True
 
             if made_change and b.isIf():
                 # Keep 'expr' in sync with 'tokens'.
