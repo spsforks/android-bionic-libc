@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6433f9bb_6564aa0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-17T15:32:50Z",
+      "side": 1,
+      "message": "lgtm (and seems self-contained in the MTE code, so no real impact on the rest of the code), and i\u0027m assuming rprichard would have spoken up by now if he had comments...",
+      "revId": "7c1f3770afb1e4a3188de34d7649b23c16a49376",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
