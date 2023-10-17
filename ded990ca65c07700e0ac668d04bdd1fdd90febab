@@ -16,6 +16,24 @@
       "message": "+2 to unblock you, but +cferris (who\u0027s touched this code the most) in case he has a different idea longer term. (but function-like macros seem different enough to functions that i\u0027m not optimistic.)",
       "revId": "ded990ca65c07700e0ac668d04bdd1fdd90febab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe1fe74b_25a5869c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1942356
+      },
+      "writtenOn": "2023-10-17T17:30:33Z",
+      "side": 1,
+      "message": "I modified it to use the `CppStringTokenizer` now.  Hopefully it looks a little cleaner too.",
+      "parentUuid": "523b2ee2_5bc6995c",
+      "revId": "ded990ca65c07700e0ac668d04bdd1fdd90febab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
