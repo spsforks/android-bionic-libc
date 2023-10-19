@@ -122,8 +122,10 @@ cc_defaults {
         "liblog_for_runtime_apex",
     ],
 
-    // We need to access Bionic private headers in the linker.
-    include_dirs: ["bionic/libc"],
+    include_dirs: [
+        "bionic/libc", // We need to access Bionic private headers in the linker.
+        "system/libprocinfo/include",
+    ],
 }
 
 // ========================================================
@@ -541,8 +543,10 @@ cc_test {
         "-Werror",
     ],
 
-    // We need to access Bionic private headers in the linker.
-    include_dirs: ["bionic/libc"],
+    include_dirs: [
+        "bionic/libc", // We need to access Bionic private headers in the linker.
+        "system/libprocinfo/include",
+    ],
 
     srcs: [
         // Tests.
