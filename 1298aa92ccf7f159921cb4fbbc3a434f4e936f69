@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "791d1314_a0d4ee56",
+        "filename": "libc/system_properties/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-19T20:20:03Z",
+      "side": 1,
+      "message": "(i don\u0027t think this is exactly the same as the version that went in internally?)",
+      "revId": "1298aa92ccf7f159921cb4fbbc3a434f4e936f69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
