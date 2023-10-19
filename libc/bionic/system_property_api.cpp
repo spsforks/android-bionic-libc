@@ -131,6 +131,6 @@ int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie),
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-int __system_properties_reload() {
+int __system_properties_zygote_reload() {
   return system_properties.Reload(false) ? 0 : -1;
 }
