@@ -131,13 +131,14 @@ int __system_properties_init(void);
 
 /*
  * Reloads the system properties from disk.
+ * Not intended for use by any apps except the Zygote
  *
  * NOTE: Any pointers received from methods such as __system_property_find should be assumed to be
  * invalid after this method is called.
  *
  * Returns 0 on success, -1 otherwise
  */
-int __system_properties_reload();
+int __system_properties_zygote_reload();
 
 /* Deprecated: use __system_property_wait instead. */
 uint32_t __system_property_wait_any(uint32_t __old_serial);
