@@ -16,6 +16,24 @@
       "message": "(i don\u0027t think this is exactly the same as the version that went in internally?)",
       "revId": "1298aa92ccf7f159921cb4fbbc3a434f4e936f69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86f43362_13082022",
+        "filename": "libc/system_properties/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-19T20:36:58Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "791d1314_a0d4ee56",
+      "revId": "1298aa92ccf7f159921cb4fbbc3a434f4e936f69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
