@@ -694,6 +694,30 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   return true;
 }
 
+static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                             size_t phdr_idx, ElfW(Addr)* p_memsz,
+                                             ElfW(Addr)* p_filesz) {
+  const ElfW(Phdr)* phdr = &phdr_table[phdr_idx];
+  const ElfW(Phdr)* next = nullptr;
+  size_t next_idx = phdr_idx + 1;
+  if (next_idx < phdr_count && (&phdr_table[next_idx])->p_type == PT_LOAD) {
+    next = &phdr_table[next_idx];
+  }
+
+  if (next && *p_memsz == *p_filesz) {
+    ElfW(Addr) next_start = page_start(next->p_vaddr);
+    ElfW(Addr) curr_end = page_end(phdr->p_vaddr + *p_memsz);
+
+    // If adjacent segments' mappings overlap, no extentsion is needed.
+    if (curr_end < next_start) {
+      ElfW(Addr) extend = next_start - curr_end;
+
+      *p_memsz += extend;
+      *p_filesz += extend;
+    }
+  }
+}
+
 bool ElfReader::LoadSegments() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
@@ -702,18 +726,22 @@ bool ElfReader::LoadSegments() {
       continue;
     }
 
+    ElfW(Addr) p_memsz = phdr->p_memsz;
+    ElfW(Addr) p_filesz = phdr->p_filesz;
+    _extend_load_segment_vma(phdr_table_, phdr_num_, i, &p_memsz, &p_filesz);
+
     // Segment addresses in memory.
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
-    ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
+    ElfW(Addr) seg_end = seg_start + p_memsz;
 
     ElfW(Addr) seg_page_start = page_start(seg_start);
     ElfW(Addr) seg_page_end = page_end(seg_end);
 
-    ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
+    ElfW(Addr) seg_file_end = seg_start + p_filesz;
 
     // File offsets.
     ElfW(Addr) file_start = phdr->p_offset;
-    ElfW(Addr) file_end   = file_start + phdr->p_filesz;
+    ElfW(Addr) file_end = file_start + p_filesz;
 
     ElfW(Addr) file_page_start = page_start(file_start);
     ElfW(Addr) file_length = file_end - file_page_start;
@@ -723,7 +751,7 @@ bool ElfReader::LoadSegments() {
       return false;
     }
 
-    if (file_end > static_cast<size_t>(file_size_)) {
+    if (file_start + phdr->p_filesz > static_cast<size_t>(file_size_)) {
       DL_ERR("invalid ELF file \"%s\" load segment[%zd]:"
           " p_offset (%p) + p_filesz (%p) ( = %p) past end of file (0x%" PRIx64 ")",
           name_.c_str(), i, reinterpret_cast<void*>(phdr->p_offset),
@@ -768,8 +796,18 @@ bool ElfReader::LoadSegments() {
 
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
-    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
+    //
+    // The intention is to zero the partial page at that may exist at the
+    // end of a file backed mapping. With the extended seg_file_end, this
+    // file offset as calculated from the mapping start can overrun the end
+    // of the file. However pages in that range cannot be touched by userspace
+    // because the kernel will not be able to handle a file map fault past the
+    // extent of the file. No need to try zeroing this untouchable region.
+    // Zero the partial page at the end of the unextended seg_file_end.
+    ElfW(Addr) seg_file_end_partial = seg_start + phdr->p_filesz;
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end_partial) > 0) {
+      memset(reinterpret_cast<void*>(seg_file_end_partial), 0,
+             page_size() - page_offset(seg_file_end_partial));
     }
 
     seg_file_end = page_end(seg_file_end);
@@ -803,16 +841,19 @@ bool ElfReader::LoadSegments() {
  */
 static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                      ElfW(Addr) load_bias, int extra_prot_flags) {
-  const ElfW(Phdr)* phdr = phdr_table;
-  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
 
-  for (; phdr < phdr_limit; phdr++) {
     if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
       continue;
     }
 
-    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) p_memsz = phdr->p_memsz;
+    ElfW(Addr) p_filesz = phdr->p_filesz;
+    _extend_load_segment_vma(phdr_table, phdr_count, i, &p_memsz, &p_filesz);
+
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr + load_bias);
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + p_memsz + load_bias);
 
     int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
     if ((prot & PROT_WRITE) != 0) {
