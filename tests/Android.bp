@@ -788,6 +788,7 @@ cc_test_library {
     ],
     include_dirs: [
         "bionic/libc",
+        "system/libprocinfo/include",
     ],
     shared: {
         enabled: false,
