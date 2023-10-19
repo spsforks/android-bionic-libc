@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2a79e52_e744b261",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-19T23:05:44Z",
+      "side": 1,
+      "message": "(i\u0027d probably have just used getpagesize() everywhere since (a) it\u0027s attribute const so probably _faster_ than a global and (b) none of this cares about performance anyway, but this is fine...)",
+      "revId": "41c8951c9162d5acb9257231fa5e0d38bf5a968b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
