@@ -27,7 +27,11 @@
 #include "utils.h"
 
 #if defined(__BIONIC__)
+#include <sys/mount.h>
 #include <sys/system_properties.h>
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
+
 int64_t NanoTime() {
   auto t = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now());
   return t.time_since_epoch().count();
@@ -170,4 +174,48 @@ TEST(properties, empty_value) {
 #else  // __BIONIC__
   GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
+}
+
+TEST(properties, __system_property_reload_no_op) {
+#if defined(__BIONIC__)
+    if (getuid() != 0) GTEST_SKIP() << "test requires root";
+
+    char name[] = "test.property.1";
+    char value[] = "test_value";
+    ASSERT_EQ(0, __system_property_find(name));
+    __system_property_set(name, value);
+    ASSERT_EQ(0, __system_properties_zygote_reload());
+    const prop_info* readptr = __system_property_find(name);
+    std::string expected_name = name;
+    __system_property_read_callback(
+        readptr,
+        [](void*, const char*, const char* value, unsigned /*serial*/) {
+          ASSERT_STREQ("test_value", value);
+        },
+        &expected_name);
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
+}
+
+TEST(properties, __system_property_reload_invalid) {
+#if defined(__BIONIC__)
+    if (getuid() != 0) GTEST_SKIP() << "test requires root";
+    mkdir("/tmp/contains_no_properties", S_IRWXU | S_IXGRP | S_IXOTH);
+
+    char name[] = "test.property.1";
+    char value[] = "test_value";
+    ASSERT_EQ(0, __system_property_find(name));
+    __system_property_set(name, value);
+    int ret = mount("/tmp/contains_no_properties", "/dev/__properties__/", nullptr,
+                    MS_BIND | MS_REC, nullptr);
+    if (ret != 0) {
+      ASSERT_ERRNO(0);
+    }
+
+    ASSERT_EQ(-1, __system_properties_zygote_reload());
+    umount("/dev/__properties__/");
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
 }
