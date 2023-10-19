@@ -240,7 +240,7 @@ void test_longjmp() {
 }
 
 void test_longjmp_sigaltstack() {
-  constexpr size_t kAltStackSize = kStackAllocationSize + PAGE_SIZE * 16;
+  constexpr size_t kAltStackSize = kStackAllocationSize + getpagesize() * 16;
   SigAltStackScoped sigAltStackScoped(kAltStackSize);
   SigActionScoped sigActionScoped(
       SIGUSR1, [](int, siginfo_t*, void*) { check_longjmp_restores_tags(); });
