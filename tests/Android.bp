@@ -598,6 +598,64 @@ cc_test_library {
 }
 
 cc_test_library {
+    name: "libBionicRootTests",
+    defaults: ["bionic_tests_defaults"],
+    tidy_disabled_srcs: [
+        "malloc_test.cpp", // timed out with clang-tidy, and too many warnings
+    ],
+    srcs: [
+        "system_properties_root_test.cpp",
+        "utils.cpp",
+    ],
+
+    include_dirs: [
+        "bionic/libc",
+    ],
+
+    target: {
+        bionic: {
+            whole_static_libs: [
+                "libasync_safe",
+                "libprocinfo",
+                "libsystemproperties",
+            ],
+        },
+        musl: {
+            exclude_srcs: [
+                // musl doesn't have error.h
+                "error_test.cpp",
+
+                // musl doesn't define noreturn for C++
+                "stdnoreturn_test.cpp",
+
+                // unsupported relocation type 37
+                "ifunc_test.cpp",
+
+                // musl #defines utmp to utmpx, causing a collision with
+                // utmpx_test.cpp
+                "utmp_test.cpp",
+            ],
+        },
+    },
+
+    static_libs: [
+        "liblog",
+        "libbase",
+    ],
+    shared: {
+        enabled: false,
+    },
+
+    generated_headers: ["generated_android_ids"],
+
+    // Bug: http://b/218788252 IR verifier too strict for ifunc resolver that
+    // accept parameters.
+    lto: {
+        never: true,
+    },
+}
+
+cc_test_library {
     name: "libBionicElfTlsLoaderTests",
     defaults: ["bionic_tests_defaults"],
     srcs: [
