@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "939afe53_98564e1f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2341,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-19T22:07:23Z",
+      "side": 1,
+      "message": "The spec says TLS is not tagged. Are we doing this as an extension? No concerns as this is no-op, just making sure its intentional.",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ce5e3f5_5c13ae7b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 3317,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-19T22:07:23Z",
+      "side": 1,
+      "message": "We should not remap pages when MTE is not enabled. Is this implemented? I do not see where.",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5448a827_b2662af5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-19T22:07:23Z",
+      "side": 1,
+      "message": "hmm I would expect this to compile back to a memcpy() call. There was an attribute to prevent this from happening. Also, would not that turn into __dl_memcpy or something? What\u0027s wrong with calling that?",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2b5c0ea_abe9a01c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-19T22:07:23Z",
+      "side": 1,
+      "message": "this comment has very strange formatting",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28734bd1_52e93df5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-19T22:07:23Z",
+      "side": 1,
+      "message": "why not put all this code under #ifdef aarch64?",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d40bbd7_d3546aac",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-19T22:07:23Z",
+      "side": 1,
+      "message": "sink offset and place under if()",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
