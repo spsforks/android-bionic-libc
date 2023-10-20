@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "366fa9f4_a87890b1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-20T20:35:03Z",
+      "side": 1,
+      "message": "you\u0027d need __restrict__ on the inputs to generate a call to memcpy. I still do not understand what\u0027s wrong with it. Does it have something to do with ifuncs?",
+      "parentUuid": "c37bbe63_fa78c3a0",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2b5c0ea_abe9a01c",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 23
@@ -172,6 +190,24 @@
       "side": 1,
       "message": "Personal preference to have the shortest conditional defines possible. For two reasons:\n\n 1. My editor (vscode) removes syntax highlighting (it renders as a comment) on any code in a conditional that it thinks you\u0027re not using by default, so anything aarch64-specific loses that.\n 2. Long conditional defines are easier to lose track of in a large file, especially when they go above a single screen. Especially when it spans multiple functions - very easy to add another function between the two and only realising when the linker complains about missing functions.\n \nOkay with you?",
       "parentUuid": "28734bd1_52e93df5",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb7443a2_c1ac8bb1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-20T20:35:03Z",
+      "side": 1,
+      "message": "sure, as long as this code does not run when it is not needed",
+      "parentUuid": "0b254a56_1afb6a5e",
       "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
