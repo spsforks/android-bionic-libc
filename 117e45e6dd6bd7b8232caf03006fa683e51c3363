@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7008dd1_fe4c94fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-20T14:45:04Z",
+      "side": 1,
+      "message": "(i wonder whether the claim that errno is set is strictly true in _all_ cases!)",
+      "revId": "117e45e6dd6bd7b8232caf03006fa683e51c3363",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
