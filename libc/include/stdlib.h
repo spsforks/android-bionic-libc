@@ -87,7 +87,7 @@ long atol(const char* _Nonnull __s) __attribute_pure__;
 long long atoll(const char* _Nonnull __s) __attribute_pure__;
 
 __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
-int system(const char* _Nonnull __command);
+int system(const char* _Nullable __command);
 
 void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 

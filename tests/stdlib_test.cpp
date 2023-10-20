@@ -482,6 +482,8 @@ TEST(stdlib, mkstemp) {
 TEST(stdlib, system) {
   int status;
 
+  ASSERT_EQ(1, system(nullptr));
+
   status = system("exit 0");
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(0, WEXITSTATUS(status));
