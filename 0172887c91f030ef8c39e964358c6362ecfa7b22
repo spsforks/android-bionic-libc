@@ -53,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed1880c5_33832976",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-23T22:59:11Z",
+      "side": 1,
+      "message": "Probably only the main thread.",
+      "parentUuid": "4bcda438_bf38e4fb",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a07a5ee_01d22452",
@@ -90,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7d51e335_4af264fd",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-23T22:59:11Z",
+      "side": 1,
+      "message": "We don\u0027t intend apps to call this after they start.",
+      "parentUuid": "b90a5716_5012b7fe",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14ddae2b_a60f382c",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
@@ -101,6 +137,24 @@
       "writtenOn": "2023-10-23T22:24:10Z",
       "side": 1,
       "message": "Error conditions must be documented: go/android-ndk-api-guidelines#well-documented\n\nDepending on the answer to that, go/android-ndk-api-guidelines#error-return-types may also be relevant.",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64df8264_2abc4241",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-23T22:59:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14ddae2b_a60f382c",
       "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -164,6 +218,48 @@
         "endLine": 141,
         "endChar": 37
       },
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90d83615_4ef283b5",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-23T22:59:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bc2e5ad_e3117665",
+      "range": {
+        "startLine": 141,
+        "startChar": 37,
+        "endLine": 141,
+        "endChar": 39
+      },
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ff186b4_928b354c",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-23T22:59:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64a57fc6_c7532327",
       "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
