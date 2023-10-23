@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1290e735_f3917556",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "go/android-ndk-api-guidelines#compatibility-apex\n\n(most of go/android-ndk-api-guidelines#compatibilty-cts applies)",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a07a5ee_01d22452",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "I\u0027m not very familiar with how the zygote actually operates, but this isn\u0027t something that will be called after the app starts up, right? (I don\u0027t think that needs to be documented, I just need to check that this isn\u0027t pushing an impossible constraint onto app developers that read system properties)",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14ddae2b_a60f382c",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "Error conditions must be documented: go/android-ndk-api-guidelines#well-documented\n\nDepending on the answer to that, go/android-ndk-api-guidelines#error-return-types may also be relevant.",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bc2e5ad_e3117665",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "`(void)` (C compatibility)",
+      "range": {
+        "startLine": 141,
+        "startChar": 37,
+        "endLine": 141,
+        "endChar": 39
+      },
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64a57fc6_c7532327",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "Needs `__INTRODUCED_IN(__ANDROID_V__)`",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9123566_4feae4b1",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "(name doesn\u0027t conform to APEX rules, but waiving that requirement since it conforms to existing system property APEX APIs here)",
+      "range": {
+        "startLine": 141,
+        "startChar": 4,
+        "endLine": 141,
+        "endChar": 37
+      },
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0bc3c9e_0110bb36",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:24:10Z",
+      "side": 1,
+      "message": "@enh, just so you know what you\u0027re signing off on, APEX has the same longevity as NDK: immortal.",
+      "range": {
+        "startLine": 1603,
+        "startChar": 41,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
