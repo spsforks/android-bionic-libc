@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "26af4a15_48d3a4fd",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-23T10:23:22Z",
+      "side": 1,
+      "message": "```\n$ echo \u0027void foo(void* d, void* s, unsigned n) { __builtin_memcpy(d, s, n); }\u0027 \u003e /tmp/in.c\n$ clang --target\u003daarch64-linux-android1000 -O2 -S /tmp/in.c -o -\n\n\t.text\n\t.file\t\"in.c\"\n\t.globl\tfoo                             // -- Begin function foo\n\t.p2align\t2\n\t.type\tfoo,@function\nfoo:                                    // @foo\n\t.cfi_startproc\n// %bb.0:                               // %entry\n\tmov\tw2, w2\n\tb\tmemcpy  // \u003c------------------- ??????????????\n.Lfunc_end0:\n\t.size\tfoo, .Lfunc_end0-foo\n\t.cfi_endproc\n                                        // -- End function\n\t.ident\t\"clang version 18.0.0 (https://github.com/llvm/llvm-project.git 928c9d6851102dfaca18909cee047bb63cdc05c7)\"\n\t.section\t\".note.GNU-stack\",\"\",@progbits\n```\n\nYet godbolt disagrees: https://godbolt.org/z/rT56jeocs. Maybe something to do with my toolchain / the android toolchain and compiler-rt builtins?",
+      "parentUuid": "366fa9f4_a87890b1",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2b5c0ea_abe9a01c",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 23
