@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4bcda438_bf38e4fb",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T22:31:04Z",
+      "side": 1,
+      "message": "Ah, one more part of go/android-ndk-api-guidelines#well-documented that should be covered: can this be called from any thread, or only certain threads?",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a07a5ee_01d22452",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
