@@ -124,6 +124,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5048400_4e12dbb4",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-23T23:39:21Z",
+      "side": 1,
+      "message": "Apps weren\u0027t what I was worried about, it was whether the zygote code could possibly call this after the app started. enh tells me the answer is no, so not an issue.",
+      "parentUuid": "7d51e335_4af264fd",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14ddae2b_a60f382c",
