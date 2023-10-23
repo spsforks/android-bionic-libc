@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b90a5716_5012b7fe",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-23T22:27:51Z",
+      "side": 1,
+      "message": "(we could keep some internal \"have we called this already?\" state and just abort rather than letting apps accidentally call this again?)",
+      "parentUuid": "4a07a5ee_01d22452",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14ddae2b_a60f382c",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
