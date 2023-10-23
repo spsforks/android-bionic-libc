@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "73e1b080_de4aa42a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-23T22:35:28Z",
+      "side": 1,
+      "message": "https://source.corp.google.com/h/googleplex-android/platform/superproject/main/+/main:bionic/tests/system_properties_test.cpp;drc\u003dae7f33dd572108a2a9dcfe6007eeccbbf14c416f;l\u003d141 is the test written to cover it. Is that sufficient?",
+      "parentUuid": "1290e735_f3917556",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bcda438_bf38e4fb",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
