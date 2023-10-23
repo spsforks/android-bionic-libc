@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9381d6f_a9ad33d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-10-23T21:06:19Z",
+      "side": 1,
+      "message": "s/to/the",
+      "range": {
+        "startLine": 15,
+        "startChar": 30,
+        "endLine": 15,
+        "endChar": 33
+      },
+      "revId": "7694d699053824b0b0cde73e46b39df045f0d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcfd1b47_1ef22db1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-10-23T21:06:19Z",
+      "side": 1,
+      "message": "I think an example it is better here.\n\nWhen this code process the last segment, these 2 expressions are the same\n\n ElfW(Addr) file_end \u003d file_start + p_filesz;\n ElfW(Addr) seg_file_end_partial \u003d seg_start + phdr-\u003ep_filesz;\n \n however, when we process the second-last, it might evaluate different valus.",
+      "range": {
+        "startLine": 793,
+        "startChar": 0,
+        "endLine": 799,
+        "endChar": 71
+      },
+      "revId": "7694d699053824b0b0cde73e46b39df045f0d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
