@@ -364,6 +364,8 @@ struct soinfo {
   bool memtag_heap() const { return memtag_dynamic_entries()->memtag_heap; }
   bool memtag_stack() const { return memtag_dynamic_entries()->memtag_stack; }
 
+  void set_bionic_loaded(bool bionic_loaded) { bionic_loaded_ = bionic_loaded; }
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -449,6 +451,8 @@ struct soinfo {
 
   // version >= 7
   memtag_dynamic_entries_t memtag_dynamic_entries_;
+
+  bool bionic_loaded_ = false;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
