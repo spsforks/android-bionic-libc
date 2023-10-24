@@ -58,6 +58,7 @@ class ElfReader {
   const char* get_string(ElfW(Word) index) const;
   bool is_mapped_by_caller() const { return mapped_by_caller_; }
   ElfW(Addr) entry_point() const { return header_.e_entry + load_bias_; }
+  bool is_bionic_loaded() const { return bionic_loaded_; }
 
  private:
   bool ReadElfHeader();
@@ -113,6 +114,9 @@ class ElfReader {
   // Is map owned by the caller
   bool mapped_by_caller_;
 
+  // Is ELF loaded by bionic
+  bool bionic_loaded_ = false;
+
   // Only used by AArch64 at the moment.
   GnuPropertySection note_gnu_property_ __unused;
 };
@@ -129,7 +133,7 @@ int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_coun
                                   ElfW(Addr) load_bias);
 
 int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                 ElfW(Addr) load_bias);
+                                 ElfW(Addr) load_bias, bool bionic_loaded);
 
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                    ElfW(Addr) load_bias, int fd, size_t* file_offset);
