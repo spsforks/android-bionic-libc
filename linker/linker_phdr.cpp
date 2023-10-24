@@ -719,6 +719,8 @@ static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t
 }
 
 bool ElfReader::LoadSegments() {
+  bionic_loaded_ = true;
+
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
 
@@ -924,11 +926,61 @@ int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE);
 }
 
+static inline int _gnu_relro_load_segment_idx(const ElfW(Addr) vaddr, const ElfW(Phdr)* phdr_table,
+                                              size_t phdr_count) {
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+
+    if (phdr->p_vaddr == vaddr) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+static inline void _extend_gnu_relro_prot_end(const ElfW(Phdr)* relro_phdr,
+                                              const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                              ElfW(Addr) load_bias, bool bionic_loaded,
+                                              ElfW(Addr)* seg_page_end) {
+  // Find the LOAD containing the GNU_RELRO segment
+  int index = _gnu_relro_load_segment_idx(relro_phdr->p_vaddr, phdr_table, phdr_count);
+  const ElfW(Phdr)* load_phdr = nullptr;
+  if (index != -1) {
+    load_phdr = &phdr_table[index];
+  }
+
+  // Before extending the RO protection, we need to ensure:
+  //    1) The ELF was loaded by bionic, because the kernel won't protect
+  //       the gaps so it usually contains unrelated mappings which will
+  //       be incorrectly protected as RO likely leading to a segmentation
+  //       fault.
+  //    2) That the GNRU_RELRO mem size is at least as large as the corresponding
+  //       LOAD segment mem size. If not we need to protect only a partial region
+  //       of the LOAD segment and therefore cannot avoid a VMA split.
+  if (bionic_loaded && load_phdr && (relro_phdr->p_memsz >= load_phdr->p_memsz)) {
+    ElfW(Addr) p_memsz = load_phdr->p_memsz;
+    ElfW(Addr) p_filesz = load_phdr->p_filesz;
+
+    // Attempt extending the VMA (mprotect range). Without extending the range
+    // mprotect will only RO protect a part of the extend RW LOAD segment, which will
+    // leave an extra split RW VMA (the gap).
+    _extend_load_segment_vma(phdr_table, phdr_count, index, &p_memsz, &p_filesz);
+
+    *seg_page_end = page_end(load_phdr->p_vaddr + p_memsz + load_bias);
+  }
+}
+
 /* Used internally by phdr_table_protect_gnu_relro and
  * phdr_table_unprotect_gnu_relro.
  */
 static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                          ElfW(Addr) load_bias, int prot_flags) {
+                                          ElfW(Addr) load_bias, int prot_flags,
+                                          bool bionic_loaded) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
 
@@ -953,8 +1005,11 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     //       the program is likely to fail at runtime. So in effect the
     //       linker must only emit a PT_GNU_RELRO segment if it ensures
     //       that it starts on a page boundary.
-    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr + load_bias);
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz + load_bias);
+
+    _extend_gnu_relro_prot_end(phdr, phdr_table, phdr_count, load_bias, bionic_loaded,
+                               &seg_page_end);
 
     int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
@@ -982,9 +1037,10 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
  * Return:
  *   0 on success, -1 on failure (error code in errno).
  */
-int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
-                                 size_t phdr_count, ElfW(Addr) load_bias) {
-  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ);
+int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                 ElfW(Addr) load_bias, bool bionic_loaded) {
+  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ,
+                                        bionic_loaded);
 }
 
 /* Serialize the GNU relro segments to the given file descriptor. This can be
