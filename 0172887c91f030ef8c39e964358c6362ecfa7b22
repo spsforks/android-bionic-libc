@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9a37ffbf_857dca72",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-24T19:02:14Z",
+      "side": 1,
+      "message": "No. The API must be tested explicitly. Same rationale as:\n\n\u003e Tests must exercise the C APIs themselves, in addition to the C++ wrapper if one is present. The C API is the interface to the system and needs to work as documented, and the C++ wrapper could alter behavior.",
+      "parentUuid": "67d7c47f_68fd548a",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bcda438_bf38e4fb",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
