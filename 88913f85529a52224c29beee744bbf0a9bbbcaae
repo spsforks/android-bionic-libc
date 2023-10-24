@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38d7b6d3_8697e7de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978766
+      },
+      "writtenOn": "2023-10-24T03:37:15Z",
+      "side": 1,
+      "message": "Seems like Snapdragon\u0027s latest chips have L3 cache: https://nanoreview.net/en/soc/qualcomm-snapdragon-8-gen-2",
+      "revId": "88913f85529a52224c29beee744bbf0a9bbbcaae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
