@@ -638,6 +638,7 @@ class LoadTask {
     si_->phdr = elf_reader.loaded_phdr();
     si_->set_gap_start(elf_reader.gap_start());
     si_->set_gap_size(elf_reader.gap_size());
+    si_->set_bionic_loaded(elf_reader.is_bionic_loaded());
 
     return true;
   }
@@ -3379,7 +3380,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
+  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, bionic_loaded_) < 0) {
     DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
            get_realpath(), strerror(errno));
     return false;
