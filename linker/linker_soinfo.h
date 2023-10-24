@@ -351,6 +351,8 @@ struct soinfo {
   void set_gap_size(size_t gap_size);
   size_t get_gap_size() const;
 
+  void set_bionic_loaded(bool bionic_loaded) { bionic_loaded_ = bionic_loaded; }
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -433,6 +435,8 @@ struct soinfo {
   // version >= 6
   ElfW(Addr) gap_start_;
   size_t gap_size_;
+
+  bool bionic_loaded_ = false;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
