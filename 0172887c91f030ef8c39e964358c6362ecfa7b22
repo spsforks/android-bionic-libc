@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67d7c47f_68fd548a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-24T18:37:58Z",
+      "side": 1,
+      "message": "The test technically covers `SystemProperties.Reload`, not the actual API, but the actual API is a minimal-change call to `Reload`",
+      "parentUuid": "73e1b080_de4aa42a",
+      "revId": "0172887c91f030ef8c39e964358c6362ecfa7b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bcda438_bf38e4fb",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
