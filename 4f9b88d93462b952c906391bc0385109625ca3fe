@@ -22,6 +22,23 @@
       },
       "revId": "4f9b88d93462b952c906391bc0385109625ca3fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "726db717_e4fc7909",
+        "filename": "libc/include/android/exit_mode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1894651
+      },
+      "writtenOn": "2023-10-25T20:26:31Z",
+      "side": 1,
+      "message": "This comment is currently aspirational: I thought fdsan was nonfatal for old API levels, but I couldn\u0027t find the code that did that, which is how I stumbled on the dead adbd code. Having typed this comment out, I just found it, it\u0027s in bionic, fixed in PS2",
+      "revId": "4f9b88d93462b952c906391bc0385109625ca3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
