@@ -43,6 +43,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "05e6d05d_426d42aa",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "This goes after the decl. I\u0027m pretty sure clang doesn\u0027t treat this as an error.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "03bb44e9_a5047fad",
         "filename": "libc/libc.map.txt",
         "patchSetId": 9
@@ -54,6 +71,29 @@
       "writtenOn": "2023-10-25T19:25:45Z",
       "side": 1,
       "message": "this is wrong --- please put this back as `# apex`.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4dc78c8_cdfefa28",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "`# apex`",
+      "range": {
+        "startLine": 1603,
+        "startChar": 4,
+        "endLine": 1603,
+        "endChar": 37
+      },
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -77,6 +117,57 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8c8f9738_cebf8280",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "How will this actually get run? Do you need a `TEST_MAPPING`?",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1abec91e_52792024",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "@enh should review the rest of this, but ack that we have a root test for this\n\n(it looks fine to me, but I\u0027m not familiar enough with how the bionic tests work to trust my judgement much)",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a691817_ab1da84f",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "These sources aren\u0027t included in this module, so I\u0027m pretty sure this stanza does nothing.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "991d64e1_41643da2",
         "filename": "tests/NOTICE",
         "patchSetId": 9
@@ -94,6 +185,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "94e7df66_51185575",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "You\u0027ve got no-op and invalid, what about the case where the API does something?",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "55ffe506_0bc38bb2",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
@@ -105,6 +213,40 @@
       "writtenOn": "2023-10-25T19:25:45Z",
       "side": 1,
       "message": "why is this even in a separate file? just do the usual `if (getuid() !\u003d 0) GTEST_SKIP() \u003c\u003c \"requires root\";` skipping instead.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98a5f3bf_ababbb5e",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "Hmm. It\u0027d be best if we could drop root after `mount` (test that the API itself doesn\u0027t require root)... but given that we have to later `umount` that\u0027s probably quite annoying to do? You\u0027d have to `fork` and run the test itself in the lower privileged child and communicate that result back, I think. Probably not worth the effort unless you see an easier way to do that.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e4c0d78_c8c377fa",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:37:26Z",
+      "side": 1,
+      "message": "This test doesn\u0027t need root, right?",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
