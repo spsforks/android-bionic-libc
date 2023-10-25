@@ -26,10 +26,15 @@
  * SUCH DAMAGE.
  */
 
+#include <android/exit_mode.h>
+#include <platform/bionic/reserved_signals.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "private/bionic_defs.h"
+#include "private/bionic_globals.h"
+#include "private/bionic_inline_raise.h"
 #include "pthread_internal.h"
 
 extern "C" void __cxa_finalize(void* dso_handle);
@@ -42,9 +47,38 @@ __attribute__((no_sanitize("memtag"))) void _exit(int status) {
 
 __strong_alias(_Exit, _exit);
 
+android_exit_mode android_set_exit_mode(android_exit_mode mode) {
+  return atomic_exchange(&__libc_shared_globals()->exit_mode, mode);
+}
+
+android_exit_mode android_get_exit_mode() {
+  return __libc_shared_globals()->exit_mode;
+}
+
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void exit(int status) {
-  __cxa_thread_finalize();
-  __cxa_finalize(nullptr);
+  int exit_mode = android_get_exit_mode();
+  static constexpr char abort_message_str[] =
+      "exit() called in multithreaded process, aborting instead.";
+  if (exit_mode & ANDROID_EXIT_MODE_ABORT) {
+    async_safe_fatal(abort_message_str);
+  } else if (exit_mode & ANDROID_EXIT_MODE_WARN) {
+    struct {
+      size_t size;
+      char buf[512];
+    } abort_message = {};
+    memcpy(abort_message.buf, abort_message_str, strlen(abort_message_str));
+    abort_message.size = strlen(abort_message_str) + sizeof(size_t);
+    inline_raise(BIONIC_SIGNAL_DEBUGGER, &abort_message);
+  }
+
+  if ((exit_mode & ANDROID_EXIT_MODE_SKIP_THREAD_DESTRUCTORS) == 0) {
+    __cxa_thread_finalize();
+  }
+
+  if ((exit_mode & ANDROID_EXIT_MODE_SKIP_GLOBAL_DESTRUCTORS) == 0) {
+    __cxa_finalize(nullptr);
+  }
+
   _exit(status);
 }
