@@ -29,6 +29,7 @@
 #ifndef _PRIVATE_BIONIC_GLOBALS_H
 #define _PRIVATE_BIONIC_GLOBALS_H
 
+#include <android/exit_mode.h>
 #include <inttypes.h>
 #include <link.h>
 #include <platform/bionic/malloc.h>
@@ -105,6 +106,8 @@ struct libc_shared_globals {
 
   pthread_mutex_t abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
   abort_msg_t* abort_msg = nullptr;
+
+  _Atomic(android_exit_mode) exit_mode = ANDROID_EXIT_MODE_NORMAL;
 
   StaticTlsLayout static_tls_layout;
   TlsModules tls_modules;
