@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "edd45937_88ce7bf4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T20:40:40Z",
+      "side": 1,
+      "message": "or we could detect exit() is being called from an app, and always dump a call stack? isn\u0027t that what ART does for System.exit()?\n\nhmm, actually theirs isn\u0027t quite that fancy:\n```\nJNIEXPORT __attribute__((noreturn)) void JVM_Exit(jint status) {\n  LOG(INFO) \u003c\u003c \"System.exit called, status: \" \u003c\u003c status;\n  art::Runtime::Current()-\u003eCallExitHook(status);\n  // Unsafe to call exit() while threads may still be running. They would race\n  // with static destructors.\n  art::FastExit(status);\n}\n```",
+      "parentUuid": "a3db33d0_96e65d6c",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 67
+      },
+      "revId": "4f9b88d93462b952c906391bc0385109625ca3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "726db717_e4fc7909",
