@@ -219,6 +219,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "730d7294_39948a0f",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:39:23Z",
+      "side": 1,
+      "message": "Because if it\u0027s in a separate module it can be paired with https://cs.android.com/android/platform/superproject/main/+/main:test/cts-root/tests/stats/AndroidTest.xml;drc\u003d17db0745a481c48278ac3916e4b92dc6bdc71e98;l\u003d21, and then it can be run in CI.",
+      "parentUuid": "55ffe506_0bc38bb2",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "98a5f3bf_ababbb5e",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
