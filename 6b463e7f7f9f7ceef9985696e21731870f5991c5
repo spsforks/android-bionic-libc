@@ -237,6 +237,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6923e64_1ba2118a",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:41:38Z",
+      "side": 1,
+      "message": "that\u0027s the wrong way to do that. jdesprez has added a link to the right way to do it.\n\nthis should go back in the system_properties_test.cpp file.",
+      "parentUuid": "730d7294_39948a0f",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "98a5f3bf_ababbb5e",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
@@ -248,6 +266,24 @@
       "writtenOn": "2023-10-25T19:37:26Z",
       "side": 1,
       "message": "Hmm. It\u0027d be best if we could drop root after `mount` (test that the API itself doesn\u0027t require root)... but given that we have to later `umount` that\u0027s probably quite annoying to do? You\u0027d have to `fork` and run the test itself in the lower privileged child and communicate that result back, I think. Probably not worth the effort unless you see an easier way to do that.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80e23b0a_b47c3491",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:41:38Z",
+      "side": 1,
+      "message": "no, don\u0027t do anything like that.\n\nwe already have tests that are different/inapplicable for one or the other --- we should just GTEST_SKIP() for tests that require one but are running as the other.",
+      "parentUuid": "98a5f3bf_ababbb5e",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
