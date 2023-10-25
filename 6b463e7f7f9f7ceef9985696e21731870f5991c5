@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6bbd2ee_a91baa36",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:25:45Z",
+      "side": 1,
+      "message": "just `CHECK_EQ(getpid(), gettid())` instead?",
+      "range": {
+        "startLine": 134,
+        "startChar": 54,
+        "endLine": 134,
+        "endChar": 98
+      },
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c82d1834_b294dfa0",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:25:45Z",
+      "side": 1,
+      "message": "this comes on the end of the line.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03bb44e9_a5047fad",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:25:45Z",
+      "side": 1,
+      "message": "this is wrong --- please put this back as `# apex`.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4396f6c_cc5bf824",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:25:45Z",
+      "side": 1,
+      "message": "don\u0027t duplicate all of this.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "991d64e1_41643da2",
+        "filename": "tests/NOTICE",
+        "patchSetId": 9
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:25:45Z",
+      "side": 1,
+      "message": "use the 2BSD license for tests.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55ffe506_0bc38bb2",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T19:25:45Z",
+      "side": 1,
+      "message": "why is this even in a separate file? just do the usual `if (getuid() !\u003d 0) GTEST_SKIP() \u003c\u003c \"requires root\";` skipping instead.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
