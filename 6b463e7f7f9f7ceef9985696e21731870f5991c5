@@ -255,6 +255,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3e2d2d18_01ba0a2f",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:49:57Z",
+      "side": 1,
+      "message": "Ah, cool. Where? I don\u0027t see a comment from him on this CL.",
+      "parentUuid": "d6923e64_1ba2118a",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "98a5f3bf_ababbb5e",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
@@ -284,6 +302,24 @@
       "side": 1,
       "message": "no, don\u0027t do anything like that.\n\nwe already have tests that are different/inapplicable for one or the other --- we should just GTEST_SKIP() for tests that require one but are running as the other.",
       "parentUuid": "98a5f3bf_ababbb5e",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c72c978_a8deb88b",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:49:57Z",
+      "side": 1,
+      "message": "That\u0027s not the case for this though. The test _set up_ needs root, but the test itself should not run as root (because the API is not supposed to require root).",
+      "parentUuid": "80e23b0a_b47c3491",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
