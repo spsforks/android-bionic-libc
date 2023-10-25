@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3db33d0_96e65d6c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1894651
+      },
+      "writtenOn": "2023-10-25T20:37:18Z",
+      "side": 1,
+      "message": "Finding the caller via abort/tombstone is the primary utility of this CL, but I added a way to make exit behave as _exit since it\u0027s easy, and it\u0027s potentially useful to do something like \"abort/warn on -eng builds to catch issues, but just _exit on user builds to exit faster instead of way slower, in case you missed something\", or do the gwp-asan thing and opt a certain percentage of processes into slow, aborting exit vs _exit.",
+      "parentUuid": "d5a759e2_4071df68",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 67
+      },
+      "revId": "4f9b88d93462b952c906391bc0385109625ca3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "726db717_e4fc7909",
