@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "75dc2226_bca682de",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1894651
+      },
+      "writtenOn": "2023-10-25T21:00:47Z",
+      "side": 1,
+      "message": "\u003e or we could detect exit() is being called from an app, and always dump a call stack? \n\nThat\u0027s one of the options this adds, but I prefer abort over `raise(35); actual_exit()` because the latter will still generate the awful SNR crashes",
+      "parentUuid": "edd45937_88ce7bf4",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 67
+      },
+      "revId": "4f9b88d93462b952c906391bc0385109625ca3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "726db717_e4fc7909",
