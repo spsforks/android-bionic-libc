@@ -16,6 +16,24 @@
       "message": "Seems like Snapdragon\u0027s latest chips have L3 cache: https://nanoreview.net/en/soc/qualcomm-snapdragon-8-gen-2",
       "revId": "88913f85529a52224c29beee744bbf0a9bbbcaae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0beabccb_9ebae3a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-25T20:44:07Z",
+      "side": 1,
+      "message": "(unfortunately for our purposes, unlike riscv64/x86-64, arm64 doesn\u0027t make much cache information visible to userspace :-( see https://android-review.googlesource.com/c/platform/bionic/+/2721536 for details.)",
+      "parentUuid": "38d7b6d3_8697e7de",
+      "revId": "88913f85529a52224c29beee744bbf0a9bbbcaae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
