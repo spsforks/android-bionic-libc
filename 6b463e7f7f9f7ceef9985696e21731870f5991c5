@@ -273,6 +273,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cadf8e30_62cb074a",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-10-25T19:50:53Z",
+      "side": 1,
+      "message": "Aha: https://android-review.git.corp.google.com/c/platform/cts/+/2803387/comments/ef5db211_dad10363\n\nAgreed. Much better.",
+      "parentUuid": "3e2d2d18_01ba0a2f",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "98a5f3bf_ababbb5e",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
