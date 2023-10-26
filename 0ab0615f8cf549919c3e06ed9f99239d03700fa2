@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6abe07aa_49cf82c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T21:58:09Z",
+      "side": 1,
+      "message": "Spoke to Jonh offline. `apex` is correct.",
+      "parentUuid": "6416f1fd_5f7af212",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 57
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "20d33eab_034ec83f",
@@ -109,6 +133,30 @@
       "side": 1,
       "message": "see above",
       "parentUuid": "20d33eab_034ec83f",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a06e9037_a06f86d7",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T21:58:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58d8f148_7220c584",
       "range": {
         "startLine": 1603,
         "startChar": 38,
