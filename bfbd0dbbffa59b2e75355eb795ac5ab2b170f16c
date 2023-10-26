@@ -144,6 +144,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b7f1635e_c254bf0c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-26T20:50:07Z",
+      "side": 1,
+      "message": "So this whole thing with custom memcpy is because of ifunc, right? Do we need to do this before the linker relocates itself if mte globals are disabled in the linker?",
+      "parentUuid": "26af4a15_48d3a4fd",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2b5c0ea_abe9a01c",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 23
