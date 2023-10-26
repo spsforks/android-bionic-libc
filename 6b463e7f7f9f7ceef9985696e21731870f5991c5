@@ -377,6 +377,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a4a31bf1_ba1abe48",
+        "filename": "tests/NOTICE",
+        "patchSetId": 9
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T20:48:13Z",
+      "side": 1,
+      "message": "Also, the rest of the file seems to be Apache. Does the whole file need changing?",
+      "parentUuid": "6edad556_749dd8a3",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94e7df66_51185575",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
