@@ -52,6 +52,24 @@
       "parentUuid": "70d666dc_f29e1e1f",
       "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c73d9b0_4fa5bfc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-10-26T19:06:48Z",
+      "side": 1,
+      "message": "Do you build wasi-libc for Android (with or without the NDK)?  If so, you might have hit this issue or circumvented this with different build options.",
+      "parentUuid": "49a2c0bb_18ff100a",
+      "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
