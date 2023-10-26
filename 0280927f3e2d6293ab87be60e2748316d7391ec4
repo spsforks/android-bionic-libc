@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d553095_a3ea8aa5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-26T18:55:42Z",
+      "side": 1,
+      "message": "we try to ensure that every header starts with \u003csys/cdefs.h\u003e because we\u0027ve had historical bugs caused by _not_ having it. (it means __BEGIN_DECLS/__END_DECLS doesn\u0027t work unless you\u0027ve included another header, and it means that the feature/api-level detection stuff isn\u0027t available [unless you\u0027ve included another header].)\n\nwhy hasn\u0027t blume hit this?",
+      "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
