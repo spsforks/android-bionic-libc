@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "071ec9f4_d44c1470",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-10-26T21:22:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9381d6f_a9ad33d3",
+      "range": {
+        "startLine": 15,
+        "startChar": 30,
+        "endLine": 15,
+        "endChar": 33
+      },
+      "revId": "7694d699053824b0b0cde73e46b39df045f0d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f95fc99b_0b184c60",
@@ -71,6 +95,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03130fa7_0514328f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-10-26T21:22:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65447d6e_027e9b72",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 104
+      },
+      "revId": "7694d699053824b0b0cde73e46b39df045f0d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bcfd1b47_1ef22db1",
@@ -84,6 +132,30 @@
       "writtenOn": "2023-10-23T21:06:19Z",
       "side": 1,
       "message": "I think an example it is better here.\n\nWhen this code process the last segment, these 2 expressions are the same\n\n ElfW(Addr) file_end \u003d file_start + p_filesz;\n ElfW(Addr) seg_file_end_partial \u003d seg_start + phdr-\u003ep_filesz;\n \n however, when we process the second-last, it might evaluate different valus.",
+      "range": {
+        "startLine": 793,
+        "startChar": 0,
+        "endLine": 799,
+        "endChar": 71
+      },
+      "revId": "7694d699053824b0b0cde73e46b39df045f0d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2711e63_786bc40b",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-10-26T21:22:33Z",
+      "side": 1,
+      "message": "This is intended (no extension for the last LOAD segment). Since it\u0027s the last one there is no gap after it so no need to extend it.",
+      "parentUuid": "bcfd1b47_1ef22db1",
       "range": {
         "startLine": 793,
         "startChar": 0,
