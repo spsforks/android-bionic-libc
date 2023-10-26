@@ -16,6 +16,24 @@
       "message": "we try to ensure that every header starts with \u003csys/cdefs.h\u003e because we\u0027ve had historical bugs caused by _not_ having it. (it means __BEGIN_DECLS/__END_DECLS doesn\u0027t work unless you\u0027ve included another header, and it means that the feature/api-level detection stuff isn\u0027t available [unless you\u0027ve included another header].)\n\nwhy hasn\u0027t blume hit this?",
       "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70d666dc_f29e1e1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-10-26T19:00:55Z",
+      "side": 1,
+      "message": "@blume@google.com: Matthias, can you comment?  The context is that https://github.com/android/ndk/issues/1960 builds was-libc with the NDK but runs into issues because it is using musl-libc instead of bionic.",
+      "parentUuid": "5d553095_a3ea8aa5",
+      "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
