@@ -217,6 +217,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fab20092_65ef184c",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1010103
+      },
+      "writtenOn": "2023-10-26T22:16:27Z",
+      "side": 1,
+      "message": "try it \u0026 see? I don\u0027t know the answer tbh, I don\u0027t understand why non-updatable apexes even exist",
+      "parentUuid": "a72b1470_2dfa5eda",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "99e137f4_32c434cb",
         "filename": "tests/system_properties_test.cpp",
         "patchSetId": 12
