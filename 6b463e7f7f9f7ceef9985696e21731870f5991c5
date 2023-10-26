@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "339f4f1a_9003588f",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6bbd2ee_a91baa36",
+      "range": {
+        "startLine": 134,
+        "startChar": 54,
+        "endLine": 134,
+        "endChar": 98
+      },
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c82d1834_b294dfa0",
@@ -54,6 +78,42 @@
       "writtenOn": "2023-10-25T19:37:26Z",
       "side": 1,
       "message": "This goes after the decl. I\u0027m pretty sure clang doesn\u0027t treat this as an error.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfcda05f_9d111f68",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c82d1834_b294dfa0",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db1e60ad_2d77b992",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05e6d05d_426d42aa",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -98,6 +158,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "292817b7_362acb0e",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03bb44e9_a5047fad",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c329c5d2_115d8711",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4dc78c8_cdfefa28",
+      "range": {
+        "startLine": 1603,
+        "startChar": 4,
+        "endLine": 1603,
+        "endChar": 37
+      },
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4396f6c_cc5bf824",
@@ -132,6 +234,42 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "111e8875_259e9fd8",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4396f6c_cc5bf824",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0dce0b8_573209cb",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Now that it\u0027s in `CtsBionicTestCases`, it doesn\u0027t need a different `TEST_MAPPING`",
+      "parentUuid": "8c8f9738_cebf8280",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1abec91e_52792024",
@@ -149,6 +287,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b360045d_e38bb6bc",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "1abec91e_52792024",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a691817_ab1da84f",
@@ -162,6 +318,24 @@
       "writtenOn": "2023-10-25T19:37:26Z",
       "side": 1,
       "message": "These sources aren\u0027t included in this module, so I\u0027m pretty sure this stanza does nothing.",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9784ad0_ab3d05d4",
+        "filename": "tests/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a691817_ab1da84f",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -185,6 +359,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6edad556_749dd8a3",
+        "filename": "tests/NOTICE",
+        "patchSetId": 9
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "This was added automatically. Do you know how to influence it to add BSD instead?",
+      "parentUuid": "991d64e1_41643da2",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94e7df66_51185575",
         "filename": "tests/system_properties_root_test.cpp",
         "patchSetId": 9
@@ -196,6 +388,24 @@
       "writtenOn": "2023-10-25T19:37:26Z",
       "side": 1,
       "message": "You\u0027ve got no-op and invalid, what about the case where the API does something?",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5524fbf1_74f649e7",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94e7df66_51185575",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -289,6 +499,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "849485a4_2d6e657a",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cadf8e30_62cb074a",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98a5f3bf_ababbb5e",
@@ -355,6 +583,24 @@
       "writtenOn": "2023-10-25T19:37:26Z",
       "side": 1,
       "message": "This test doesn\u0027t need root, right?",
+      "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e170bf7_6b1b505a",
+        "filename": "tests/system_properties_root_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T00:21:38Z",
+      "side": 1,
+      "message": "With the new root config, this test will be run both with and without root.",
+      "parentUuid": "3e4c0d78_c8c377fa",
       "revId": "6b463e7f7f9f7ceef9985696e21731870f5991c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
