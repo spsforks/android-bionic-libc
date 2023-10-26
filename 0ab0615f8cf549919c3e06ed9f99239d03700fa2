@@ -134,6 +134,24 @@
       "message": "shouldn\u0027t it be in system_properties_test2 then? isn\u0027t that (badly named) file where the dangerous/destructive system properties tests (that really shouldn\u0027t be in CTS at all!) live?",
       "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f0fa1db_a5dacc01",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T20:59:35Z",
+      "side": 1,
+      "message": "You\u0027d know better than I! Would you mind if I moved it in a followup, so I can unstick the internal CLs?",
+      "parentUuid": "99e137f4_32c434cb",
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
