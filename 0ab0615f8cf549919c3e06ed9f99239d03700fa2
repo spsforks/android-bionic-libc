@@ -170,6 +170,24 @@
       "parentUuid": "1f0fa1db_a5dacc01",
       "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d36afba0_16729548",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-26T21:17:05Z",
+      "side": 1,
+      "message": "Then I\u0027ll get right on that once this submits.",
+      "parentUuid": "7ff694ed_00fc360a",
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
