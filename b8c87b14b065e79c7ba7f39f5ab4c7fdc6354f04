@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d71b2d4_11c2a3d0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010103
+      },
+      "writtenOn": "2023-10-26T20:30:41Z",
+      "side": 1,
+      "message": "`_PLATFORM` only change, rubber stamping",
+      "revId": "b8c87b14b065e79c7ba7f39f5ab4c7fdc6354f04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
