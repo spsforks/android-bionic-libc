@@ -16,6 +16,24 @@
       "message": "Technically, passing NULL won\u0027t return 1 since we\u0027ve told the compiler that NULL is not a possible value. As I\u0027ve found first hand, the compiler just removes the NULL check in the code.",
       "revId": "cc87eec645245f63da9a7aafebb5b55a69b88a5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43659576_50b29553",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-26T22:22:01Z",
+      "side": 1,
+      "message": "for _this_ annotation, or the similar-sounding-but-completely-different `__attribute__((__nonnull__))`? that this annotation _doesn\u0027t_ let the compiler break your code in that way is supposed to be the whole difference between the two, so that\u0027s an llvm bug we should report...",
+      "parentUuid": "92c76af4_e6e74e9d",
+      "revId": "cc87eec645245f63da9a7aafebb5b55a69b88a5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
