@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6416f1fd_5f7af212",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-26T20:56:23Z",
+      "side": 1,
+      "message": "well, we\u0027re (annoyingly) stuck in an apex, but we\u0027re not a mainline module.\n\ndoes #systemapi work? (i only said #apex because that\u0027s what i thought ccross/danalbert had said. certainly _logically_ #systemapi makes more sense!)\n\ni also thought that it was supposed to be #apex but in LIBC_PLATFORM?",
+      "parentUuid": "28a02f4a_3e331ad2",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 57
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "20d33eab_034ec83f",
         "filename": "libc/libc.map.txt",
         "patchSetId": 12
@@ -91,6 +115,23 @@
         "endLine": 1603,
         "endChar": 45
       },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99e137f4_32c434cb",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-26T20:56:23Z",
+      "side": 1,
+      "message": "shouldn\u0027t it be in system_properties_test2 then? isn\u0027t that (badly named) file where the dangerous/destructive system properties tests (that really shouldn\u0027t be in CTS at all!) live?",
       "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
