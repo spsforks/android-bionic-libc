@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92c76af4_e6e74e9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-10-26T22:03:05Z",
+      "side": 1,
+      "message": "Technically, passing NULL won\u0027t return 1 since we\u0027ve told the compiler that NULL is not a possible value. As I\u0027ve found first hand, the compiler just removes the NULL check in the code.",
+      "revId": "cc87eec645245f63da9a7aafebb5b55a69b88a5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
