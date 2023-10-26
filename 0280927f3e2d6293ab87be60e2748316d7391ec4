@@ -70,6 +70,24 @@
       "parentUuid": "49a2c0bb_18ff100a",
       "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6f073ce_39873372",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1950515
+      },
+      "writtenOn": "2023-10-26T19:07:47Z",
+      "side": 1,
+      "message": "We are not using wasi-libc",
+      "parentUuid": "8c73d9b0_4fa5bfc2",
+      "revId": "0280927f3e2d6293ab87be60e2748316d7391ec4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
