@@ -241,6 +241,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "142af009_0b4e81b2",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-26T22:25:45Z",
+      "side": 1,
+      "message": "\"because we don\u0027t want to have to deal with the app compat fallout of getting back out of an apex\".",
+      "parentUuid": "fab20092_65ef184c",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "99e137f4_32c434cb",
         "filename": "tests/system_properties_test.cpp",
         "patchSetId": 12
