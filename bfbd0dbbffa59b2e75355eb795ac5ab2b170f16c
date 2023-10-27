@@ -178,6 +178,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fb122be_c901ea3e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-27T18:23:58Z",
+      "side": 1,
+      "message": "Right, that is exactly because of ifunc, same as linker_memclr.",
+      "parentUuid": "d551d4d1_6f427602",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2b5c0ea_abe9a01c",
