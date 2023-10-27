@@ -335,6 +335,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0bc5817_b0165d93",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1010103
+      },
+      "writtenOn": "2023-10-27T21:00:26Z",
+      "side": 1,
+      "message": "I don\u0027t know if there really exists the concept of \"non-updatable APEX\" to the build, is there?",
+      "parentUuid": "1a46bd89_c5657375",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99e137f4_32c434cb",
