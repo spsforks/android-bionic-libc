@@ -1734,3 +1734,34 @@ TEST(malloc, zeroed_allocations_realloc) {
     }
   }
 }
+
+TEST(android_mallopt, get_decay_time_non_zero_errors) {
+#if defined(__BIONIC__)
+  errno = 0;
+  EXPECT_FALSE(android_mallopt(M_GET_DECAY_TIME_NON_ZERO, nullptr, sizeof(bool)));
+  EXPECT_ERRNO(EINVAL);
+
+  errno = 0;
+  int value;
+  EXPECT_FALSE(android_mallopt(M_GET_DECAY_TIME_NON_ZERO, &value, sizeof(value)));
+  EXPECT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(android_mallopt, get_decay_time_non_zero) {
+#if defined(__BIONIC__)
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, 0));
+
+  bool value;
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_NON_ZERO, &value, sizeof(value)));
+  EXPECT_FALSE(value);
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_NON_ZERO, &value, sizeof(value)));
+  EXPECT_TRUE(value);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
