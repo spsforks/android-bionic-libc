@@ -162,6 +162,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d551d4d1_6f427602",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-27T07:39:15Z",
+      "side": 1,
+      "message": "MTE globals are disabled in the linker in this patch: https://android-review.git.corp.google.com/c/platform/bionic/+/1845896/25/linker/Android.bp\n\nIt\u0027s just that __builtin_memcpy -\u003e call to memcpy.plt -\u003e can\u0027t relocate memcpy.plt.got. Not anything to do with the MTE globals instrumentation, just (implicitly) calling a libc function before relocation happens.",
+      "parentUuid": "b7f1635e_c254bf0c",
+      "revId": "bfbd0dbbffa59b2e75355eb795ac5ab2b170f16c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2b5c0ea_abe9a01c",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 23
