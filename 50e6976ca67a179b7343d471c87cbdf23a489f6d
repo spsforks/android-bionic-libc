@@ -16,6 +16,24 @@
       "message": "Should we remove _vext from the file names ?",
       "revId": "50e6976ca67a179b7343d471c87cbdf23a489f6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fc4858f_79d0beca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-27T23:05:42Z",
+      "side": 1,
+      "message": "i was tempted ... i think it depends on how likely we think it is that there will more variants in future. but, yeah, since V\u0027s in the base ABI it probably doesn\u0027t make sense to call out V. i\u0027ll send another patch later. i want to have another go at stpcpy() first though, because your comment made me think we can probably do better :-)",
+      "parentUuid": "b1cabc23_b2210c8d",
+      "revId": "50e6976ca67a179b7343d471c87cbdf23a489f6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
