@@ -311,6 +311,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a46bd89_c5657375",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-10-27T20:48:31Z",
+      "side": 1,
+      "message": "It\u0027s linking against `out/soong/.intermediates/bionic/libc/libc/android_arm64_armv8-2a_cortex-a55_shared_current/libc.so`, which I believe is an apex stubs variant.  I\u0027m not sure whether that is supposed to contain `LIBC_PLATFORM` symbols or not.  Maybe `LIBC_PLATFORM` symbols are only available to the bootstrap modules like `init` that load `/system/lib64/bootstrap/libc.so`?",
+      "parentUuid": "8a47b57a_83558903",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99e137f4_32c434cb",
