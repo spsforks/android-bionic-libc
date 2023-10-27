@@ -53,8 +53,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define pDst a0
@@ -67,7 +65,7 @@
 #define ELEM_LMUL_SETTING m8
 #define vData v0
 
-ENTRY(memcpy_vext)
+ENTRY(memcpy)
 
     mv pDstPtr, pDst
 
@@ -84,6 +82,4 @@ L(loop):
 
     ret
 
-END(memcpy_vext)
-
-#endif
+END(memcpy)

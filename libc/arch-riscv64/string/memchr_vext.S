@@ -53,8 +53,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define iResult a0
@@ -70,7 +68,7 @@
 #define vData v0
 #define vMask v8
 
-ENTRY(memchr_vext)
+ENTRY(memchr)
 
 L(loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
@@ -95,6 +93,4 @@ L(found):
     add iResult, pSrc, iTemp
     ret
 
-END(memchr_vext)
-
-#endif
+END(memchr)

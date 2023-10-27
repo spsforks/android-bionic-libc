@@ -53,8 +53,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define iResult a0
@@ -76,7 +74,7 @@
 #define vMask1 v16
 #define vMask2 v17
 
-ENTRY(strcmp_vext)
+ENTRY(strcmp)
 
     # increase the lmul using the following sequences:
     # 1/2, 1/2, 1, 2, 4, 4, 4, ...
@@ -168,6 +166,4 @@ L(check2):
     sub iResult, iTemp1, iTemp2
     ret
 
-END(strcmp_vext)
-
-#endif
+END(strcmp)

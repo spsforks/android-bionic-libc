@@ -53,8 +53,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define pStr a0
@@ -71,7 +69,7 @@
 #define vMaskEnd v8
 #define vMaskCh v9
 
-ENTRY(strchr_vext)
+ENTRY(strchr)
 
 L(strchr_loop):
     vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
@@ -93,6 +91,4 @@ L(found_ch):
     add pStr, pStr, iChOffset
     ret
 
-END(strchr_vext)
-
-#endif
+END(strchr)

@@ -53,8 +53,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define iResult a0
@@ -73,7 +71,7 @@
 #define vMask1 v8
 #define vMask2 v9
 
-ENTRY(strncmp_vext)
+ENTRY(strncmp)
 
     beqz iLength, L(zero_length)
 
@@ -118,6 +116,4 @@ L(zero_length):
     li iResult, 0
     ret
 
-END(strncmp_vext)
-
-#endif
+END(strncmp)
