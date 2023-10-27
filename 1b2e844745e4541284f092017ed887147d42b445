@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6941b368_c6609ba4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-27T00:53:07Z",
+      "side": 1,
+      "message": "(i don\u0027t think this is prashanthsw\u0027s issue, but it\u0027s the first [and so far only] vector issue i\u0027ve found...)",
+      "revId": "1b2e844745e4541284f092017ed887147d42b445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
