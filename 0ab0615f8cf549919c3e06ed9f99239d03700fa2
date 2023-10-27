@@ -287,6 +287,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a47b57a_83558903",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-27T18:18:04Z",
+      "side": 1,
+      "message": "+ccross just to confirm this is expected (if unfortunate)...",
+      "parentUuid": "e914cbf8_d62dd63d",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99e137f4_32c434cb",
