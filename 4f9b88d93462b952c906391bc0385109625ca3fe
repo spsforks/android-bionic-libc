@@ -120,6 +120,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c723ab9_0ec5d7ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-30T20:33:29Z",
+      "side": 1,
+      "message": "i\u0027m not really convinced by this at all ... but having exit() be _exit() in an app sounds reasonable and consistent with System.exit()?",
+      "parentUuid": "c29b648c_f45e1cdf",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 67
+      },
+      "revId": "4f9b88d93462b952c906391bc0385109625ca3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "726db717_e4fc7909",
