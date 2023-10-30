@@ -479,6 +479,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9c7c263_d0bb9a9e",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1572720
+      },
+      "writtenOn": "2023-10-30T22:33:59Z",
+      "side": 1,
+      "message": "@enh@google.com, would you like me to file a followup bug to examine the APEX status of bionic? And do you have any further feedback on the rest of the CL?",
+      "parentUuid": "5d687af7_8bb3c1c9",
+      "range": {
+        "startLine": 1603,
+        "startChar": 38,
+        "endLine": 1603,
+        "endChar": 45
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99e137f4_32c434cb",
