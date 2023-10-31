@@ -33,6 +33,24 @@
       "message": "this shouldn\u0027t be needed? it\u0027s in libc_defaults now?",
       "revId": "a4d7102cf2f924265f21095be2c231faff980321",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aa12900_2bde6a81",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1279898
+      },
+      "writtenOn": "2023-10-31T15:45:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9b61be46_2c2c271b",
+      "revId": "a4d7102cf2f924265f21095be2c231faff980321",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
