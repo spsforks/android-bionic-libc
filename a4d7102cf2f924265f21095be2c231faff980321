@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0071f0e8_4c4a202d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-31T15:08:14Z",
+      "side": 1,
+      "message": "(otherwise lgtm.)",
+      "revId": "a4d7102cf2f924265f21095be2c231faff980321",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b61be46_2c2c271b",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-31T15:08:14Z",
+      "side": 1,
+      "message": "this shouldn\u0027t be needed? it\u0027s in libc_defaults now?",
+      "revId": "a4d7102cf2f924265f21095be2c231faff980321",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
