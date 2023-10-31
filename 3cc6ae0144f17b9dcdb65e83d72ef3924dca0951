@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e006b7f2_9bf816b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2023-10-31T08:18:41Z",
+      "side": 1,
+      "message": "This issue was caught while running [Android/Morello](https://git.morello-project.org/morello/docs/-/tree/morello/mainline/android), using the [pure-capability ABI](https://git.morello-project.org/morello/kernel/linux/-/wikis/Morello-pure-capability-kernel-user-Linux-ABI-specification). Thanks to the capability\nrepresentation, pointers carry bounds that match the object they refer\nto. The kernel accesses user memory (uaccess) via such capabilities, and as a result a syscall will fail (-EFAULT) if any uaccess goes out of bounds.",
+      "revId": "3cc6ae0144f17b9dcdb65e83d72ef3924dca0951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
