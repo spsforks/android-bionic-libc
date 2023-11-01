@@ -57,6 +57,30 @@
       },
       "revId": "f61b2b16b82b316b3eb2a2b58e81197bb5ba3013",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca2e5475_b23d845d",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-01T23:19:34Z",
+      "side": 1,
+      "message": "the only place i\u0027ve seen dlopen()/dlclose() pairs is actually for plugin type stuff. i can\u0027t think of a case where dlclose() was used but they were actually just missing a free_thing().\n\n(and another process is usually a _great_ idea for plugins --- better stability against crashes, better security, better accounting.)",
+      "parentUuid": "23ffe7a6_37859978",
+      "range": {
+        "startLine": 63,
+        "startChar": 20,
+        "endLine": 65,
+        "endChar": 17
+      },
+      "revId": "f61b2b16b82b316b3eb2a2b58e81197bb5ba3013",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
