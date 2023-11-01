@@ -81,6 +81,30 @@
       },
       "revId": "f61b2b16b82b316b3eb2a2b58e81197bb5ba3013",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40658516_10b70c2f",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-11-01T23:26:51Z",
+      "side": 1,
+      "message": "Story time! How I learned dlclose was problematic. Someone dlopened and then dlclosed every library in /vendor/lib/hw/ in a loop, looking for the entry symbol for their plugin system, and then filed a bug on me that it was crashing in libhidl. I actually fixed it in a few libraries before I started to understand what was going on 😊\n\nor at least thought that I fixed it at the time - dlclose interacts especially badly with multithreading.",
+      "parentUuid": "ca2e5475_b23d845d",
+      "range": {
+        "startLine": 63,
+        "startChar": 20,
+        "endLine": 65,
+        "endChar": 17
+      },
+      "revId": "f61b2b16b82b316b3eb2a2b58e81197bb5ba3013",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
