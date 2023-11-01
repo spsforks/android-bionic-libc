@@ -46,6 +46,20 @@ typedef struct {
 } Dl_info;
 
 void* _Nullable dlopen(const char* _Nullable __filename, int __flag);
+
+/**
+ * WARNING: most libraries will leak with dlclose, because they will
+ * allocate memory in their constructors or during usage that won't
+ * get cleaned up. So, dlclose will usually cause a leak. dlclose is
+ * also dangerous in general because in order to use it successfully,
+ * you need to make sure there are no references to anything in the
+ * library in any data structure in your program.
+ *
+ * This API may become a no-op in the future.
+ *
+ * Instead of dlclose, prefer to leave the library open OR dlopen
+ * libraries in processes which you can later kill or exit.
+ */
 int dlclose(void* _Nonnull __handle);
 char* _Nullable dlerror(void);
 /* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */
