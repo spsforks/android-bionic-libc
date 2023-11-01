@@ -34,6 +34,29 @@
       "parentUuid": "7701a855_15f3f9e1",
       "revId": "f61b2b16b82b316b3eb2a2b58e81197bb5ba3013",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23ffe7a6_37859978",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-11-01T22:20:55Z",
+      "side": 1,
+      "message": "Or add an explicit API to the library to release resources? That\u0027s usually the better alternative, since the library being opened in another process isn\u0027t usually too useful.",
+      "range": {
+        "startLine": 63,
+        "startChar": 20,
+        "endLine": 65,
+        "endChar": 17
+      },
+      "revId": "f61b2b16b82b316b3eb2a2b58e81197bb5ba3013",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
