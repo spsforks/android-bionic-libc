@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2b06ba2_4a5532c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-03T21:46:45Z",
+      "side": 1,
+      "message": "(i\u0027d still probably explicitly call out that this is a _temporary_ thing...)",
+      "revId": "6cec691f0dd82648c69baa2be56b493bb6034f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
