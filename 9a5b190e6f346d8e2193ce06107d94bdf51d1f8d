@@ -87,6 +87,24 @@
       "parentUuid": "e7b07aef_e68ab3f5",
       "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c1077a_427ddaea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-11-06T23:17:57Z",
+      "side": 1,
+      "message": "Hmm. What effect will this have on the `foo` command in `adb shell foo`? I sometimes run benchmarks this way and I wouldn\u0027t be surprised if others do as well. From what I can tell `mksh` only reads the `mkshrc` file in interactive shells.\n\nI guess another option would be to keep this as an opt-in env var but only set it for the `adbd` and `zygote` processes?",
+      "parentUuid": "babe8c90_53996aa2",
+      "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
