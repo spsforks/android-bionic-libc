@@ -33,6 +33,24 @@
       "message": "Which processes exactly need to be able to opt out of decay timers? Wouldn\u0027t it be better to have decay timers be the default (i.e. that\u0027s what you get with no env var) and then use the env var to override the opting out processes?",
       "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48c8b897_ab23b5b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-06T22:49:21Z",
+      "side": 1,
+      "message": "That would be ideal, and why I mention this is temporary. The problem is that there are a few native servers that this would cause RSS increases. When enabling the decay timer everywhere, you can see an increase in just those few processes by more than 10MB or RSS per process.\n\nI do have a plan to enable this all of the time, but it\u0027s a little tricky and could potentially cause an increase in RSS any way, or even cause battery life problems.",
+      "parentUuid": "bba9ac5c_d0b9863d",
+      "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
