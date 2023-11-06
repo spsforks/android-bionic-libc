@@ -16,6 +16,23 @@
       "message": "Other change in the topic.",
       "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bba9ac5c_d0b9863d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-11-06T22:31:49Z",
+      "side": 1,
+      "message": "Which processes exactly need to be able to opt out of decay timers? Wouldn\u0027t it be better to have decay timers be the default (i.e. that\u0027s what you get with no env var) and then use the env var to override the opting out processes?",
+      "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
