@@ -69,6 +69,24 @@
       "parentUuid": "48c8b897_ab23b5b0",
       "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "babe8c90_53996aa2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-06T23:07:09Z",
+      "side": 1,
+      "message": "I don\u0027t think I would be able to guarantee that all servers would have this the value set properly. Partners could easily miss changing it, and then have servers consuming way more memory than they used to.\n\nHonestly, I\u0027m still worried that this will cause some RSS increase that I don\u0027t anticipate, so I want to minimize the way this happens. Therefore only enabling it for shells.",
+      "parentUuid": "e7b07aef_e68ab3f5",
+      "revId": "9a5b190e6f346d8e2193ce06107d94bdf51d1f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
