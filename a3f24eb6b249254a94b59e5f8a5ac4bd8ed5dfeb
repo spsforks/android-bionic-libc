@@ -16,6 +16,24 @@
       "message": "nit: anyway we can test for this?",
       "revId": "a3f24eb6b249254a94b59e5f8a5ac4bd8ed5dfeb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "094f7a78_800586a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-06T16:47:54Z",
+      "side": 1,
+      "message": "not very usefully, no.\n\nfor stuff that POSIX says should be in a header file, we have complete tests in bionic/tests/headers/posix/. (those tests either test just the _presence_ or the specific _value_ depending on what POSIX actually guarantees.)\n\nfor stuff that affects _behavior_, yes, obviously we should have a test.\n\nbut for something like this, that\u0027s just exported as a convenience to others... well, we _could_ write a \"ASSERT_EQ(\u003cconstant\u003e, \u003cmacro name\u003e)\" in a test file, but that doesn\u0027t seem useful (given that we\u0027d just be copy \u0026 pasting any mistake from one file to the other anyway, because there\u0027s no \"independent auditor\" here) and there are a _lot_ of constants. literally tens of thousands. so we don\u0027t tend to do that.\n\nthere might be some value for a third-party project though. in an ideal world, there would be a free+open POSIX test suite, and free+open ELF test suite, etc. but i\u0027m not aware of any such thing.\n\n(another interesting question there would be \"what about all the custom LLVM constants? should we have those too?\".)",
+      "parentUuid": "9639155e_76ce1f74",
+      "revId": "a3f24eb6b249254a94b59e5f8a5ac4bd8ed5dfeb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
