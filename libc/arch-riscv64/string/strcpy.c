@@ -1,11 +1,8 @@
-/*-
- * SPDX-License-Identifier: BSD-3-Clause
- *
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Chris Torek.
+/*	$OpenBSD: strcpy.c,v 1.10 2017/11/28 06:55:49 tb Exp $	*/
+
+/*
+ * Copyright (c) 1988 Regents of the University of California.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,28 +29,18 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)memcmp.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <string.h>
 
-/*
- * Compare memory regions.
- */
-int
-memcmp(const void *s1, const void *s2, size_t n)
+#if defined(APIWARN)
+__warn_references(strcpy,
+    "strcpy() is almost always misused, please use strlcpy()");
+#endif
+
+char *
+strcpy(char *to, const char *from)
 {
-	if (n != 0) {
-		const unsigned char *p1 = s1, *p2 = s2;
+	char *save = to;
 
-		do {
-			if (*p1++ != *p2++)
-				return (*--p1 - *--p2);
-		} while (--n != 0);
-	}
-	return (0);
+	for (; (*to = *from) != '\0'; ++from, ++to);
+	return(save);
 }
-

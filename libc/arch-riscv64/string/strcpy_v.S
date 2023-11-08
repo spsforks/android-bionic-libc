@@ -53,6 +53,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#if defined(__riscv_v)
+
 #include <private/bionic_asm.h>
 
 #define pDst a0
@@ -69,7 +71,7 @@
 #define vStr1 v8
 #define vStr2 v16
 
-ENTRY(strcpy)
+ENTRY(strcpy_vext)
 
     mv pDstPtr, pDst
 
@@ -88,4 +90,6 @@ L(strcpy_loop):
 
     ret
 
-END(strcpy)
+END(strcpy_vext)
+
+#endif
