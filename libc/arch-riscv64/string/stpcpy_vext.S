@@ -53,33 +53,40 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#if defined(__riscv_v)
+
 #include <private/bionic_asm.h>
 
-#define pDst a0
+#define pDstPtr a0
 #define pSrc a1
-#define iNum a2
 
 #define iVL a3
-#define pDstPtr a4
+#define iCurrentVL a4
+#define iActiveElemPos a5
 
-#define ELEM_LMUL_SETTING m8
-#define vData v0
+#define ELEM_LMUL_SETTING m1
+#define vMask1 v0
+#define vMask2 v1
+#define vStr1 v8
+#define vStr2 v16
 
-ENTRY(memcpy)
+ENTRY(stpcpy_vext)
+L(stpcpy_loop):
+    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+    vle8ff.v vStr1, (pSrc)
+    vmseq.vx vMask2, vStr1, zero
+    csrr iCurrentVL, vl
+    vfirst.m iActiveElemPos, vMask2
+    vmsif.m vMask1, vMask2
+    add pSrc, pSrc, iCurrentVL
+    vse8.v vStr1, (pDstPtr), vMask1.t
+    add pDstPtr, pDstPtr, iCurrentVL
+    bltz iActiveElemPos, L(stpcpy_loop)
 
-    mv pDstPtr, pDst
-
-L(loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
-
-    vle8.v vData, (pSrc)
-    sub iNum, iNum, iVL
-    add pSrc, pSrc, iVL
-    vse8.v vData, (pDstPtr)
-    add pDstPtr, pDstPtr, iVL
-
-    bnez iNum, L(loop)
-
+    // stpcpy() returns a pointer to the '\0' in the destination.
+    sub pDstPtr, pDstPtr, iCurrentVL
+    add pDstPtr, pDstPtr, iActiveElemPos
     ret
+END(stpcpy_vext)
 
-END(memcpy)
+#endif
