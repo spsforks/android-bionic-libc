@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "025a0c51_a1d38610",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-10T22:56:53Z",
+      "side": 1,
+      "message": "can we get some public docs for this (presumably in the berberis git project) that we can link to? seems like it would be useful for anyone doing dynamic binary translation?",
+      "revId": "a66a6830aae5212f5f32fd9154379b13cfcd91b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90c96ef7_d5900d6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-10T22:56:53Z",
+      "side": 1,
+      "message": "(otherwise sgtm. though i wonder if there\u0027s a clearer name? or is \"guest state\" the term that anyone working on dbt would use, and i\u0027m just not familiar with it?)",
+      "revId": "a66a6830aae5212f5f32fd9154379b13cfcd91b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
