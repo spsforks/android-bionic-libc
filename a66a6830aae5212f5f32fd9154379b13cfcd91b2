@@ -33,6 +33,23 @@
       "message": "(otherwise sgtm. though i wonder if there\u0027s a clearer name? or is \"guest state\" the term that anyone working on dbt would use, and i\u0027m just not familiar with it?)",
       "revId": "a66a6830aae5212f5f32fd9154379b13cfcd91b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b105293_f2aa45e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-10T23:02:27Z",
+      "side": 1,
+      "message": "(the \"guest state layout\" part of the doc in particular is the part i was curious about. because _that\u0027s_ the other thing a dbt implementor needs to know about, right? they need to put a pointer to their version of that in this slot. so i guess i can take a promise that once _that_ struct exists, you\u0027ll come back and link to it here, and vice versa? +cferris since it\u0027s been so long since we all talked about this i\u0027d completely forgotten about it, so fyi this is likely coming to debuggerd soon!)",
+      "revId": "a66a6830aae5212f5f32fd9154379b13cfcd91b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
