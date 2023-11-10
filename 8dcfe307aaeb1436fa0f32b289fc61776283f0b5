@@ -16,6 +16,149 @@
       "message": "@cferris, would you mind doing a pass on this patch? thx in advance.",
       "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f472d0ea_e0ed6415",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "Have you tried running this using atest?",
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74b9e8a7_8d330189",
+        "filename": "tests/libs/memtag_globals_binary.so",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "This should be in the prebuilt-elf-files directory. Even if you plan to build it every time at some point, that\u0027s where we tend to put these things.",
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a5f8f0f_e4f79e62",
+        "filename": "tests/libs/memtag_globals_dso.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "Doesn\u0027t this need a copyright header?",
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "322891ed_d71c5d26",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "Once you move the shared libraries, then use GetPrebuiltElfDir() function instead.",
+      "range": {
+        "startLine": 39,
+        "startChar": 23,
+        "endLine": 39,
+        "endChar": 37
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92b35d38_32a12076",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "Add an #include \u003cstring\u003e for this.",
+      "range": {
+        "startLine": 39,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 13
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de712c44_3b88a885",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "Need sys/stat.h for this function.",
+      "range": {
+        "startLine": 40,
+        "startChar": 2,
+        "endLine": 40,
+        "endChar": 7
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3f396de_fd4366a7",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-10T22:00:55Z",
+      "side": 1,
+      "message": "Need unistd.h for this function.",
+      "range": {
+        "startLine": 45,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 14
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
