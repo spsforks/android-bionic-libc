@@ -50,6 +50,23 @@
       "message": "(friendly ping)",
       "revId": "432d7d773183d96caa7d5fd5b70e24040427bf49",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91b99663_20b03706",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 26
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-10T13:22:56Z",
+      "side": 1,
+      "message": "(friendly ping @bionic folks)",
+      "revId": "432d7d773183d96caa7d5fd5b70e24040427bf49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
