@@ -192,6 +192,8 @@ struct three_atomics {
   atomic_uint_least32_t z;
 };
 
+atomic_bool read_enough(false);
+
 // Very simple acquire/release memory ordering smoke test.
 static void* writer(void* arg) {
   three_atomics* a = reinterpret_cast<three_atomics*>(arg);
@@ -199,9 +201,18 @@ static void* writer(void* arg) {
     atomic_store_explicit(&a->x, i, memory_order_relaxed);
     atomic_store_explicit(&a->z, i, memory_order_relaxed);
     atomic_store_explicit(&a->y, i, memory_order_release);
+
+    // Force stores to be visible in spite of being overwritten below.
+    asm volatile("" ::: "memory");
+
     atomic_store_explicit(&a->x, i+1, memory_order_relaxed);
     atomic_store_explicit(&a->z, i+1, memory_order_relaxed);
     atomic_store_explicit(&a->y, i+1, memory_order_release);
+    if (i >= BIG - 1000 && !atomic_load(&read_enough)) {
+      // Give reader a chance to catch up, at the expense of making the test
+      // less efective.
+      usleep(1000);
+    }
   }
   return nullptr;
 }
@@ -229,7 +240,11 @@ static void* reader(void* arg) {
                     << xval << " < " << yval << ", " << zval <<  "\n";
       return nullptr; // Only report once.
     }
-    if (repeat < repeat_limit) ++repeat;
+    if (repeat < repeat_limit) {
+      ++repeat;
+    } else if (!atomic_load_explicit(&read_enough, memory_order_relaxed)) {
+      atomic_store_explicit(&read_enough, true, memory_order_relaxed);
+    }
   }
   // The following assertion is not technically guaranteed to hold.
   // But if it fails to hold, this test was useless, and we have a
