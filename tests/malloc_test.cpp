@@ -714,6 +714,23 @@ TEST(malloc, mallopt_log_stats) {
 #endif
 }
 
+#if defined(__BIONIC__)
+extern "C" void malloc_disable();
+extern "C" void malloc_enable();
+#endif
+
+TEST(malloc, mallopt_log_stats_no_allocations) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  malloc_disable();
+  int ret = mallopt(M_LOG_STATS, 0);
+  malloc_enable();
+  ASSERT_EQ(1, ret);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 // Verify that all of the mallopt values are unique.
 TEST(malloc, mallopt_unique_params) {
 #if defined(__BIONIC__)
