@@ -163,6 +163,24 @@
       "parentUuid": "406b0ce6_068b7db8",
       "revId": "99113fa89f4b9390c447783957be1691367885c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed8e862c_62ba8aa4",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-14T22:23:56Z",
+      "side": 1,
+      "message": "just like in this morning\u0027s conversation, \"odd platforms\" are not our problem :-)",
+      "parentUuid": "bdb59e55_7e47899b",
+      "revId": "99113fa89f4b9390c447783957be1691367885c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
