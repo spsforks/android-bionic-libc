@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d810239e_1021d1d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2023-11-14T22:12:13Z",
+      "side": 1,
+      "message": "No. I\u0027m not 100% sure this fixes the problem. But I think these are issues that should be fixed anyway.",
+      "parentUuid": "80c34a1b_5d14e06e",
+      "revId": "99113fa89f4b9390c447783957be1691367885c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e783749_356638f3",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-11-14T16:11:40Z",
       "side": 1,
       "message": "(static_assert?)",
+      "range": {
+        "startLine": 184,
+        "startChar": 56,
+        "endLine": 184,
+        "endChar": 74
+      },
+      "revId": "99113fa89f4b9390c447783957be1691367885c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16c3c48f_71091b8c",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2023-11-14T22:12:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e783749_356638f3",
       "range": {
         "startLine": 184,
         "startChar": 56,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea624fc9_d460c55a",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2023-11-14T22:12:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c179a30_c72c197e",
+      "range": {
+        "startLine": 213,
+        "startChar": 14,
+        "endLine": 213,
+        "endChar": 22
+      },
+      "revId": "99113fa89f4b9390c447783957be1691367885c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "406b0ce6_068b7db8",
@@ -77,6 +143,24 @@
       "writtenOn": "2023-11-14T16:11:40Z",
       "side": 1,
       "message": "is sched_yield() more intention-revealing than a sleep? it\u0027s not really _time_ here, right, it\u0027s whether the reader has run?",
+      "revId": "99113fa89f4b9390c447783957be1691367885c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdb59e55_7e47899b",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2023-11-14T22:12:13Z",
+      "side": 1,
+      "message": "In the absence of real performance constraints, I generally prefer sleep here due to past issues with other thread schedulers. I think that for current Linux schedulers either works. But if this thread somehow ends up with higher priority, and its contending with another higher priority thread, then sched_yield may end up just trading off among the higher priority threads without ever getting reader to run. So I think this is a bit more robust against future changes or running on odd platforms.",
+      "parentUuid": "406b0ce6_068b7db8",
       "revId": "99113fa89f4b9390c447783957be1691367885c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
