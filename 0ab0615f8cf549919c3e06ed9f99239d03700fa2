@@ -115,6 +115,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bcc8a49b_ff944c4e",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-14T19:18:57Z",
+      "side": 1,
+      "message": "This should be at the end of the line.",
+      "range": {
+        "startLine": 142,
+        "startChar": 43,
+        "endLine": 142,
+        "endChar": 44
+      },
+      "revId": "0ab0615f8cf549919c3e06ed9f99239d03700fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "20d33eab_034ec83f",
         "filename": "libc/libc.map.txt",
         "patchSetId": 12
