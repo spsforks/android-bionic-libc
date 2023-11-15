@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef46b1e6_a90fe419",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 27
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "Looks good to me, other than the one question about `__libc_init_globals`.",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50ab7096_e4486eee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 3313,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "I\u0027m seeing a 404 error on:\n\nhttps://www.kernel.org/doc/html/latest/arm64/memory-tagging-extension.html\n\nShould be this probably:\n\nhttps://www.kernel.org/doc/html/latest/arch/arm64/memory-tagging-extension.html",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2753007a_9f261f20",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "I don\u0027t understand why we need to delay this call? In general, I think the loader tries to initialize itself and its copy of libc before it starts searching for and loading the initial DSO set.\n\nThe vdso[] fields won\u0027t be initialized until late. Maybe `vdso[VDSO_CLOCK_GETTIME]` et al are useful for measuring the time to load libraries, and maybe `vdso[VDSO_RISCV_HWPROBE]` is needed for ifuncs?\n\nIt looks like the MTE tags are applied by `soinfo::tag_globals` which is called by `soinfo::prelink_image`. For the loader, I think that happens as part of self-relocating, which should be finished at the point of the current call from `__linker_init_post_relocation` to `__libc_init_globals`.\n\nAlternate fix: defer marking `__libc_globals` as PROT_READ until this point?\n\n(I\u0027m also wondering if moving this function call is currently needed given the `memtag_globals: false` for the loader in Android.bp... But it makes sense to be preparing for turning that property on.)",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d2a0029_3cb41591",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "Maybe use `const void* src`?",
+      "range": {
+        "startLine": 680,
+        "startChar": 31,
+        "endLine": 680,
+        "endChar": 40
+      },
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc331787_5796f54a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "I think this can be `static`?",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "057dd6b5_f45a6795",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "I can\u0027t find any other references (uses or definitions) of this method...",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cb0aba8_2a445239",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-11-15T23:49:15Z",
+      "side": 1,
+      "message": "I think this can be `static`?",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
