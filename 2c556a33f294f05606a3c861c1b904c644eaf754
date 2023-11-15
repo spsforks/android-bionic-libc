@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e04a450_33754aed",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-15T19:27:08Z",
+      "side": 1,
+      "message": "Need a copyright header.",
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23452436_1bbd2a48",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-15T19:27:08Z",
+      "side": 1,
+      "message": "Need \u003cuitlity\u003e for this.",
+      "range": {
+        "startLine": 13,
+        "startChar": 39,
+        "endLine": 13,
+        "endChar": 48
+      },
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dc77fcb_182819da",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals_binary.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-15T19:27:08Z",
+      "side": 1,
+      "message": "Any reason you aren\u0027t using the gtest macros?",
+      "range": {
+        "startLine": 153,
+        "startChar": 2,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fcf4905_686c4e0e",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals_binary.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-15T19:27:08Z",
+      "side": 1,
+      "message": "Even though this isn\u0027t being compiled right now, doesn\u0027t this being used in a cc_test rule mean this main is not executed?",
+      "range": {
+        "startLine": 170,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 8
+      },
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
