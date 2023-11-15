@@ -87,6 +87,24 @@
       "parentUuid": "0dc446e5_97d73db1",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d617116_fc7842db",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-15T22:53:12Z",
+      "side": 1,
+      "message": "\u003e If we can assume that faccessat2 is available, that simplifies things quite a bit -- this wrapper effectively reduces to __faccessat2(...). That\u0027s exactly what you\u0027re suggesting, if I understand correctly?\n\ncorrect.\n\n\u003e BTW out of curiosity, is there a precedent in bionic for adding functionality that depends on new kernel features without a fallback? Presumably those changes come with a big \"don\u0027t attempt to backport\" warning. 😊\n\nwe only backport security fixes, so this just doesn\u0027t come up.\n\nthe tricky part is the \"wait until the relevant lower-bound kernel is guaranteed to be present on all devices getting the next version of the OS\". let\u0027s consult the sheet ... https://source.android.com/docs/core/architecture/kernel/android-common#feature-and-launch-kernels ... ugh. so it was possible to ship a _new_ 2022 device with a 5.4 kernel, so it\u0027s 2025/2026 before you can assume that a bionic patch (even ignoring static binaries) actually goes to devices guaranteed to have 5.8+ :-(\n\n\u003e I don\u0027t mind implementing a version that uses faccessat2() -- it\u0027s certainly a cleaner approach if we don\u0027t need to worry about compatibility with older kernels -- but I worry that it would be a solution that I can\u0027t use. We may need to maintain a separate fix internally for the time being.\n\nfwiw, i realized i was wrong about the SIGSYS part earlier --- the seccomp filter is paired with the bionic version. so static binaries are still screwed, but dynamic binaries could try faccessat2(2) and fall back to faccessat(2).\n\nbut if you\u0027re actually trying to fix old devices you can\u0027t get a new kernel on, we\u0027re back to \"do we really want another hack on top of the existing ones in 2023?\".\n\nyou could argue that there is some precedent; this, for example:\n```\n// O_TMPFILE isn\u0027t available until Linux 3.11, so we fall back to this on\n// older kernels. AOSP was on a new enough kernel in the Lollipop timeframe,\n// so this code should be obsolete by 2025.\n```\nbut (a) tmpfile() is a much more heavily used api, more likely to be used in static binaries, and (b) that was probably added at a time when we still had devices in CI running old enough kernels that we tested both paths (even if the fallback path probably hasn\u0027t been tested in several years now).\n\ndo you _know_ you have a too-old kernel, or just fear that you do? (because if you\u0027re the only user, and you don\u0027t _need_ the backwards compatibility to old kernels, then faccessat2(2) falling back to the current code sgtm.)",
+      "parentUuid": "732ebccc_a755063d",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
