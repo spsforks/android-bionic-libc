@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0eb2fb39_33336d92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Yep, `atest bionic-unit-tests --test-filter\u003d*Memtag*` on an mte device, a non-mte device, and x86 cf.",
+      "parentUuid": "f472d0ea_e0ed6415",
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "74b9e8a7_8d330189",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd3a4dcf_2d445eed",
+        "filename": "tests/libs/memtag_globals_binary.so",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74b9e8a7_8d330189",
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8a5f8f0f_e4f79e62",
@@ -65,6 +101,24 @@
       "writtenOn": "2023-11-10T22:00:55Z",
       "side": 1,
       "message": "Doesn\u0027t this need a copyright header?",
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b252657_7afd4961",
+        "filename": "tests/libs/memtag_globals_dso.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a5f8f0f_e4f79e62",
       "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -115,6 +169,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23376f27_6c080b83",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "322891ed_d71c5d26",
+      "range": {
+        "startLine": 39,
+        "startChar": 23,
+        "endLine": 39,
+        "endChar": 37
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e96e2919_6d20cd42",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92b35d38_32a12076",
+      "range": {
+        "startLine": 39,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 13
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de712c44_3b88a885",
@@ -138,6 +240,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfc2382f_b6e2d787",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de712c44_3b88a885",
+      "range": {
+        "startLine": 40,
+        "startChar": 2,
+        "endLine": 40,
+        "endChar": 7
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3f396de_fd4366a7",
@@ -151,6 +277,30 @@
       "writtenOn": "2023-11-10T22:00:55Z",
       "side": 1,
       "message": "Need unistd.h for this function.",
+      "range": {
+        "startLine": 45,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 14
+      },
+      "revId": "8dcfe307aaeb1436fa0f32b289fc61776283f0b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a58e6266_53e010df",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-15T13:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3f396de_fd4366a7",
       "range": {
         "startLine": 45,
         "startChar": 8,
