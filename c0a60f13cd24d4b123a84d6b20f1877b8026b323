@@ -69,6 +69,24 @@
       "parentUuid": "59937ea6_baa2eac3",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "732ebccc_a755063d",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2005646
+      },
+      "writtenOn": "2023-11-15T22:16:01Z",
+      "side": 1,
+      "message": "Appreciate your feedback @enh@google.com!\n\n\u003e i think you mean \"more complicated to test\", whereas i mean \"fewer lines of source and fewer special cases\" :-)\n\nI was under the assumption that we\u0027d need to support kernels that don\u0027t have `faccessat2()`, so by \"more complicated\" I meant a bunch of extra code (a way to detect if the syscall exists, plus the same fallback path as currently implemented that checks if euid matches uid etc.) to support a flag that we may not have a use for (yet?)\n\nIf we can assume that `faccessat2` is available, that simplifies things quite a bit -- this wrapper effectively reduces to `__faccessat2(...)`. That\u0027s exactly what you\u0027re suggesting, if I understand correctly?\n\nBTW out of curiosity, is there a precedent in bionic for adding functionality that depends on new kernel features without a fallback? Presumably those changes come with a big \"don\u0027t attempt to backport\" warning. 😊\n\n\u003e we\u0027ll only use faccessat2() in apps on devices running \u003e\u003d V, and they can\u0027t ship with kernels older than 5.8.\n\nWe still have some devices that launched on older kernels and may not be able to upgrade (because vendor BSP).\n\nI don\u0027t mind implementing a version that uses `faccessat2()` -- it\u0027s certainly a cleaner approach if we don\u0027t need to worry about compatibility with older kernels -- but I worry that it would be a solution that I can\u0027t use. We may need to maintain a separate fix internally for the time being.",
+      "parentUuid": "0dc446e5_97d73db1",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
