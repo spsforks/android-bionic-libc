@@ -51,6 +51,24 @@
       "parentUuid": "c6186034_7ee1b441",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0dc446e5_97d73db1",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-15T20:37:58Z",
+      "side": 1,
+      "message": "\u003e Since there\u0027s still a number of devices running older kernels, I think we\u0027d also need to have a fallback path that allows AT_EACCESS without using faccessat2().\n\nwe\u0027ll only use faccessat2() in apps on devices running \u003e\u003d V, and they can\u0027t ship with kernels older than 5.8.\n\n_static_ binaries will be affected, but they\u0027re only ever quasi-supported anyway. lots of stuff doesn\u0027t work there. we certainly have no precedent for checking the kernel version to choose a syscall, and you can\u0027t \"fall back\" on Android like you would in other libcs because you\u0027re already dead from the SIGSYS you got from trying a syscall that\u0027s not in the seccomp filter.\n\n\u003e I was hesitant to make the code more complicated\n\ndefine \"complicated\". i think _you_ mean \"more complicated to test\", whereas i mean \"fewer lines of source and fewer special cases\" :-)\n\n(given that we support AT_SYMLINK_NOFOLLOW elsewhere, i was assuming we\u0027d just let faccessat2()/seccomp/selinux policy decide that --- if someone really wants to block it, they should do it properly. in the meantime, i see there\u0027s another new flag in the kernel that hasn\u0027t made it to the man page yet, which seems like another argument for \"yeah, let\u0027s do this properly now\".)\n\nbtw, only do this if it sounds like fun --- if you\u0027re thinking \"well, okay, but that\u0027s more than i was signing up for\", just say and i\u0027ll make those changes for you. (it\u0027s mildly intricate if you haven\u0027t done it before, but grepping for `__faccessat` should let you copy \u0026 paste your way through. that\u0027s certainly what i\u0027d do if it were me :-) )",
+      "parentUuid": "59937ea6_baa2eac3",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
