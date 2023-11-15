@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f28c76b_3112497b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2005646
+      },
+      "writtenOn": "2023-11-15T01:58:01Z",
+      "side": 1,
+      "message": "We ran into this at Meta while testing bpftrace compiled against libbpf 1.2.2 (from ExtendedAndroidTools [1]), which failed to load BTF data on account of calling faccessat() with AT_EACCESS [2]. I suspect similar issues may arise once Android updates external/libbpf to a newer version.\n\nHaving limited support for AT_EACCESS (i.e. allowing it only when it doesn\u0027t actually need to do anything) isn\u0027t ideal. However, given the comment about Android not running code with euid!\u003duid, I figured it may be better to not error out (and break user code) in the case that _is_ supported.\n\nAn alternative would be to fix all users of AT_EACCESS to first check if libc supports it, but that may be impractical.\n\n[1] https://github.com/facebookexperimental/ExtendedAndroidTools\n[2] https://github.com/libbpf/libbpf/blob/0c54691bae75cdf50c43be3ff5ac3b201fc94ba2/src/btf.c#L4951",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
