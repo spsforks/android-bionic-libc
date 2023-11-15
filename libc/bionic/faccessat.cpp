@@ -42,13 +42,14 @@ int faccessat(int dirfd, const char* pathname, int mode, int flags) {
     return -1;
   }
 
-  if (flags != 0) {
+  if (flags != 0 && !(flags == AT_EACCESS && getuid() == geteuid() && getgid() == getegid())) {
     // We deliberately don't support AT_SYMLINK_NOFOLLOW, a glibc
     // only feature which is error prone and dangerous.
     // More details at http://permalink.gmane.org/gmane.linux.lib.musl.general/6952
     //
     // AT_EACCESS isn't supported either. Android doesn't have setuid
-    // programs, and never runs code with euid!=uid.
+    // programs, and never runs code with euid!=uid. If effective ids
+    // don't match real ids, we reject the request.
     //
     // We could use faccessat2(2) from Linux 5.8, but since we don't want the
     // first feature and don't need the second, we just reject such requests.

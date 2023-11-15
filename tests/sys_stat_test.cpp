@@ -314,3 +314,7 @@ TEST(sys_stat, faccessat_nonexistant) {
   ASSERT_ERRNO(ENOENT);
 #endif
 }
+
+TEST(sys_stat, faccessat_AT_EACCESS) {
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", R_OK, AT_EACCESS));
+}
