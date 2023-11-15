@@ -33,6 +33,24 @@
       "message": "if we\u0027re going to allow AT_EACCESS, it might make more sense to revisit this decision instead?",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59937ea6_baa2eac3",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2005646
+      },
+      "writtenOn": "2023-11-15T16:55:51Z",
+      "side": 1,
+      "message": "Since there\u0027s still a number of devices running older kernels, I think we\u0027d also need to have a fallback path that allows `AT_EACCESS` without using `faccessat2()`.\n\nI was hesitant to make the code more complicated given that AFAIK we don\u0027t have a use case that would require _fully_ supporting these flags (rather than just the `uid\u003d\u003deuid` case, where `AT_EACCESS` can be ignored), but happy to revisit if you think that\u0027d be cleaner.",
+      "parentUuid": "c6186034_7ee1b441",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
