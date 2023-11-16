@@ -16,6 +16,24 @@
       "message": "System appears to be exploding in \u0027memcpy\u0027, will provide crash report.",
       "revId": "aefe999d92d9592ffeb02e142ffcc85161ddb8d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4a4d6e2_a2ab6ddf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-16T21:52:26Z",
+      "side": 1,
+      "message": "sounds like the crash went away after a rebuild, but i\u0027m ooo all next week anyway, so i don\u0027t plan on merging this until i\u0027m back. you two should feel free to submit in the meantime if you\u0027re around though, if you want to make the qemu SIGILLs go away...",
+      "parentUuid": "0ebe6bb0_9418ea25",
+      "revId": "aefe999d92d9592ffeb02e142ffcc85161ddb8d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
