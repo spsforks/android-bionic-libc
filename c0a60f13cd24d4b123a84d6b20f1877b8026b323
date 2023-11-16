@@ -122,6 +122,24 @@
       "parentUuid": "732ebccc_a755063d",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eaa47695_d3e50210",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2005646
+      },
+      "writtenOn": "2023-11-16T02:57:25Z",
+      "side": 1,
+      "message": "\u003e so it was possible to ship a new 2022 device with a 5.4 kernel, so it\u0027s 2025/2026 before you can assume that a bionic patch (even ignoring static binaries) actually goes to devices guaranteed to have 5.8+ :-(\n\nFrom https://source.android.com/docs/core/architecture/kernel/android-common#compatibility-between-kernels, looks like Android 14 is still supported on 4.14. Unless V switches to 5.10 as the oldest supported kernel (meaning that, for example, devices launched in 2022 may not be able to upgrade to V if they\u0027re stuck on 5.4), just calling `faccessat2()` unconditionally is not feasible, no?\n\nI didn\u0027t get a chance to take a closer look at seccomp yet so please correct me if my understanding is wrong. Assuming the seccomp filter is guaranteed to be in sync with `SYSCALLS.txt`, then checking for `ENOSYS` + fallback should be possible, one exception being binaries running on older platforms but statically linked against newer libc? I\u0027ll give that a try.\n\nI\u0027m still on the fence whether it\u0027s worth adding that hack given there are currently no uses of these flags (except the no-op case for `AT_EACCESS`) and eventually we\u0027ll be able to replace this with just `__faccessat2()`, but it shouldn\u0027t be too bad.\n\n\u003e do you know you have a too-old kernel\n\nYes. 😞 For example, Meta Quest 2 is still on 4.19, and may stay there until EOL.\n\n\u003e (/me wonders why +maennich hasn\u0027t noticed this with AOSP\u0027s libbpf...)\n\nI initially thought this was because external/libbpf is still an older version, but I see now there was a recent upgrade (aosp/2790399). `AT_EACCESS` is only used in a few places (e.g. `btf__load_vmlinux_btf()`, which `bpftrace` calls), and code in AOSP that uses libbpf may not be hitting those code paths.",
+      "parentUuid": "8d617116_fc7842db",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
