@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1869b6ae_a8822f7c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2023-11-17T18:04:50Z",
+      "side": 1,
+      "message": "This function can return a pointer to the phdr to simplify the caller.",
+      "revId": "2ec4979f71f3a2f1e650ea44cd27011ee4e2f422",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e0a93c1_3d6d9cfe",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2023-11-17T18:04:50Z",
+      "side": 1,
+      "message": "It seems that `bionic_loaded` can be checked at the call site so that this function can have one fewer parameter.",
+      "revId": "2ec4979f71f3a2f1e650ea44cd27011ee4e2f422",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
