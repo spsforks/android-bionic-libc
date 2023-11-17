@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1816b282_cbc2a264",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-11-17T21:26:02Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "dbad558f_241ca18e",
+      "revId": "76cb6d080f90db7ccc6dd2be522370e1453bfcf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "caec7801_23e59236",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-11-17T19:25:08Z",
       "side": 1,
       "message": "The code does handle the \"overlap\" case, but in practice it cannot happen (the linker does not create such cases and it would be a hard error if a binary manipulation tool creates such a scenario).\n\nI\u0027d probably remove the `if (curr_end \u003c next_start) {` condition.\n\nThe generic ABI says \"Loadable segment entries in the program header table appear in ascending order, sorted on the p_vaddr member.\"",
+      "revId": "76cb6d080f90db7ccc6dd2be522370e1453bfcf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e89c449_9bf855b9",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-11-17T21:26:02Z",
+      "side": 1,
+      "message": "I\u0027ve stumbled on this case in b/307803052#comment7 the align down results in both LOADs being loaded at the same virtual address (they use a custom linker script).",
+      "parentUuid": "caec7801_23e59236",
       "revId": "76cb6d080f90db7ccc6dd2be522370e1453bfcf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
