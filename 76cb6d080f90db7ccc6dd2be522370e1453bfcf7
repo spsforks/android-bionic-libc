@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43acecc6_a60a6dae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2023-11-17T19:25:08Z",
+      "side": 1,
+      "message": "The change looks good to me, though I maintain lld/ELF, not bionic 😊",
+      "revId": "76cb6d080f90db7ccc6dd2be522370e1453bfcf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbad558f_241ca18e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2023-11-17T19:25:08Z",
+      "side": 1,
+      "message": "`phdr_table[next_idx].p_type`",
+      "revId": "76cb6d080f90db7ccc6dd2be522370e1453bfcf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caec7801_23e59236",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2023-11-17T19:25:08Z",
+      "side": 1,
+      "message": "The code does handle the \"overlap\" case, but in practice it cannot happen (the linker does not create such cases and it would be a hard error if a binary manipulation tool creates such a scenario).\n\nI\u0027d probably remove the `if (curr_end \u003c next_start) {` condition.\n\nThe generic ABI says \"Loadable segment entries in the program header table appear in ascending order, sorted on the p_vaddr member.\"",
+      "revId": "76cb6d080f90db7ccc6dd2be522370e1453bfcf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
