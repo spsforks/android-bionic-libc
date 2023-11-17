@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "334e48f3_bed6c8e7",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-11-17T21:26:43Z",
+      "side": 1,
+      "message": "Squashed into it\u0027s single caller (we still need the index)",
+      "parentUuid": "1869b6ae_a8822f7c",
+      "revId": "2ec4979f71f3a2f1e650ea44cd27011ee4e2f422",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e0a93c1_3d6d9cfe",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-11-17T18:04:50Z",
       "side": 1,
       "message": "It seems that `bionic_loaded` can be checked at the call site so that this function can have one fewer parameter.",
+      "revId": "2ec4979f71f3a2f1e650ea44cd27011ee4e2f422",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e56e2cf8_9a3b4f06",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-11-17T21:26:43Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "5e0a93c1_3d6d9cfe",
       "revId": "2ec4979f71f3a2f1e650ea44cd27011ee4e2f422",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
