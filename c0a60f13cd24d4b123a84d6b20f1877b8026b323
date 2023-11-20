@@ -53,6 +53,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2bc76b5_257d72ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1981633
+      },
+      "writtenOn": "2023-11-20T16:54:06Z",
+      "side": 1,
+      "message": "We do have an out of date patch set from the last attempt to update libbpf which addresses the AT_EACCESS issue here: aosp/2356584",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6186034_7ee1b441",
