@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cffbda56_2cd3502d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1402878
+      },
+      "writtenOn": "2023-11-20T16:26:36Z",
+      "side": 1,
+      "message": "My main use case is actually on the host where we thankfully do not run that old kernels. As for the platform, odds are we were lucky to not use this code path +nkapron.",
+      "parentUuid": "87188cb7_0f68c488",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c6186034_7ee1b441",
         "filename": "libc/bionic/faccessat.cpp",
         "patchSetId": 1
