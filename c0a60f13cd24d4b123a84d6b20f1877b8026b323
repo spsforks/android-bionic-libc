@@ -158,6 +158,24 @@
       "parentUuid": "8d617116_fc7842db",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b4c2c73_7dd443fb",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1981633
+      },
+      "writtenOn": "2023-11-20T16:44:48Z",
+      "side": 1,
+      "message": "\u003e \u003e (/me wonders why +maennich hasn\u0027t noticed this with AOSP\u0027s libbpf...)\n\u003e \n\u003e I initially thought this was because external/libbpf is still an older version, but I see now there was a recent upgrade (aosp/2790399). `AT_EACCESS` is only used in a few places (e.g. `btf__load_vmlinux_btf()`, which `bpftrace` calls), and code in AOSP that uses libbpf may not be hitting those code paths.\n\nThis is likely because libbpf is not actually used in aosp right now. Yes, it has been updated, but libbpf is not integrated in any programs which run on devices by default, only debug utilities from external/bcc/libbpf-tools currently.\n\nI am working on enabling libbpf support in aosp, but there are a few blockers, the first of which is the bpf build target needs to be updated in soong.",
+      "parentUuid": "eaa47695_d3e50210",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
