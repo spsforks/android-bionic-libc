@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75eb65ee_be480466",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e04a450_33754aed",
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23452436_1bbd2a48",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-11-15T19:27:08Z",
       "side": 1,
       "message": "Need \u003cuitlity\u003e for this.",
+      "range": {
+        "startLine": 13,
+        "startChar": 39,
+        "endLine": 13,
+        "endChar": 48
+      },
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99b54353_e3317807",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23452436_1bbd2a48",
       "range": {
         "startLine": 13,
         "startChar": 39,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a4832e7_257d177f",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals_binary.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T10:31:13Z",
+      "side": 1,
+      "message": "So same as below, this isn\u0027t actually a gtest unit test. We inherit (from `bionic_testlib_defaults`) the `gtest: false` because this is just a standalone binary that we want to spawn/run. This allows me to quickly run the binary when updating a compiler, as well as spawn it as a subprocess as part of a unit test (like all the rest of the ones in bionic/tests/libs).\n\nHaving it under `cc_test` is needed to do the right thing with the install path (in \n data/nativetest) and such.",
+      "parentUuid": "2dc77fcb_182819da",
+      "range": {
+        "startLine": 153,
+        "startChar": 2,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fcf4905_686c4e0e",
@@ -77,6 +143,30 @@
       "writtenOn": "2023-11-15T19:27:08Z",
       "side": 1,
       "message": "Even though this isn\u0027t being compiled right now, doesn\u0027t this being used in a cc_test rule mean this main is not executed?",
+      "range": {
+        "startLine": 170,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 8
+      },
+      "revId": "2c556a33f294f05606a3c861c1b904c644eaf754",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13cbcdb0_31114875",
+        "filename": "tests/prebuilt-elf-files/arm64/src/memtag_globals_binary.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T10:31:13Z",
+      "side": 1,
+      "message": "See above, this isn\u0027t a gtest unit test, it\u0027s a standalone binary (with an inherted `gtest: false`).",
+      "parentUuid": "0fcf4905_686c4e0e",
       "range": {
         "startLine": 170,
         "startChar": 4,
