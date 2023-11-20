@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ed7327a_f0ce7fb1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 3313,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T14:51:05Z",
+      "side": 1,
+      "message": "Thanks, looks like they changed the link.",
+      "parentUuid": "50ab7096_e4486eee",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2753007a_9f261f20",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-11-15T23:49:15Z",
       "side": 1,
       "message": "I don\u0027t understand why we need to delay this call? In general, I think the loader tries to initialize itself and its copy of libc before it starts searching for and loading the initial DSO set.\n\nThe vdso[] fields won\u0027t be initialized until late. Maybe `vdso[VDSO_CLOCK_GETTIME]` et al are useful for measuring the time to load libraries, and maybe `vdso[VDSO_RISCV_HWPROBE]` is needed for ifuncs?\n\nIt looks like the MTE tags are applied by `soinfo::tag_globals` which is called by `soinfo::prelink_image`. For the loader, I think that happens as part of self-relocating, which should be finished at the point of the current call from `__linker_init_post_relocation` to `__libc_init_globals`.\n\nAlternate fix: defer marking `__libc_globals` as PROT_READ until this point?\n\n(I\u0027m also wondering if moving this function call is currently needed given the `memtag_globals: false` for the loader in Android.bp... But it makes sense to be preparing for turning that property on.)",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "657be1f6_36fe1dbf",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T14:51:05Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s vestigal from when these patches supported MTE globals in the linker. I\u0027ve undone the diff here because I don\u0027t have a clear window of when I\u0027d land that change. We need some clear testing frameworks before enabling MTE in the linker (as it requires maintaining an deny-list of globals that can\u0027t be MTE-instrumented).",
+      "parentUuid": "2753007a_9f261f20",
       "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -75,6 +111,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5382038d_42a6cb6d",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T14:51:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d2a0029_3cb41591",
+      "range": {
+        "startLine": 680,
+        "startChar": 31,
+        "endLine": 680,
+        "endChar": 40
+      },
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc331787_5796f54a",
@@ -88,6 +148,24 @@
       "writtenOn": "2023-11-15T23:49:15Z",
       "side": 1,
       "message": "I think this can be `static`?",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42a4440f_a3e4cc0d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T14:51:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc331787_5796f54a",
       "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -109,6 +187,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88b650ab_3e52feb9",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T14:51:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "057dd6b5_f45a6795",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7cb0aba8_2a445239",
@@ -122,6 +218,24 @@
       "writtenOn": "2023-11-15T23:49:15Z",
       "side": 1,
       "message": "I think this can be `static`?",
+      "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae538443_3578c8cf",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-20T14:51:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cb0aba8_2a445239",
       "revId": "63ef57c0cf89770d93ce46e58a4a1a4bbf22da33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
