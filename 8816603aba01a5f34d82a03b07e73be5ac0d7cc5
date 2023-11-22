@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03e47945_fae6bba2",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2023-11-22T04:00:56Z",
+      "side": 1,
+      "message": "I think we don\u0027t want to relate vendor API level with the SDK API level. Furthermore, this will confuse people; 202404 is actually NOT Android V. V will be released at around Q3 as before.\n\nCan this be `__ANDROID_VENDOR_API_202404__`?",
+      "range": {
+        "startLine": 188,
+        "startChar": 29,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
