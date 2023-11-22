@@ -171,6 +171,22 @@ __BEGIN_DECLS
 /** Names the "V" API level (35), for comparison against `__ANDROID_API__`. */
 #define __ANDROID_API_V__ 35
 
+/**
+ * Different from the Android SDK version, API level of the vendor API surface
+ * has YYYYMM format.
+ * Defining the vendor API levels with __ANDROID_VENDOR_API_ prefix.
+ *
+ * Because of the 6-digit representation of the API level, vendor API level
+ * need to define a different future API level
+ */
+#define __ANDROID_VENDOR_API_FUTURE__ 1000000
+
+/**
+ * Vendor API level for 2024Q2 release. This value corresponds to
+ * __ANDROID_API_V__
+ */
+#define __ANDROID_VENDOR_API_2024__ 202404
+
 /* This file is included in <features.h>, and might be used from .S files. */
 #if !defined(__ASSEMBLY__)
 
