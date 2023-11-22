@@ -22,6 +22,30 @@
       },
       "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1d91295_02032a03",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2023-11-22T04:33:52Z",
+      "side": 1,
+      "message": "aosp/2720213 is where this vendor API constants are needed along with `__ANDROID_API_U__`. I thought keeping alphabet version for the yearly release is easier to match the version with the SDK release.\nOn the other hand, it is easier to make mistakes by using SDK versions to the vendor API level by mistake.\n\nWhat do you think about skipping the MM field to make it more readable then?: `__ANDROID_VENDOR_API_2024__`",
+      "parentUuid": "03e47945_fae6bba2",
+      "range": {
+        "startLine": 188,
+        "startChar": 29,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
