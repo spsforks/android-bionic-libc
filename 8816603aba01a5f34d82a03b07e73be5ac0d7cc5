@@ -118,6 +118,30 @@
       },
       "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "796c8c9a_f47b2ba4",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2023-11-23T04:07:34Z",
+      "side": 1,
+      "message": "2024Q2 or just 24Q2 is fine with me.",
+      "parentUuid": "50802015_0ecbedac",
+      "range": {
+        "startLine": 188,
+        "startChar": 29,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
