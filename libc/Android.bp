@@ -1978,6 +1978,9 @@ cc_library_headers {
     name: "libc_llndk_headers",
     visibility: [
         "//external/musl",
+        "//hardware/google/gfxstream/guest/vulkan",
+        "//hardware/google/gfxstream/guest/mesa/src/util",
+        "//hardware/google/gfxstream/guest/mesa/src/vulkan/runtime",
     ],
     llndk: {
         llndk_headers: true,
@@ -2009,6 +2012,7 @@ cc_library_headers {
     sdk_version: "1",
 
     export_system_include_dirs: [
+        "include",
         "kernel/uapi",
         "kernel/android/scsi",
         "kernel/android/uapi",
