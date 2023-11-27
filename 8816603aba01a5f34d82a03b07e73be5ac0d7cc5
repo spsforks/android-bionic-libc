@@ -166,6 +166,30 @@
       },
       "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bf6f048_5c4f854c",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-27T22:34:05Z",
+      "side": 1,
+      "message": "i agree with jiyong, but then that makes me wonder if -- like POSIX or ISO C -- we\u0027re not better off with vendors just using the numbers directly at that point?\n\nalso, what header is defining the equivalent of `__ANDROID_API__` for your new thing, and why aren\u0027t any corresponding constants in _there_ instead of here?",
+      "parentUuid": "0c5056f4_c77b9795",
+      "range": {
+        "startLine": 188,
+        "startChar": 29,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
