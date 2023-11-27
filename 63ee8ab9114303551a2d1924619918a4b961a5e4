@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04997c61_4a05b73a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-27T19:40:15Z",
+      "side": 1,
+      "message": "(lgtm, though i suspect we\u0027ll want to just disable this globally?)",
+      "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
