@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0611c4b_b3910748",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-27T19:29:13Z",
+      "side": 1,
+      "message": "is there any _benefit_ to enabling it though? (given that libc and libm are inherently quite problematic libraries.)\n\nis there measurable benefit on any of the benchmarks? is code size significantly better?\n\notherwise i worry you\u0027re just signing yourself up for a lifetime of flipping this bit every other clang update :-)",
+      "revId": "b23df316ec9c14e8adc133cf4c4497c4a1e599a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
