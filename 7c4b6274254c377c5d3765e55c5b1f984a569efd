@@ -16,6 +16,24 @@
       "message": "i\u0027m not sure exactly what you\u0027re trying to do, but this almost certainly isn\u0027t the right way to do it.\n\nhave you talked to ccross/dwillemsen about your build at all?",
       "revId": "7c4b6274254c377c5d3765e55c5b1f984a569efd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a8a2a2c_99213aed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1101621
+      },
+      "writtenOn": "2023-11-27T21:03:09Z",
+      "side": 1,
+      "message": "Don\u0027t need this change, abandoning.",
+      "parentUuid": "3ae22b6b_e989f6e3",
+      "revId": "7c4b6274254c377c5d3765e55c5b1f984a569efd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
