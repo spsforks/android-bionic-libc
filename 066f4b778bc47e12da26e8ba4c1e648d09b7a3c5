@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2db58e38_08f430ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-27T22:02:09Z",
+      "side": 1,
+      "message": "d\u0027oh! this function used to be \"is_qemu()\" instead :-(",
+      "revId": "066f4b778bc47e12da26e8ba4c1e648d09b7a3c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
