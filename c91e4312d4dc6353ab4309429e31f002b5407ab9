@@ -53,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "762b955d_18839367",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2023-11-28T01:53:14Z",
+      "side": 1,
+      "message": "\u003e almost nothing is guaranteed safe in a signal handler, and it\u0027s basically impossible to enforce that you don\u0027t accidentally change that (either in the caller or the callee)\nThis is a strong reason and which makes sense to me :). \n\nI was thinking the case in the dumpsys. Does it also set some flag and the VM handles it at some checkpoint?",
+      "parentUuid": "9d077b31_f00aa9d8",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56433da3_a604083a",
