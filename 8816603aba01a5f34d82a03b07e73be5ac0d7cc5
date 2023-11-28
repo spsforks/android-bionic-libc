@@ -190,6 +190,30 @@
       },
       "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16558865_1f083ff0",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2023-11-28T09:52:43Z",
+      "side": 1,
+      "message": "\u003e we\u0027re not better off with vendors just using the numbers directly at that point?\n\nThis may work. But using the constants shows the number is an API level, not just a number for year and month.\n\n\u003e also, what header is defining the equivalent of `__ANDROID_API__` for your new thing, and why aren\u0027t any corresponding constants in there instead of here?\n\nI didn\u0027t work on that yet, but we may define `__ANDROID_VENDOR_API__` from soong as we have for `__ANDROID_API__`. From an example aosp/2720213, I think `api-level.h` is the best place to define the vendor api constants. Or we may define them to a new header file and include it to `api-level.h`.",
+      "parentUuid": "5bf6f048_5c4f854c",
+      "range": {
+        "startLine": 188,
+        "startChar": 29,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
