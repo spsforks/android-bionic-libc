@@ -71,6 +71,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00a29e38_83bdc4be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-28T02:03:32Z",
+      "side": 1,
+      "message": "ART\u0027s even more complicated but \"pretty much, yeah\", but kind of inside out --- ART has a \"Signal Catcher\" thread whose only job is \"wait for signal, do the thing\" in a loop. see art/runtime/signal_catcher.cc for the gory details.",
+      "parentUuid": "762b955d_18839367",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56433da3_a604083a",
