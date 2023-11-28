@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c82b817_d1c402dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2023-11-28T01:27:31Z",
+      "side": 1,
+      "message": "I may miss something and I\u0027m wondering that if we ensure that mallopt(M_LOG_STATS, 0) won\u0027t trigger any signal, is it safe to do that in the signal handler?",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56433da3_a604083a",
