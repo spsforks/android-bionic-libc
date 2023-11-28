@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "617c54e9_a4385c18",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-28T18:14:55Z",
+      "side": 1,
+      "message": "for sure.",
+      "parentUuid": "063120de_3b60825b",
+      "revId": "f71ee5adb74b075948efbd6fef7a61445e27790d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac7130a1_40af9993",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-11-28T18:12:18Z",
       "side": 1,
       "message": "I don\u0027t think this bug is very useful as a comment. It would be better to just say that this doesn\u0027t work with hwasan enabled.",
+      "range": {
+        "startLine": 43,
+        "startChar": 25,
+        "endLine": 43,
+        "endChar": 36
+      },
+      "revId": "f71ee5adb74b075948efbd6fef7a61445e27790d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c9fd2e4_5eefe500",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-11-28T18:14:55Z",
+      "side": 1,
+      "message": "Ack, will follow up with a proper message/solution.",
+      "parentUuid": "ac7130a1_40af9993",
       "range": {
         "startLine": 43,
         "startChar": 25,
