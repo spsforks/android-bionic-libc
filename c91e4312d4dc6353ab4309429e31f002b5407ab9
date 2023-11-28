@@ -33,6 +33,24 @@
       "message": "mallopt() doesn\u0027t set errno on failure?",
       "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5269327e_6f7b25dc",
+        "filename": "libc/malloc_debug/LogAllocatorStats.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-28T00:50:36Z",
+      "side": 1,
+      "message": "Nope, in fact the man page explicitly states that it is not set for this call.",
+      "parentUuid": "56433da3_a604083a",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
