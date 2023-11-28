@@ -1616,6 +1616,7 @@ cc_test {
    name: "heap_tagging_sync_helper",
    defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
    srcs: ["heap_tagging_helper.cpp"],
+   static_libs: ["libbase"],
    sanitize: {
      memtag_heap: true,
      diag: {
@@ -1629,6 +1630,7 @@ cc_test {
    name: "heap_tagging_async_helper",
    defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
    srcs: ["heap_tagging_helper.cpp"],
+   static_libs: ["libbase"],
    sanitize: {
      memtag_heap: true,
      diag: {
@@ -1642,6 +1644,7 @@ cc_test {
    name: "heap_tagging_disabled_helper",
    defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
    srcs: ["heap_tagging_helper.cpp"],
+   static_libs: ["libbase"],
    sanitize: {
      memtag_heap: false,
      hwaddress: false,
@@ -1652,6 +1655,7 @@ cc_test {
    name: "heap_tagging_static_sync_helper",
    defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
    srcs: ["heap_tagging_helper.cpp"],
+   static_libs: ["libbase"],
    static_executable: true,
    sanitize: {
      memtag_heap: true,
@@ -1666,6 +1670,7 @@ cc_test {
    name: "heap_tagging_static_async_helper",
    defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
    srcs: ["heap_tagging_helper.cpp"],
+   static_libs: ["libbase"],
    static_executable: true,
    sanitize: {
      memtag_heap: true,
@@ -1680,6 +1685,7 @@ cc_test {
    name: "heap_tagging_static_disabled_helper",
    defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
    srcs: ["heap_tagging_helper.cpp"],
+   static_libs: ["libbase"],
    static_executable: true,
    sanitize: {
      memtag_heap: false,
