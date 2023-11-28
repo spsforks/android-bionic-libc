@@ -52,17 +52,17 @@
 
 #include "printf_common.h"
 
-#define print_utf8(utf8, prec) \
-  do { \
-    free(convbuf); \
+#define print_utf8(utf8, prec)              \
+  do {                                      \
+    if (convbuf) free(convbuf);             \
     convbuf = helpers::mbsconv(utf8, prec); \
-    if (convbuf == nullptr) { \
-      fp->_flags |= __SERR; \
-      goto error; \
-    } else { \
-      cp = convbuf; \
-    } \
-    goto string; \
+    if (convbuf == nullptr) {               \
+      fp->_flags |= __SERR;                 \
+      goto error;                           \
+    } else {                                \
+      cp = convbuf;                         \
+    }                                       \
+    goto string;                            \
   } while (0)
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
@@ -409,7 +409,7 @@ signed_decimal:
 #if CHAR_TYPE_ORIENTATION == ORIENT_BYTES
         cp = dtoaresult;
 #else
-        free(convbuf);
+        if (convbuf) free(convbuf);
         cp = convbuf = helpers::mbsconv(dtoaresult, -1);
         if (cp == nullptr) goto error;
 #endif
@@ -704,7 +704,7 @@ overflow:
   ret = -1;
 
 finish:
-  free(convbuf);
+  if (convbuf) free(convbuf);
   if (dtoaresult) __freedtoa(dtoaresult);
   if (argtable != nullptr && argtable != statargtable) {
     munmap(argtable, argtablesiz);

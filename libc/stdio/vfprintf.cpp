@@ -417,7 +417,7 @@ signed_decimal:
 #if CHAR_TYPE_ORIENTATION == ORIENT_BYTES
         cp = dtoaresult;
 #else
-        free(convbuf);
+        if (convbuf) free(convbuf);
         cp = convbuf = helpers::mbsconv(dtoaresult, -1);
         if (cp == nullptr) goto error;
 #endif
@@ -506,7 +506,7 @@ signed_decimal:
         if (flags & LONGINT) {
           wchar_t* wcp;
 
-          free(convbuf);
+          if (convbuf) free(convbuf);
           convbuf = nullptr;
           if ((wcp = GETARG(wchar_t*)) == nullptr) {
             cp = const_cast<char*>("(null)");
@@ -726,7 +726,7 @@ overflow:
   ret = -1;
 
 finish:
-  free(convbuf);
+  if (convbuf) free(convbuf);
   if (dtoaresult) __freedtoa(dtoaresult);
   if (argtable != nullptr && argtable != statargtable) {
     munmap(argtable, argtablesiz);
