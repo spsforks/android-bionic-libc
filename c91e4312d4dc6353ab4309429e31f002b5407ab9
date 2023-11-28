@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d077b31_f00aa9d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-28T01:44:07Z",
+      "side": 1,
+      "message": "almost nothing is guaranteed safe in a signal handler, and it\u0027s basically impossible to enforce that you don\u0027t accidentally change that (either in the caller or the callee). the only 100% safe option for a signal handler is \"set some atomic flag, deal with it later\". (of course, in real life you can get away with amazing amounts of stuff, most of the time. but \"hope is not a strategy\" :-) )",
+      "parentUuid": "3c82b817_d1c402dc",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56433da3_a604083a",
