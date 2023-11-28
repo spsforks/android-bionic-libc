@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27e6cc09_54248698",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-28T00:48:43Z",
+      "side": 1,
+      "message": "(excellent choice, which resolves the main concern i was expecting to have before i\u0027ve even seen any of the code :-) )",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56433da3_a604083a",
+        "filename": "libc/malloc_debug/LogAllocatorStats.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-28T00:48:43Z",
+      "side": 1,
+      "message": "mallopt() doesn\u0027t set errno on failure?",
+      "revId": "c91e4312d4dc6353ab4309429e31f002b5407ab9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
