@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "063120de_3b60825b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-28T18:12:18Z",
+      "side": 1,
+      "message": "Since this is test break, I\u0027m +2ing. But I do think a follow-up cl that fixes the skip message should be done.",
+      "revId": "f71ee5adb74b075948efbd6fef7a61445e27790d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac7130a1_40af9993",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-28T18:12:18Z",
+      "side": 1,
+      "message": "I don\u0027t think this bug is very useful as a comment. It would be better to just say that this doesn\u0027t work with hwasan enabled.",
+      "range": {
+        "startLine": 43,
+        "startChar": 25,
+        "endLine": 43,
+        "endChar": 36
+      },
+      "revId": "f71ee5adb74b075948efbd6fef7a61445e27790d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
