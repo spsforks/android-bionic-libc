@@ -16,6 +16,7 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
@@ -88,6 +89,15 @@ __attribute__((optnone)) int main() {
     munmap(p, page_size);
   }
 #endif  // __aarch64__
+
+  // In fact, make sure that there are no tagged mappings at all.
+  char buf[200];
+  snprintf(buf, sizeof(buf), "cat /proc/%d/smaps | grep -E 'VmFlags:.* mt'", getpid());
+  int res = system(buf);
+  if (res == 0) {
+    fprintf(stderr, "unexpected PROT_MTE mappings found\n");
+    return 1;
+  }
 
   fprintf(stderr, "normal exit\n");
   return 0;
