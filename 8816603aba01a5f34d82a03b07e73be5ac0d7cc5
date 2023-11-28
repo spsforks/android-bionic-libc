@@ -214,6 +214,30 @@
       },
       "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a9060a8_3dda1225",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-28T14:56:59Z",
+      "side": 1,
+      "message": "\u003e This may work. But using the constants shows the number is an API level, not just a number for year and month.\n\nbut i\u0027d argue (as i think jiyong was arguing before me) that that\u0027s a bug, not a feature: \"2024 is better than V, but I don\u0027t think 202404 will confuse people\".\n\nlike i added, this is exactly how POSIX, ISO C, and ISO C++ do versioning. _not_ inventing new stuff for people to learn, and just doing what equivalent things do is ideal. i\u0027d argue -- from experience, because Android \"too many\" different numbering schemes confuse developers all the time -- that numbers are your best friend.\n\n(in particular, look at the annoying position the NDK is in right now --- we have to add constants like `__ANDROID_API_V__` for consistency with something marketing moved the public names away from years ago now [but which is still the \"numbering\" scheme that _OS_ developers are most familiar with, even if app developers tend to be most comfortable with the \"raw\" API level numbers]. if i had my time again, i wouldn\u0027t add these constants for the NDK either.)\n\n((as for your readability complaint, you can always write `2024\u002704` since C++14, though it didn\u0027t reach C until C23.))",
+      "parentUuid": "16558865_1f083ff0",
+      "range": {
+        "startLine": 188,
+        "startChar": 29,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "8816603aba01a5f34d82a03b07e73be5ac0d7cc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
