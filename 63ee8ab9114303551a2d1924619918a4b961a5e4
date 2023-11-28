@@ -34,6 +34,24 @@
       "parentUuid": "04997c61_4a05b73a",
       "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dca45ee_5e857dc3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978766
+      },
+      "writtenOn": "2023-11-28T23:00:18Z",
+      "side": 1,
+      "message": "\u003e (lgtm, though i suspect we\u0027ll want to just disable this globally?)\n\nso far (in a broken build) i only found this in bionic. but if this warning comes up in other places we can disable it globally.",
+      "parentUuid": "72504c47_874f617d",
+      "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
