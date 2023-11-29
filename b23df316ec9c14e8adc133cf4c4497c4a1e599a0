@@ -70,6 +70,24 @@
       "parentUuid": "b753791c_75dcc8b9",
       "revId": "b23df316ec9c14e8adc133cf4c4497c4a1e599a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b48dcca_8196e8c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2023-11-29T00:53:38Z",
+      "side": 1,
+      "message": "Ack. I rebased the linker change out of the commit chain, please review.",
+      "parentUuid": "84d81e11_c7aeb5ac",
+      "revId": "b23df316ec9c14e8adc133cf4c4497c4a1e599a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
