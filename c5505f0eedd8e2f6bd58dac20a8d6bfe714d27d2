@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "571c51b8_8f19ba8a",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-29T20:04:17Z",
+      "side": 1,
+      "message": "Isn\u0027t this better written as:\n\n  if struct_token.id in structs and structs[struct_token.id]:",
+      "range": {
+        "startLine": 1250,
+        "startChar": 23,
+        "endLine": 1250,
+        "endChar": 52
+      },
+      "revId": "c5505f0eedd8e2f6bd58dac20a8d6bfe714d27d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2804a98c_a1c51861",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-29T20:04:17Z",
+      "side": 1,
+      "message": "Would it be better to have this as None for no value? Then the code that does the check doesn\u0027t need to check the length.\n\nThen you can do the check as I mentioned in the other file.",
+      "range": {
+        "startLine": 36,
+        "startChar": 28,
+        "endLine": 36,
+        "endChar": 30
+      },
+      "revId": "c5505f0eedd8e2f6bd58dac20a8d6bfe714d27d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
