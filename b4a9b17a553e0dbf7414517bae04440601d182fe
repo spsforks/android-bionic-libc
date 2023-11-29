@@ -16,6 +16,24 @@
       "message": "ccross: have we dealt with issues like this before?\n```\nbionic/libc/kernel/uapi/linux/tcp.h:177:3: error: redefinition of enumerator \u0027TCP_NLA_TOTAL_RETRANS\u0027\nTCP_NLA_TOTAL_RETRANS,\n^\nexternal/musl/include/netinet/tcp.h:63:2: note: previous definition is here\nTCP_NLA_TOTAL_RETRANS,\n^\n```\n(remind me why musl doesn\u0027t just use the external/kernel-headers uapi headers directly, and uses the ones modified to be compatible with bionic instead?)",
       "revId": "b4a9b17a553e0dbf7414517bae04440601d182fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eabe82f7_7a7a7b22",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-11-29T01:05:31Z",
+      "side": 1,
+      "message": "I don\u0027t think I\u0027ve seen anything like that.\n\nIIRC the `external/kernel-headers` don\u0027t work on their own, and we need some of the modifications done by the bionic scripts?  Maybe we need a separate script for musl-compatible headers.",
+      "parentUuid": "75646193_d7fb76f9",
+      "revId": "b4a9b17a553e0dbf7414517bae04440601d182fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
