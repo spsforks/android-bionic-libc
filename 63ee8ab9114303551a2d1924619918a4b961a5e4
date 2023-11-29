@@ -70,6 +70,24 @@
       "parentUuid": "2dca45ee_5e857dc3",
       "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3079d9c_66fa921b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978766
+      },
+      "writtenOn": "2023-11-29T05:43:17Z",
+      "side": 1,
+      "message": "Ah i didn\u0027t know that someone attempted to run this before. I only started seeing this while trying the latest clang. https://android-review.git.corp.google.com/c/platform/build/soong/+/2804373.\n\nhttps://reviews.llvm.org/D157879 is likely the patch that is now triggering these new warnings.",
+      "parentUuid": "04f13899_12771611",
+      "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
