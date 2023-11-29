@@ -34,6 +34,24 @@
       "parentUuid": "e0611c4b_b3910748",
       "revId": "b23df316ec9c14e8adc133cf4c4497c4a1e599a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b753791c_75dcc8b9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T00:17:31Z",
+      "side": 1,
+      "message": "the linker definitely makes sense, and i can see libc, but specifically for libm? (which i think has also been our most problematic library for such things.)\n\ni guess you wanted to start with libm on the assumption it matters the least, but i\u0027d rather start with the linker or libc since they matter the most :-)",
+      "parentUuid": "d9fe9107_49e693cf",
+      "revId": "b23df316ec9c14e8adc133cf4c4497c4a1e599a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
