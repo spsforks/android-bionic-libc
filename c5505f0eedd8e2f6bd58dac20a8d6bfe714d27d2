@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68fa1f34_129b619d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T20:40:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "571c51b8_8f19ba8a",
+      "range": {
+        "startLine": 1250,
+        "startChar": 23,
+        "endLine": 1250,
+        "endChar": 52
+      },
+      "revId": "c5505f0eedd8e2f6bd58dac20a8d6bfe714d27d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2804a98c_a1c51861",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-11-29T20:04:17Z",
       "side": 1,
       "message": "Would it be better to have this as None for no value? Then the code that does the check doesn\u0027t need to check the length.\n\nThen you can do the check as I mentioned in the other file.",
+      "range": {
+        "startLine": 36,
+        "startChar": 28,
+        "endLine": 36,
+        "endChar": 30
+      },
+      "revId": "c5505f0eedd8e2f6bd58dac20a8d6bfe714d27d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d720f89_29644dfb",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T20:40:08Z",
+      "side": 1,
+      "message": "i did wonder whether that\u0027s what a python person would do but not being a python person, i translated \"None\" to nullptr and thought \"no, that\u0027s worse than the empty string\". but since you _are_ a python person, i\u0027ve changed this and the other file.",
+      "parentUuid": "2804a98c_a1c51861",
       "range": {
         "startLine": 36,
         "startChar": 28,
