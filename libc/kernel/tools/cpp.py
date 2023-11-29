@@ -1247,8 +1247,8 @@ class BlockList(object):
                     # Add an include for the structure to be removed of the form:
                     #  #include <bits/STRUCT_NAME.h>
                     struct_token = b.tokens[i + 1]
-                    if not structs[struct_token.id]:
-                        extra_includes.append("<bits/%s.h>" % struct_token.id)
+                    if len(structs[struct_token.id]):
+                        extra_includes.append("<%s>" % structs[struct_token.id])
 
                     # Search forward for the end of the structure.
                     # Very simple search, look for } and ; tokens.
