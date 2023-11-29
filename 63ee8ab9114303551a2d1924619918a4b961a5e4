@@ -88,6 +88,24 @@
       "parentUuid": "04f13899_12771611",
       "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "569bdea9_7009057f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T15:26:11Z",
+      "side": 1,
+      "message": "from the comments on the patch it sounds like fuschia has similar feelings: \"It\u0027s an unfortunate configuration. We saw this in Chrome where some projects were manually setting -Wmissing-field-initializers, but when building for Fuchsia, some Fuchsia system headers had this code. We can just suppress this for all Fuchsia builds, I think that\u0027s fine.\"\n\nit\u0027s a shame, because i think this would have been useful (a) as a [[warn_unused]]-type attribute on an individual struct or (b) if it automatically applied to non-POD types (but not to POD types) or even (c) if there was a [[ignore_unused]] we could apply to [almost] all the types in the libc headers. but as it is, it just doesn\u0027t seem useful.",
+      "parentUuid": "f3079d9c_66fa921b",
+      "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
