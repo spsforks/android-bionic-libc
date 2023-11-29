@@ -16,6 +16,23 @@
       "message": "okay, ps7 actually cleans up the #define crap that was the point of this exercise in the first place...\n\n(isn\u0027t it funny how trying to do two things at once tends to make both go slower?)",
       "revId": "316c2301e2faca4cf3a681866b34c7a750a81a41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0142e5c2_d42a4df9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-11-29T21:38:04Z",
+      "side": 1,
+      "message": "Looks good to me, but it looks like at least one tool is using the uapi headers directly and causing build problems. Specifically, tools/netsim.",
+      "revId": "316c2301e2faca4cf3a681866b34c7a750a81a41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
