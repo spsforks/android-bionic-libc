@@ -106,6 +106,24 @@
       "parentUuid": "f3079d9c_66fa921b",
       "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "110b05da_ae5cae53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T15:28:47Z",
+      "side": 1,
+      "message": "(because wrt \"Ah i didn\u0027t know that someone attempted to run this before\" the problem is that it\u0027s not just bionic that gets this spam --- it\u0027s basically any code that uses bionic\u0027s structs. that\u0027s what i mean about this would have made more sense as a per-struct attribute. the whole \"`{ .foo \u003d 123 }` automatically zeros any other fields\" feature was added to the language because it\u0027s _such_ a useful idiom for so many libc structs!)",
+      "parentUuid": "569bdea9_7009057f",
+      "revId": "63ee8ab9114303551a2d1924619918a4b961a5e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
