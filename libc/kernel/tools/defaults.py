@@ -32,11 +32,12 @@ kernel_known_macros = {
 # addition to removing the structure, add an #include <bits/STRUCT.h>
 # to the file.
 kernel_structs_to_remove = {
-    # Remove the structures since they are still the same as
+    # Remove these structures since they are still the same as
     # timeval, itimerval.
     "__kernel_old_timeval": True,
     "__kernel_old_itimerval": True,
     # Replace all of the below structures with #include <bits/STRUCT.h>
+    "__kernel_sockaddr_storage": False,
     "epoll_event": False,
     "flock": False,
     "flock64": False,
@@ -91,6 +92,8 @@ kernel_token_replacements = {
     "__kernel_old_timeval": "timeval",
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
+    # Do the same for __kernel_sockaddr_storage.
+    "__kernel_sockaddr_storage": "sockaddr_storage",
     # Replace __packed with __attribute__((__packed__)) to avoid depending
     # on sys/cdefs.h
     "__packed": "__attribute__((__packed__))",
