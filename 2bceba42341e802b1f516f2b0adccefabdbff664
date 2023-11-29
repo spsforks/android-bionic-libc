@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce46b2c9_d4050cd3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T19:26:39Z",
+      "side": 1,
+      "message": "actually, that appears to be basically a one-line change that \"just works\", so ps2 incoming...",
+      "revId": "2bceba42341e802b1f516f2b0adccefabdbff664",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
