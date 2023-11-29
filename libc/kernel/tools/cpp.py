@@ -1247,8 +1247,13 @@ class BlockList(object):
                     # Add an include for the structure to be removed of the form:
                     #  #include <bits/STRUCT_NAME.h>
                     struct_token = b.tokens[i + 1]
+<<<<<<< PATCH SET (81f38f Use the canonical idiom for sockaddr_storage.)
+                    if len(structs[struct_token.id]):
+                        extra_includes.append("<%s>" % structs[struct_token.id])
+=======
                     if not structs[struct_token.id]:
                         extra_includes.add("<bits/%s.h>" % struct_token.id)
+>>>>>>> BASE      (3906f3 Merge "Avoid multiple definitions of sigaction." into main)
 
                     # Search forward for the end of the structure.
                     # Very simple search, look for } and ; tokens.
