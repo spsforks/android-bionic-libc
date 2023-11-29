@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75646193_d7fb76f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-11-29T00:45:15Z",
+      "side": 1,
+      "message": "ccross: have we dealt with issues like this before?\n```\nbionic/libc/kernel/uapi/linux/tcp.h:177:3: error: redefinition of enumerator \u0027TCP_NLA_TOTAL_RETRANS\u0027\nTCP_NLA_TOTAL_RETRANS,\n^\nexternal/musl/include/netinet/tcp.h:63:2: note: previous definition is here\nTCP_NLA_TOTAL_RETRANS,\n^\n```\n(remind me why musl doesn\u0027t just use the external/kernel-headers uapi headers directly, and uses the ones modified to be compatible with bionic instead?)",
+      "revId": "b4a9b17a553e0dbf7414517bae04440601d182fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
