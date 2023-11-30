@@ -193,6 +193,24 @@
       "parentUuid": "eaa47695_d3e50210",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82499ed5_c469c4b7",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2005646
+      },
+      "writtenOn": "2023-11-30T00:48:42Z",
+      "side": 1,
+      "message": "\u003e [...] faccessat2(2) falling back to the current code\n\n@enh@google.com: I finally got around to experimenting with `faccessat2()` and wanted to share an update. Unfortunately, even without the fallback path, there\u0027s a complication related to seccomp that I fear may be difficult to resolve in a clean way. 😞\n\nThere are separate seccomp policies in `frameworks/av` that are loaded via minijail, for example [mediacodec-arm64.policy](https://android.googlesource.com/platform/frameworks/av/+/refs/heads/main/services/mediacodec/seccomp_policy/mediacodec-arm64.policy#38). While we could add `faccessat2` to those syscall allowlists, vendors would also need to update their copies or they\u0027d crash if bionic starts calling `faccessat2`. That\u0027s exactly what I ran into while testing on a Quest 2 device: `vendor.qti.media.c2@1.0-service` kept crashing with `SIGSYS`.\n\nIf we were to change libc\u0027s `faccessat` wrapper to use the new syscall, I think some of our options are:\n\n- Have vendors update their seccomp policies to allow `faccessat2`. This is likely a non-starter, given the guarantees about API/ABI stability of core libraries like libc.\n- Add some logic to minijail that would implicitly allow v2 of the syscall if `faccessat` is in the list. Super hacky.\n\nWhat do you think?",
+      "parentUuid": "1b4c2c73_7dd443fb",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
