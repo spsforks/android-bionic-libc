@@ -2192,8 +2192,8 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    // Generate NDK variants of the CRT objects for every supported API level.
-    min_sdk_version: "16",
+    // Generate NDK variants of the CRT objects suitable for every supported API level.
+    min_sdk_version: "21",
     stl: "none",
     crt: true,
     cflags: [
