@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdb40b23_2452cda5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-12-02T00:34:31Z",
+      "side": 1,
+      "message": "It was pointed out to me that these checks can actually be removed by smart enough compiler... I could move the logic to scudo, or malloc_common?",
+      "revId": "4bcd06ffb008c2a7f0af8729c08cae6c8c629ae5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
