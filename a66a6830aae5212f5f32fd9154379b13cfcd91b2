@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fc4183a_3910b68c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2023-12-04T15:14:13Z",
+      "side": 1,
+      "message": "Yes that\u0027s the idea, to have it available to all binary translation engines. I will add the Guest State layouts to native_bridge_support before submitting this.\n\n(just noticed that this comment was in draft)",
+      "parentUuid": "025a0c51_a1d38610",
+      "revId": "a66a6830aae5212f5f32fd9154379b13cfcd91b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "90c96ef7_d5900d6b",
