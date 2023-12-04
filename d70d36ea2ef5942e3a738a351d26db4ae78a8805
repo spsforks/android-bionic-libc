@@ -16,6 +16,29 @@
       "message": "thanks!\n\ni see upstream netbsd still has this bug. do you want to report this upstream, or should i? (i\u0027ll link to this and mention that you found the bug, not me.)\n\nalso, i notice that packages/modules/DnsResolver/sethostent.cpp\u0027s copy \u0026 paste of this code has the same bug. +cken...",
       "revId": "d70d36ea2ef5942e3a738a351d26db4ae78a8805",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df18f2d5_08cad07f",
+        "filename": "libc/dns/net/sethostent.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-12-04T22:35:24Z",
+      "side": 1,
+      "message": "Doesn\u0027t this call need to be added into the nospc: label code?\n\nThe gotos from the for loop will be jumping out without calling endhostent_r(\u0026hf).",
+      "range": {
+        "startLine": 160,
+        "startChar": 2,
+        "endLine": 160,
+        "endChar": 20
+      },
+      "revId": "d70d36ea2ef5942e3a738a351d26db4ae78a8805",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
