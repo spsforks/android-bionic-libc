@@ -157,6 +157,7 @@ _hf_gethtbyname2(const char *name, int af, struct getnamaddr *info)
 
 	if ((ptr = buf = malloc(len = info->buflen)) == NULL) {
 		*info->he = NETDB_INTERNAL;
+		endhostent_r(&hf);
 		return NULL;
 	}
 
