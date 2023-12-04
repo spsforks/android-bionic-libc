@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82dd7183_9a9a9146",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-04T19:03:48Z",
+      "side": 1,
+      "message": "thanks!\n\ni see upstream netbsd still has this bug. do you want to report this upstream, or should i? (i\u0027ll link to this and mention that you found the bug, not me.)\n\nalso, i notice that packages/modules/DnsResolver/sethostent.cpp\u0027s copy \u0026 paste of this code has the same bug. +cken...",
+      "revId": "d70d36ea2ef5942e3a738a351d26db4ae78a8805",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
