@@ -16,6 +16,46 @@
       "message": "This is a test-only change now. Please review!",
       "revId": "f56b5aedfe6f12888f569217c04b1710cc50a05d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "145d843f_ad874bcb",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-05T19:28:55Z",
+      "side": 1,
+      "message": "y u hate StringPrintf()?",
+      "revId": "f56b5aedfe6f12888f569217c04b1710cc50a05d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57bb1365_9226426b",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-05T19:28:55Z",
+      "side": 1,
+      "message": "don\u0027t create a local if you\u0027re not going to use it",
+      "range": {
+        "startLine": 96,
+        "startChar": 6,
+        "endLine": 96,
+        "endChar": 9
+      },
+      "revId": "f56b5aedfe6f12888f569217c04b1710cc50a05d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
