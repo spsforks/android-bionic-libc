@@ -51,6 +51,24 @@
       "parentUuid": "0142e5c2_d42a4df9",
       "revId": "316c2301e2faca4cf3a681866b34c7a750a81a41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5ecf455_65617e2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-05T23:40:40Z",
+      "side": 1,
+      "message": "oh, good grief, we have a lot of copies of vm_sockets.h around the tree...",
+      "parentUuid": "b126a289_3c3be5c6",
+      "revId": "316c2301e2faca4cf3a681866b34c7a750a81a41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
