@@ -57,6 +57,30 @@
       },
       "revId": "d70d36ea2ef5942e3a738a351d26db4ae78a8805",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0aff4b05_f32a1317",
+        "filename": "libc/dns/net/sethostent.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-12-05T03:25:43Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "df18f2d5_08cad07f",
+      "range": {
+        "startLine": 160,
+        "startChar": 2,
+        "endLine": 160,
+        "endChar": 20
+      },
+      "revId": "d70d36ea2ef5942e3a738a351d26db4ae78a8805",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
