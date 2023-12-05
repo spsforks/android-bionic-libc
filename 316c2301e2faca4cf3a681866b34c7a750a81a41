@@ -33,6 +33,24 @@
       "message": "Looks good to me, but it looks like at least one tool is using the uapi headers directly and causing build problems. Specifically, tools/netsim.",
       "revId": "316c2301e2faca4cf3a681866b34c7a750a81a41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b126a289_3c3be5c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-05T23:38:51Z",
+      "side": 1,
+      "message": "i was assuming that was just the lack of the corresponding musl change... but, yeah, seems like someone\u0027s up to no good, mixing glibc with bionic uapi headers... (i really wish we could stop people just poking about anywhere in the tree like that!)",
+      "parentUuid": "0142e5c2_d42a4df9",
+      "revId": "316c2301e2faca4cf3a681866b34c7a750a81a41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
