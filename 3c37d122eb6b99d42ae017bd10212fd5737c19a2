@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b0718c6_86ceeba0",
+        "filename": "libc/bionic/bionic_call_ifunc_resolver.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1279898
+      },
+      "writtenOn": "2023-12-06T00:36:01Z",
+      "side": 0,
+      "message": "I\u0027m not drawing the connection between the change to hwprobe.h and why this allows us to remove this ARM-specific one-time-init check?",
+      "revId": "3c37d122eb6b99d42ae017bd10212fd5737c19a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
