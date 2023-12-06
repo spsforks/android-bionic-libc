@@ -34,6 +34,24 @@
       "parentUuid": "8b0718c6_86ceeba0",
       "revId": "3c37d122eb6b99d42ae017bd10212fd5737c19a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ce8d956_1b7a9f9f",
+        "filename": "libc/bionic/bionic_call_ifunc_resolver.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1279898
+      },
+      "writtenOn": "2023-12-06T00:49:25Z",
+      "side": 0,
+      "message": "Acknowledged",
+      "parentUuid": "be749099_b0a38eb1",
+      "revId": "3c37d122eb6b99d42ae017bd10212fd5737c19a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
