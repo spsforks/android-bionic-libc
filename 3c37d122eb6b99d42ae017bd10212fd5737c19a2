@@ -16,6 +16,24 @@
       "message": "I\u0027m not drawing the connection between the change to hwprobe.h and why this allows us to remove this ARM-specific one-time-init check?",
       "revId": "3c37d122eb6b99d42ae017bd10212fd5737c19a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be749099_b0a38eb1",
+        "filename": "libc/bionic/bionic_call_ifunc_resolver.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-06T00:43:31Z",
+      "side": 0,
+      "message": "it\u0027s mainly \"riscv64 relies on the built-in c++ stuff being fine, so if we\u0027re wrong, let\u0027s flush that out sooner rather than later, and if we\u0027re right, let\u0027s clean up arm32\".\n\nbut, yeah, i should send out a separate change for that... brb... https://android-review.googlesource.com/c/platform/bionic/+/2860690\n\n(i\u0027ll rebase this once that\u0027s in.)",
+      "parentUuid": "8b0718c6_86ceeba0",
+      "revId": "3c37d122eb6b99d42ae017bd10212fd5737c19a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
