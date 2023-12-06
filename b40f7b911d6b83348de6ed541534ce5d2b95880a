@@ -16,6 +16,24 @@
       "message": "should just just be\n```\n#if defined(__LP64__)\n#define PTHREAD_STACK_MIN 16384\n#else\n#define PTHREAD_STACK_MIN 8192\n#endif\n```\n?\n\nin the code review that added this, it looks like we were so distracted by the minutiae of the other noise that we never stopped to question why we\u0027re increasing this? increasing the page size shouldn\u0027t change the stack usage of random functions, and the pthread stack guards etc are in addition to this, not subtracted from it (or the existing values wouldn\u0027t work)?\n\n+2 since this is \"less wrong\", but looking at this again is making me worry that we\u0027ve missed something else that\u0027s behaving badly with a larger page size? probably also worth testing with the usual 16KiB and filing a bug (or uploading the fix) if anything breaks...",
       "revId": "b40f7b911d6b83348de6ed541534ce5d2b95880a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38023d27_de9e30fa",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-12-06T19:57:56Z",
+      "side": 1,
+      "message": "I see your concern. I created this bug b/315174209 to run bionic\u0027s tests in different targets and make sure that there are not regressions. Feel free to add other test cases that we would like to run.",
+      "parentUuid": "83399ab5_ddaaf53b",
+      "revId": "b40f7b911d6b83348de6ed541534ce5d2b95880a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
