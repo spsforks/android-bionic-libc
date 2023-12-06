@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3f065de_d6a0787b",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1619,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-06T15:31:36Z",
+      "side": 1,
+      "message": "is there a reason you didn\u0027t just put this in the defaults to save yourself the copy \u0026 paste?",
+      "revId": "bcb19c8fbe1dd266d7b91da7a1d65c551fd6ceea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
