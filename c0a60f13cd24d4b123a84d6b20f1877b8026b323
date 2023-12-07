@@ -229,6 +229,24 @@
       "parentUuid": "82499ed5_c469c4b7",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d4a918a_7346ffde",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2023-12-07T04:01:01Z",
+      "side": 1,
+      "message": "(haven\u0027t read the whole thread. sorry; too long...)\n\n`ro.vendor.api_level` is the system property which gives you the api level that the vendor partition is targeting at.\n\n\n\u003e Add some logic to minijail that would implicitly allow v2 of the syscall if faccessat is in the list.\n\nThis is what came to my mind when I first read the thread, but if it requires recompilation of the vendor software, it\u0027d be a no-go.\n\nSorry, I don\u0027t have a better idea.",
+      "parentUuid": "402a57bf_9a6faff6",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
