@@ -16,6 +16,24 @@
       "message": "Was the revert really necessary? It looks like it was done incorrectly.",
       "revId": "a7fcc1be3f3031cffb571f09d2808a9a4b5612c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebfeb484_02c677c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-07T20:01:29Z",
+      "side": 1,
+      "message": "yeah, i think it was flake so it _looked_ like the revert helped, but it was irrelevant.",
+      "parentUuid": "eb8b41c9_92df1cbe",
+      "revId": "a7fcc1be3f3031cffb571f09d2808a9a4b5612c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
