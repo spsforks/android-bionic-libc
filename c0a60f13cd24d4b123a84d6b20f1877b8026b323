@@ -211,6 +211,24 @@
       "parentUuid": "1b4c2c73_7dd443fb",
       "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "402a57bf_9a6faff6",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-07T01:03:11Z",
+      "side": 1,
+      "message": "\u003e While we could add faccessat2 to those syscall allowlists, vendors would also need to update their copies or they\u0027d crash if bionic starts calling faccessat2. That\u0027s exactly what I ran into while testing on a Quest 2 device: vendor.qti.media.c2@1.0-service kept crashing with SIGSYS.\n\nis it actually a _copy_?\n\n\u003e Have vendors update their seccomp policies to allow faccessat2. This is likely a non-starter, given the guarantees about API/ABI stability of core libraries like libc.\n\nyeah, but we don\u0027t (and can\u0027t, in general) guarantee what system calls that corresponds to. (which, yes, is a fundamental flaw in the whole seccomp thing --- \"system calls\" is not the right granularity for userspace to be talking about what they do/don\u0027t do.)\n\n\u003e Add some logic to minijail that would implicitly allow v2 of the syscall if faccessat is in the list. Super hacky.\n\nthat would still require a recompile though, right, so it would break if you had a new system image with an old vendor image?\n\ni suspect the way out of this is that bionic checks not what _kernel_ it\u0027s on but what the vendor image version is. +jiyong (a) because i can never remember what that system property is called and (b) because i\u0027m interested if he has other ideas.",
+      "parentUuid": "82499ed5_c469c4b7",
+      "revId": "c0a60f13cd24d4b123a84d6b20f1877b8026b323",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
