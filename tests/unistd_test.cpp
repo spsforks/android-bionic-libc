@@ -1127,8 +1127,11 @@ TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_ONLN) {
 
 TEST(UNISTD_TEST, sysconf_SC_ARG_MAX) {
   // Since Linux 2.6.23, ARG_MAX isn't a constant and depends on RLIMIT_STACK.
-  // See prepare_arg_pages() in the kernel for the gory details:
-  // https://elixir.bootlin.com/linux/v5.3.11/source/fs/exec.c#L451
+  // See setup_arg_pages() in the kernel for the gory details:
+  // https://elixir.bootlin.com/linux/v6.6.4/source/fs/exec.c#L749
+
+  // Number of pages that the stack is expanded by the kernel.
+  int stack_exp_pg = 0;
 
   // Get our current limit, and set things up so we restore the limit.
   rlimit rl;
@@ -1145,19 +1148,29 @@ TEST(UNISTD_TEST, sysconf_SC_ARG_MAX) {
   // _SC_ARG_MAX should be 1/4 the stack size.
   EXPECT_EQ(static_cast<long>(rl.rlim_cur / 4), sysconf(_SC_ARG_MAX));
 
-  // If you have a really small stack, the kernel still guarantees "32 pages" (see fs/exec.c).
+  // If you have a really small stack, the kernel still guarantees a stack
+  // expansion of "32 pages of 4k" or "8 pages of 16k"
+  // (see setup_arg_pages() in fs/exec.c).
   rl.rlim_cur = 1024;
   rl.rlim_max = RLIM_INFINITY;
   ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
 
-  EXPECT_EQ(static_cast<long>(32 * sysconf(_SC_PAGE_SIZE)), sysconf(_SC_ARG_MAX));
+  if (sysconf(_SC_PAGE_SIZE) == 4096) {
+    stack_exp_pg = 32;
+  } else if (sysconf(_SC_PAGE_SIZE) == 16384) {
+    stack_exp_pg = 8;
+  } else {
+    FAIL() << "Page size not supported ";
+  }
 
-  // With a 128-page stack limit, we know exactly what _SC_ARG_MAX should be...
-  rl.rlim_cur = 128 * sysconf(_SC_PAGE_SIZE);
+  EXPECT_EQ(static_cast<long>(stack_exp_pg * sysconf(_SC_PAGE_SIZE)), sysconf(_SC_ARG_MAX));
+
+  // With a known page stack limit, we know exactly what _SC_ARG_MAX should be...
+  rl.rlim_cur = 4 * stack_exp_pg * sysconf(_SC_PAGE_SIZE);
   rl.rlim_max = RLIM_INFINITY;
   ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
 
-  EXPECT_EQ(static_cast<long>((128 * sysconf(_SC_PAGE_SIZE)) / 4), sysconf(_SC_ARG_MAX));
+  EXPECT_EQ(static_cast<long>(stack_exp_pg * sysconf(_SC_PAGE_SIZE)), sysconf(_SC_ARG_MAX));
 }
 
 TEST(UNISTD_TEST, sysconf_unknown) {
