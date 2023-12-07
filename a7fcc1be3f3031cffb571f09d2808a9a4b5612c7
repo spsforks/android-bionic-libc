@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb8b41c9_92df1cbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-12-07T19:11:49Z",
+      "side": 1,
+      "message": "Was the revert really necessary? It looks like it was done incorrectly.",
+      "revId": "a7fcc1be3f3031cffb571f09d2808a9a4b5612c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
