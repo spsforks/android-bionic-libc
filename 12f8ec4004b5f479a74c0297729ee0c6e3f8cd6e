@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b87022be_31e2407e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-07T21:02:48Z",
+      "side": 1,
+      "message": "i\u0027ve sent this upstream: https://mail-index.netbsd.org/tech-userlevel/2023/12/07/msg014218.html and will sync when they fix...",
+      "revId": "12f8ec4004b5f479a74c0297729ee0c6e3f8cd6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
