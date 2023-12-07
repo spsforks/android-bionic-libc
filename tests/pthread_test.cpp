@@ -776,6 +776,7 @@ static size_t GetActualStackSize(const pthread_attr_t& attributes) {
 }
 
 TEST(pthread, pthread_attr_setguardsize_tiny) {
+  const size_t kPageSize = sysconf(_SC_PAGE_SIZE);
   pthread_attr_t attributes;
   ASSERT_EQ(0, pthread_attr_init(&attributes));
 
@@ -784,7 +785,7 @@ TEST(pthread, pthread_attr_setguardsize_tiny) {
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(128U, guard_size);
-  ASSERT_EQ(4096U, GetActualGuardSize(attributes));
+  ASSERT_EQ(kPageSize, GetActualGuardSize(attributes));
 }
 
 TEST(pthread, pthread_attr_setguardsize_reasonable) {
@@ -800,6 +801,7 @@ TEST(pthread, pthread_attr_setguardsize_reasonable) {
 }
 
 TEST(pthread, pthread_attr_setguardsize_needs_rounding) {
+  const size_t kPageSize = sysconf(_SC_PAGE_SIZE);
   pthread_attr_t attributes;
   ASSERT_EQ(0, pthread_attr_init(&attributes));
 
@@ -808,7 +810,13 @@ TEST(pthread, pthread_attr_setguardsize_needs_rounding) {
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(32*1024U + 1, guard_size);
-  ASSERT_EQ(36*1024U, GetActualGuardSize(attributes));
+  if (kPageSize == 4096) {
+    ASSERT_EQ(36 * 1024U, GetActualGuardSize(attributes));
+  } else if (kPageSize == 16384) {
+    ASSERT_EQ(48 * 1024U, GetActualGuardSize(attributes));
+  } else {
+    FAIL() << "Page size not supported " << kPageSIze;
+  }
 }
 
 TEST(pthread, pthread_attr_setguardsize_enormous) {
