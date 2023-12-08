@@ -46,6 +46,30 @@
       },
       "revId": "c7cc6d5902ecd2052d61020eae7e8f594d832738",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "911631ae_5aaa00fe",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-08T17:54:31Z",
+      "side": 1,
+      "message": "https://android-review.git.corp.google.com/c/platform/bionic/+/2864852 removes the ones from libc/libm, but there might be other reasons why that\u0027s a bad idea (?), so that felt like it should be a separate change, if only so it can be reverted separately if we do find a problem!\n\n(given that the historical motivation for that was the same as for the tests, i\u0027m not expecting to have to revert, but you never know. 2019 was a long time ago...)",
+      "parentUuid": "884417ce_7b8c3e55",
+      "range": {
+        "startLine": 670,
+        "startChar": 0,
+        "endLine": 670,
+        "endChar": 26
+      },
+      "revId": "c7cc6d5902ecd2052d61020eae7e8f594d832738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
