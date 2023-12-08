@@ -22,6 +22,30 @@
       },
       "revId": "c7cc6d5902ecd2052d61020eae7e8f594d832738",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "884417ce_7b8c3e55",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-08T17:48:17Z",
+      "side": 1,
+      "message": "yeah, http://b/132640749 is the bug mentioned in the blame, and the implication is that just building bionic should fail. i\u0027m guessing this was fixed but never cleaned up?\n\nhttps://android-review.git.corp.google.com/c/platform/bionic/+/2863363 removes the ones from the tests.",
+      "parentUuid": "f0e1af83_d1a1171f",
+      "range": {
+        "startLine": 670,
+        "startChar": 0,
+        "endLine": 670,
+        "endChar": 26
+      },
+      "revId": "c7cc6d5902ecd2052d61020eae7e8f594d832738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
