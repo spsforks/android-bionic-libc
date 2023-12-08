@@ -125,18 +125,6 @@ void __libc_init_vdso(libc_globals* globals) {
     return;
   }
 
-  // How many symbols does it have?
-  size_t symbol_count = 0;
-  ElfW(Shdr)* vdso_shdr = reinterpret_cast<ElfW(Shdr)*>(vdso_ehdr_addr + vdso_ehdr->e_shoff);
-  for (size_t i = 0; i < vdso_ehdr->e_shnum; ++i) {
-    if (vdso_shdr[i].sh_type == SHT_DYNSYM) {
-      symbol_count = vdso_shdr[i].sh_size / sizeof(ElfW(Sym));
-    }
-  }
-  if (symbol_count == 0) {
-    return;
-  }
-
   // Where's the dynamic table?
   ElfW(Addr) vdso_addr = 0;
   ElfW(Dyn)* vdso_dyn = nullptr;
@@ -152,17 +140,20 @@ void __libc_init_vdso(libc_globals* globals) {
     return;
   }
 
-  // Where are the string and symbol tables?
+  // Where are the string and symbol tables, and how many symbols are there?
   const char* strtab = nullptr;
+  size_t symbol_count = 0;
   ElfW(Sym)* symtab = nullptr;
   for (ElfW(Dyn)* d = vdso_dyn; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_STRTAB) {
       strtab = reinterpret_cast<const char*>(vdso_addr + d->d_un.d_ptr);
     } else if (d->d_tag == DT_SYMTAB) {
       symtab = reinterpret_cast<ElfW(Sym)*>(vdso_addr + d->d_un.d_ptr);
+    } else if (d->d_tag == DT_HASH) {
+      symbol_count = reinterpret_cast<uint32_t*>(vdso_addr + d->d_un.d_ptr)[1];
     }
   }
-  if (strtab == nullptr || symtab == nullptr) {
+  if (strtab == nullptr || symtab == nullptr || symbol_count == 0) {
     return;
   }
 
