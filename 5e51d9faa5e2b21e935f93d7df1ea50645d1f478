@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a8e9f1c_b4599986",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-08T18:54:32Z",
+      "side": 1,
+      "message": "hmm... i\u0027m not sure this is the _same_ bug, but it does look like there\u0027s still a bug that would prevent us from removing this for libc:\n```\nFAILED: out/soong/.intermediates/bionic/libc/libc/android_arm64_armv8-a_shared_fuzzer/unstripped/libc.so\n...p/gen/libc.arm64.map.txt -fno-lto -fno-sanitize-coverage\u003dstack-depth -Wl,-rpath,\\$ORIGIN -fsanitize\u003dfuzzer-no-link -fno-sanitize-link-runtime -Wl,--exclude-libs\u003dlibclang_rt.builtins-aarch64-android.a \nld.lld: error: version script assignment of \u0027LIBC\u0027 to symbol \u0027__open_2\u0027 failed: symbol not defined\nld.lld: error: version script assignment of \u0027LIBC\u0027 to symbol \u0027__openat_2\u0027 failed: symbol not defined\nclang++: error: linker command failed with exit code 1 (use -v to see invocation)\n```",
+      "revId": "5e51d9faa5e2b21e935f93d7df1ea50645d1f478",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
