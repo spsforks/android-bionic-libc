@@ -1,5 +1,29 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0e1af83_d1a1171f",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-12-08T17:45:07Z",
+      "side": 1,
+      "message": "@mitchp@google.com upon removing `fno-emulated-tls`, can we also remove the `fuzzer: false`\n\n(assuming it links... is there a particular lunch target or build option that should be tested?)",
+      "range": {
+        "startLine": 670,
+        "startChar": 0,
+        "endLine": 670,
+        "endChar": 26
+      },
+      "revId": "c7cc6d5902ecd2052d61020eae7e8f594d832738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
