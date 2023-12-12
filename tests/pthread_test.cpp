@@ -2443,7 +2443,12 @@ static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
 
   timespec ts;
   clock_gettime(clock, &ts);
+  constexpr int64_t kNanosPerSecond = 1'000'000'000;                  // ensure 64b precision.
+  const int64_t start_ns = ts.tv_sec * kNanosPerSecond + ts.tv_nsec;  // start of test.
+
+  // add a second to get deadline.
   ts.tv_sec += 1;
+
   ASSERT_EQ(0, lock_function(&m.lock, &ts));
 
   struct ThreadArgs {
@@ -2472,6 +2477,12 @@ static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
   void* result;
   ASSERT_EQ(0, pthread_join(thread, &result));
   ASSERT_EQ(ETIMEDOUT, reinterpret_cast<intptr_t>(result));
+
+  // The timedlock must have waited at least 1 second before returning.
+  clock_gettime(clock, &ts);
+  const int64_t end_ns = ts.tv_sec * kNanosPerSecond + ts.tv_nsec;
+  ASSERT_GT(end_ns - start_ns, kNanosPerSecond);
+
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 
