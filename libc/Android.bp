@@ -819,12 +819,30 @@ cc_library_static {
     },
 }
 
+cc_defaults {
+    name: "libcpu_features_dependencies",
+    include_dirs: ["external/cpu_features/include"],
+    cflags: [
+        // Reserve 1024 bytes on the stack when reading from `/proc/cpuinfo`.
+        "-DSTACK_LINE_READER_BUFFER_SIZE=1024",
+        "-Wno-gnu-designator",
+    ],
+    arch: {
+        x86: {
+            srcs: [":libcpu_features_x86_sources"],
+        },
+        x86_64: {
+            srcs: [":libcpu_features_x86_sources"],
+        }
+    }
+}
+
 // ========================================================
 // libc_bionic.a - home-grown C library code
 // ========================================================
 
 cc_library_static {
-    defaults: ["libc_defaults"],
+    defaults: ["libc_defaults","libcpu_features_dependencies"],
     srcs: [
         // These require getauxval, which isn't available on older platforms.
         "bionic/sysconf.cpp",
@@ -846,6 +864,7 @@ cc_library_static {
                 "arch-arm/bionic/_exit_with_stack_teardown.S",
                 "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/bpabi.c",
+                "arch-arm/bionic/cacheinfo.cpp",
                 "arch-arm/bionic/libcrt_compat.c",
                 "arch-arm/bionic/popcount_tab.c",
                 "arch-arm/bionic/setjmp.S",
@@ -899,6 +918,7 @@ cc_library_static {
             srcs: [
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
+                "arch-arm64/bionic/cacheinfo.cpp",
                 "arch-arm64/bionic/setjmp.S",
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
@@ -909,6 +929,7 @@ cc_library_static {
             srcs: [
                 "arch-riscv64/bionic/__bionic_clone.S",
                 "arch-riscv64/bionic/_exit_with_stack_teardown.S",
+                "arch-riscv64/bionic/cacheinfo.cpp",
                 "arch-riscv64/bionic/setjmp.S",
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
@@ -954,6 +975,7 @@ cc_library_static {
             srcs: [
                 "arch-x86/bionic/__bionic_clone.S",
                 "arch-x86/bionic/_exit_with_stack_teardown.S",
+                "arch-x86/bionic/cacheinfo.cpp",
                 "arch-x86/bionic/libcrt_compat.c",
                 "arch-x86/bionic/__restore.S",
                 "arch-x86/bionic/setjmp.S",
@@ -1014,6 +1036,9 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
+                // Common source for both x86/x86_64
+                "arch-x86/bionic/cacheinfo.cpp",
+
                 "arch-x86_64/bionic/__bionic_clone.S",
                 "arch-x86_64/bionic/_exit_with_stack_teardown.S",
                 "arch-x86_64/bionic/__restore_rt.S",
