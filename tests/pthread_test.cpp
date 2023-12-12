@@ -2398,6 +2398,21 @@ static void pthread_mutex_timedlock_helper(clockid_t clock,
   ts.tv_sec = -1;
   ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
 
+  // check we wait long enough for the lock.
+  ASSERT_EQ(0, clock_gettime(clock, &ts));
+  constexpr int64_t kNanosPerSecond = 1'000'000'000;
+  const int64_t start_ns = ts.tv_sec * kNanosPerSecond + ts.tv_nsec;
+
+  // add a second to get deadline.
+  ts.tv_sec += 1;
+
+  ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
+
+  // The timedlock must have waited at least 1 second before returning.
+  clock_gettime(clock, &ts);
+  const int64_t end_ns = ts.tv_sec * kNanosPerSecond + ts.tv_nsec;
+  ASSERT_GT(end_ns - start_ns, kNanosPerSecond);
+
   // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
 
@@ -2443,7 +2458,12 @@ static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
 
   timespec ts;
   clock_gettime(clock, &ts);
+  constexpr int64_t kNanosPerSecond = 1'000'000'000;
+  const int64_t start_ns = ts.tv_sec * kNanosPerSecond + ts.tv_nsec;
+
+  // add a second to get deadline.
   ts.tv_sec += 1;
+
   ASSERT_EQ(0, lock_function(&m.lock, &ts));
 
   struct ThreadArgs {
@@ -2472,6 +2492,12 @@ static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
   void* result;
   ASSERT_EQ(0, pthread_join(thread, &result));
   ASSERT_EQ(ETIMEDOUT, reinterpret_cast<intptr_t>(result));
+
+  // The timedlock must have waited at least 1 second before returning.
+  clock_gettime(clock, &ts);
+  const int64_t end_ns = ts.tv_sec * kNanosPerSecond + ts.tv_nsec;
+  ASSERT_GT(end_ns - start_ns, kNanosPerSecond);
+
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 
