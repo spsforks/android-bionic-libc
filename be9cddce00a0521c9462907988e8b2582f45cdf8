@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff636baf_553095ee",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06c970eb_18a63d03",
+      "range": {
+        "startLine": 56,
+        "startChar": 32,
+        "endLine": 56,
+        "endChar": 36
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04572d1e_fa4e140d",
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "39f0a17f_b4a0f243",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Not sure what you mean. The use_realtime_clock parameter sets the clockbase of the abs_timeout parameter.  Moving the conversion out would confuse the flag meaning.\n\nIf you are worried about any regression, I updated the pthread_tests to check the NonPI timedlock as well.",
+      "parentUuid": "04572d1e_fa4e140d",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "862debaa_f4d3321b",
         "filename": "libc/bionic/bionic_futex.cpp",
         "patchSetId": 2
@@ -60,6 +108,42 @@
       "writtenOn": "2023-12-12T15:38:46Z",
       "side": 1,
       "message": "use the _Nonnull annotation instead?",
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e40a56b_8e9e0294",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "862debaa_f4d3321b",
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5bcc6b3_6a727dc1",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "862debaa_f4d3321b",
       "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -111,6 +195,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cf6eb0a_466e0ac6",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Done.  I used a Meyer\u0027s singleton to probe the FUTEX_LOCK_PI2 support. P7 is 5.10, P8 is 5.15.",
+      "parentUuid": "8e5c72a4_14609a2b",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "428b7445_64d4e38b",
@@ -124,6 +232,30 @@
       "writtenOn": "2023-12-12T15:38:46Z",
       "side": 1,
       "message": "no need for these; we don\u0027t have warn_unused_result on clock_gettime().",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 8
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3923af53_b06b8790",
+        "filename": "libc/bionic/bionic_time_conversions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Done.  I was using (void) as a [sic] annotation that we are dropping the return check, even though the input parameter is not verified.  As the only use of this is with fixed valid clockid_t, and there is no visibility outside this compilation unit there is no problem.",
+      "parentUuid": "428b7445_64d4e38b",
       "range": {
         "startLine": 59,
         "startChar": 2,
@@ -157,6 +289,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad9bda52_1be69bf2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2446,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Using 1\u0027000\u0027000\u0027000 as an integral constant (i.e. NS_PER_S which doesn\u0027t have LL) in the multiplies below will overflow on ILP32; an int64_t constant forces 64b multiplies.  If this is confusing, I\u0027ll remove the comment.",
+      "parentUuid": "e29b78ca_25aca38e",
+      "range": {
+        "startLine": 2446,
+        "startChar": 73,
+        "endLine": 2446,
+        "endChar": 93
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1158452_6b61e736",
@@ -170,6 +326,30 @@
       "writtenOn": "2023-12-12T15:38:46Z",
       "side": 1,
       "message": "if the reader couldn\u0027t work that out from the name, this comment isn\u0027t going to help them!",
+      "range": {
+        "startLine": 2447,
+        "startChar": 73,
+        "endLine": 2447,
+        "endChar": 86
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37439abb_6283c6a6",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-12T22:56:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1158452_6b61e736",
       "range": {
         "startLine": 2447,
         "startChar": 73,
