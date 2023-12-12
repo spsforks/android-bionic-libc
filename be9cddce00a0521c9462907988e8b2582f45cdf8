@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06c970eb_18a63d03",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-12T15:38:46Z",
+      "side": 1,
+      "message": "both of these should be \"may need\", right?",
+      "range": {
+        "startLine": 56,
+        "startChar": 32,
+        "endLine": 56,
+        "endChar": 36
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "862debaa_f4d3321b",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-12T15:38:46Z",
+      "side": 1,
+      "message": "use the _Nonnull annotation instead?",
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e5c72a4_14609a2b",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-12T15:38:46Z",
+      "side": 1,
+      "message": "what does this mean? FUTEX_LOCK_PI2 was added in 5.14, which is pretty old now. seems like we should be adding support for that, even if we still need an EINVAL fallback for a few more years.",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "428b7445_64d4e38b",
+        "filename": "libc/bionic/bionic_time_conversions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-12T15:38:46Z",
+      "side": 1,
+      "message": "no need for these; we don\u0027t have warn_unused_result on clock_gettime().",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 8
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e29b78ca_25aca38e",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2446,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-12T15:38:46Z",
+      "side": 1,
+      "message": "what does this mean?",
+      "range": {
+        "startLine": 2446,
+        "startChar": 73,
+        "endLine": 2446,
+        "endChar": 93
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1158452_6b61e736",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-12T15:38:46Z",
+      "side": 1,
+      "message": "if the reader couldn\u0027t work that out from the name, this comment isn\u0027t going to help them!",
+      "range": {
+        "startLine": 2447,
+        "startChar": 73,
+        "endLine": 2447,
+        "endChar": 86
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
