@@ -46,6 +46,7 @@
 #include "heap_tagging.h"
 #include "private/ScopedPthreadMutexLocker.h"
 #include "private/WriteProtected.h"
+#include "private/bionic_cacheinfo.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
@@ -171,6 +172,7 @@ void __libc_init_common() {
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
   __libc_init_fdtrack();
+  __libc_init_cacheinfo();
 }
 
 void __libc_init_fork_handler() {
