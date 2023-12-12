@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "04572d1e_fa4e140d",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-12-12T18:58:38Z",
+      "side": 1,
+      "message": "As in the comment, we always want to use monotonic time here. Instead of changing FutexWithTimeout, how about calling realtime_time_from_monotonic_time() in __futex_pi_lock_ex() when FUTEX_LOCK_PI fallback is used?",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "862debaa_f4d3321b",
         "filename": "libc/bionic/bionic_futex.cpp",
         "patchSetId": 2
@@ -54,6 +77,30 @@
       "writtenOn": "2023-12-12T15:38:46Z",
       "side": 1,
       "message": "what does this mean? FUTEX_LOCK_PI2 was added in 5.14, which is pretty old now. seems like we should be adding support for that, even if we still need an EINVAL fallback for a few more years.",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0894d4e_7a3e7283",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-12-12T18:58:38Z",
+      "side": 1,
+      "message": "And we may use a \"static std::atomic\u003cint\u003e\" to cache whether FUTEX_LOCK_PI2 is supported.",
+      "parentUuid": "8e5c72a4_14609a2b",
       "range": {
         "startLine": 88,
         "startChar": 8,
