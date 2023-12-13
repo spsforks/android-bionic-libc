@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3240517e_f27ad524",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-13T06:06:51Z",
+      "side": 1,
+      "message": "oops, I realized I can\u0027t make futex_abs_timeout _Nonnull as abs_timeout is not _Nonnull.\n\nperhaps i\u0027ll just remove futex_abs_timeout entirely and reassign abs_timeout to \u0026converted_timeout on lines 59 and 67 below. That removes a variable and makes the logic easier to read.",
+      "range": {
+        "startLine": 38,
+        "startChar": 18,
+        "endLine": 38,
+        "endChar": 26
+      },
+      "revId": "0d22fab2b732f52aaa992afc619385f44224bbde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
