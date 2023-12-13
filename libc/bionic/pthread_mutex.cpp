@@ -183,7 +183,11 @@ static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
     }
     if (ret == EBUSY) {
         ScopedTrace trace("Contending for pthread mutex");
-        ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, use_realtime_clock, abs_timeout);
+        do {
+            ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, use_realtime_clock,
+                                      abs_timeout);
+            // The futex may return EAGAIN, when the futex owner thread ID is about to exit.
+        } while (ret == EAGAIN);
     }
     return ret;
 }
