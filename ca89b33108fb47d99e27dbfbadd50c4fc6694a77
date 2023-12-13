@@ -16,6 +16,24 @@
       "message": "LGTM, since gerrit doesn\u0027t think I need to +2 this again, which seems wrong.",
       "revId": "ca89b33108fb47d99e27dbfbadd50c4fc6694a77",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b8252b8_f3dc8e41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-13T21:52:24Z",
+      "side": 1,
+      "message": "they changed to sticky +2 in AOSP a while back, but it still surprises me too!",
+      "parentUuid": "40f1b47a_03350bcc",
+      "revId": "ca89b33108fb47d99e27dbfbadd50c4fc6694a77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
