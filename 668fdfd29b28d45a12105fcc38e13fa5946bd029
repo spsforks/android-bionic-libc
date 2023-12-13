@@ -16,6 +16,24 @@
       "message": "can it? seems like this probably wants a man page fix rather than a code change?",
       "revId": "668fdfd29b28d45a12105fcc38e13fa5946bd029",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac9f57d9_1ba231e7",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-13T16:38:46Z",
+      "side": 1,
+      "message": "looks like it\u0027s still wrong in the current version of the man pages: https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man2/futex.2#n1476",
+      "parentUuid": "d55a3e86_7f0296ad",
+      "revId": "668fdfd29b28d45a12105fcc38e13fa5946bd029",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
