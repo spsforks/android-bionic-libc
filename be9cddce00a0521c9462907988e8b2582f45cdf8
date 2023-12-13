@@ -337,6 +337,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9eeccbc_c07774e2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2446,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-13T00:44:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d2931d0_3774130d",
+      "range": {
+        "startLine": 2446,
+        "startChar": 73,
+        "endLine": 2446,
+        "endChar": 93
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1158452_6b61e736",
