@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4130ff06_ab0ee634",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-12-13T18:06:43Z",
+      "side": 1,
+      "message": "As the comment in Line 46-48, we always use clock monotonic when possible. Since no caller is using FUTEX_CLOCK_REALTIME, we can simplify the if conditions like below:\n\nif (abs_timeout) {\n  // FUTEX_LOCK_PI only supports realtime clock.\n  if ((op \u0026 FUTEX_CMD_MASK) \u003d\u003d FUTEX_LOCK_PI) {\n    if (!use_realtime_clock) {\n      realtime_time_from_monotonic_time();\n    }\n  } else {\n    op \u0026\u003d ~FUTEX_CLOCK_REALTIME;  // This line is optional, but in case you care.\n    if (use_realtime_clock) {\n      monotonic_time_from_realtime_time();\n    }\n  }\n}\n\nFurther, we can move the code handling FUTEX_LOCK_PI case to __futex_pi_lock_ex(), since it is the only one using FUTEX_LOCK_PI. But it\u0027s up to you.",
+      "parentUuid": "39f0a17f_b4a0f243",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "be9cddce00a0521c9462907988e8b2582f45cdf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "862debaa_f4d3321b",
         "filename": "libc/bionic/bionic_futex.cpp",
         "patchSetId": 2

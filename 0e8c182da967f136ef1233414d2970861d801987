@@ -16,6 +16,29 @@
       "message": "thanks for the quick review!",
       "revId": "0e8c182da967f136ef1233414d2970861d801987",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb816f2f_db8f92ec",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-12-13T18:06:43Z",
+      "side": 1,
+      "message": "We\u0027d better use an atomic static variable in multi-thread environment.\nWe can use atomic_init like below:\n\n  static atomic_int lock_op \u003d 0;\n  int op \u003d atomic_load_explicit(\u0026lock_op, memory_order_relaxed);\n  if (op \u003d\u003d 0) {\n    uint32_t tmp \u003d 0;\n    if (__futex(\u0026tmp, FUTEX_LOCK_PI2, 0, nullptr, 0) \u003d\u003d 0) {\n      __futex(\u0026tmp, FUTEX_UNLOCK_PI, 0, nullptr, 0);\n      op \u003d FUTEX_LOCK_PI2;\n    } else {\n      op \u003d FUTEX_LOCK_PI;\n    }\n    atomic_store_explicit(\u0026lock_op, op, memory_order_relaxed);\n  }\n  \nOr we can use pthread_once() to initialize a static global variable supports_PI2.",
+      "range": {
+        "startLine": 90,
+        "startChar": 15,
+        "endLine": 90,
+        "endChar": 19
+      },
+      "revId": "0e8c182da967f136ef1233414d2970861d801987",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
