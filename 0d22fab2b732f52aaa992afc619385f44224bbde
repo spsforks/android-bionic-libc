@@ -22,6 +22,30 @@
       },
       "revId": "0d22fab2b732f52aaa992afc619385f44224bbde",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "93cf6c96_92395a94",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-13T20:14:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3240517e_f27ad524",
+      "range": {
+        "startLine": 38,
+        "startChar": 18,
+        "endLine": 38,
+        "endChar": 26
+      },
+      "revId": "0d22fab2b732f52aaa992afc619385f44224bbde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -39,6 +39,30 @@
       },
       "revId": "0e8c182da967f136ef1233414d2970861d801987",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb59da8e_e958739c",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-13T20:14:52Z",
+      "side": 1,
+      "message": "On further inspection, you are absolutely right!\n\nThe atomic static variable is faster after the initialization, as it only requires a ARM ldr to read.  The downside for the atomic static variable is that the initialization may occur multiple times.\n\nThe C++ Meyer\u0027s singleton guarantees only one initialization but may block. After initialization, the clang implementation requires 2 ARM ldar instructions (which impose a memory barrier) rather than a single ldr, so it is slower. It is **particularly bad** to use here because the clang implementation of the singleton eventually recurses into the pthread library anyhow, see implementation of clang cxa_guard_acquire (!)\n\nhttps://cs.android.com/android-llvm/toolchain/llvm-project/+/master:libcxxabi/src/cxa_guard.cpp;drc\u003d57b08b0944046a6a57ee9b7b479181f548a5b9b4;l\u003d173\n\nThe pthread_once() would be recursively calling into the bionic library as well :-).\n\nSee the disassembled code here for the atomic approach and the C++ Meyer\u0027s approach:\nhttps://www.godbolt.org/z/9xrc3a1rx",
+      "parentUuid": "eb816f2f_db8f92ec",
+      "range": {
+        "startLine": 90,
+        "startChar": 15,
+        "endLine": 90,
+        "endChar": 19
+      },
+      "revId": "0e8c182da967f136ef1233414d2970861d801987",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
