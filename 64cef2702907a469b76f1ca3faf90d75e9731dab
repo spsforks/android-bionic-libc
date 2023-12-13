@@ -39,6 +39,30 @@
       },
       "revId": "64cef2702907a469b76f1ca3faf90d75e9731dab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "047a9c78_a32efe62",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-12-13T18:49:13Z",
+      "side": 1,
+      "message": "yeah, my first version of this used std::is_signed, but sadly we don\u0027t have the header-only parts of libc++ available here.\n\ni\u0027m not sure why i didn\u0027t just add a `constexpr bool` when i switched to testing `Min`, but i\u0027ve fixed that now.",
+      "parentUuid": "5f79ba9f_f88c3c8d",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 11
+      },
+      "revId": "64cef2702907a469b76f1ca3faf90d75e9731dab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
