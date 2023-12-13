@@ -16,6 +16,24 @@
       "message": "i think you want to rebase this on ToT, no? (you can do that from the gerrit ui\u0027s \"rebase\" button.)\n\notherwise lgtm.",
       "revId": "9233b4ba3fb1675f96043169a03026e4966b4506",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc912158_861d17b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882770
+      },
+      "writtenOn": "2023-12-13T23:42:21Z",
+      "side": 1,
+      "message": "I rebased on top of current aosp main",
+      "parentUuid": "1b10ebdb_de692f4c",
+      "revId": "9233b4ba3fb1675f96043169a03026e4966b4506",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
