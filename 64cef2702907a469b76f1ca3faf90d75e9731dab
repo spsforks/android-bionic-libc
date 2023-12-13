@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b5107ea_6d1a051e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-12-13T02:36:24Z",
+      "side": 1,
+      "message": "I wish we could see the code coverage for this change, but the runs seems to have failed.\n\nIt looks the same as behavior as before, but I don\u0027t know if we have coverage of everything in tests.",
+      "revId": "64cef2702907a469b76f1ca3faf90d75e9731dab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f79ba9f_f88c3c8d",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-12-13T02:36:24Z",
+      "side": 1,
+      "message": "Is it worth adding a comment that this means you are working with an unsigned type?\n\nI guessed that\u0027s what is going on pretty quickly, but I\u0027m not sure if it should be more explicit.",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 11
+      },
+      "revId": "64cef2702907a469b76f1ca3faf90d75e9731dab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
