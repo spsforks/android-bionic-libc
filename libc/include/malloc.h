@@ -345,6 +345,17 @@ enum HeapTaggingLevel {
 #define M_LOG_STATS (-205)
 
 /**
+ * mallopt() option to resize the allocation ring buffer.
+ * May be called when multiple threads are running, but not in multiple
+ * threads at the same time.
+ * The value must be a positive integer for the number of elements in the buffer.
+ * NOTE: This is only available in scudo.
+ *
+ * Available since API level 35.
+ */
+#define M_HEAP_TAGGING_SET_ALLOCATION_BUFFER_SIZE (-206)
+
+/**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
  * heap behavior. Values of `__option` are the `M_` constants from this header.
  *

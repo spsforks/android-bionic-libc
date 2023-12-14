@@ -173,6 +173,34 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
   return true;
 }
 
+extern "C" const char* __scudo_get_stack_depot_addr();
+extern "C" const char* __scudo_get_region_info_addr();
+extern "C" const char* __scudo_get_ring_buffer_addr();
+extern "C" size_t __scudo_get_ring_buffer_size();
+extern "C" size_t __scudo_get_stack_depot_size();
+extern "C" bool __scudo_resize_ring_buffer(int);
+
+void MaybeSetScudoSharedGlobals() {
+#if defined(USE_SCUDO)
+  __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
+  __libc_shared_globals()->scudo_region_info = __scudo_get_region_info_addr();
+  __libc_shared_globals()->scudo_ring_buffer = __scudo_get_ring_buffer_addr();
+  __libc_shared_globals()->scudo_ring_buffer_size = __scudo_get_ring_buffer_size();
+  __libc_shared_globals()->scudo_stack_depot_size = __scudo_get_stack_depot_size();
+#endif
+}
+
+bool SetAllocationBufferSize(int value) {
+#if defined(USE_SCUDO)
+  if (!__scudo_resize_ring_buffer(value)) return false;
+  // Update the globals to the new addresses and sizes.
+  MaybeSetScudoSharedGlobals();
+  return true;
+#endif
+  (void)(value);
+  return false;
+}
+
 #ifdef __aarch64__
 static inline __attribute__((no_sanitize("memtag"))) void untag_memory(void* from, void* to) {
   __asm__ __volatile__(

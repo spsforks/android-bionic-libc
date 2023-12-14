@@ -44,6 +44,9 @@ extern pthread_mutex_t g_heap_tagging_lock;
 // only be called when holding the `g_heap_tagging_lock`.
 bool SetHeapTaggingLevel(HeapTaggingLevel level);
 
+bool SetAllocationBufferSize(int value);
+void MaybeSetScudoSharedGlobals();
+
 // This is static because libc_nomalloc uses this but does not need to link the
 // cpp file.
 __attribute__((unused)) static inline const char* DescribeTaggingLevel(
