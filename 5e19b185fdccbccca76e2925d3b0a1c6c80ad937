@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6909bdc_a3cec435",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2023-12-14T17:52:46Z",
+      "side": 1,
+      "message": "Verified on Pixel 6 (linux 5.10 FUTEX_LOCK_PI) and Pixel 8 (linux 5.15 FUTEX_LOCK_PI2).",
+      "revId": "5e19b185fdccbccca76e2925d3b0a1c6c80ad937",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
