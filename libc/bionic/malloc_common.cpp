@@ -111,6 +111,10 @@ extern "C" int mallopt(int param, int value) {
     return SetHeapZeroInitialize(value);
   }
 
+  if (param == M_HEAP_TAGGING_SET_ALLOCATION_BUFFER_SIZE) {
+    return SetAllocationBufferSize(value);
+  }
+
   // The rest we pass on...
   int retval;
   auto dispatch_table = GetDispatchTable();
