@@ -50,3 +50,18 @@ abitag:
 #endif
 3:
   .size abitag, .-abitag
+
+
+  .section ".note.android.segment_gap", "a", %note
+  .balign 4
+  .long 1f - 0f                       // int32_t namesz
+  .long 3f - 2f                       // int32_t descsz
+  .long NT_ANDROID_TYPE_SEGMENT_GAP   // int32_t type
+0:
+  .asciz "Android"                    // char name[]
+1:
+  .balign 2
+2:
+  .long NT_SEGMENT_GAP_FILL           // value
+3:
+  .balign 2
