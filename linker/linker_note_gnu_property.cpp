@@ -166,6 +166,14 @@ bool GnuPropertySection::Parse(const ElfW(NhdrGNUProperty)* note_nhdr, const cha
         break;
       }
 #endif
+      case GNU_PROPERTY_MAP_SEG_GAPS: {
+        const ElfW(Word) data = *reinterpret_cast<const ElfW(Word)*>(&property->pr_data[0]);
+        properties_.map_segment_gap = data != 0;
+        if (properties_.map_segment_gap) {
+          INFO("[ MAP_SEGMENT compatible: \"%s\" ]", name);
+        }
+        break;
+      }
       default:
         DEBUG("\"%s\" .note.gnu.property: found property pr_type %u pr_datasz 0x%x", name,
               property->pr_type, property->pr_datasz);
@@ -184,3 +192,7 @@ bool GnuPropertySection::IsBTICompatible() const {
   return (g_platform_properties.bti_supported && properties_.bti_compatible);
 }
 #endif
+
+bool GnuPropertySection::MapSegmentGap() const {
+  return properties_.map_segment_gap;
+}

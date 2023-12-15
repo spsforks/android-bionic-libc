@@ -1,0 +1,50 @@
+From 0b0e314f7b0388872046694c3515276bafa1a64e Mon Sep 17 00:00:00 2001
+From: Kalesh Singh <kaleshsingh@google.com>
+Date: Thu, 30 Nov 2023 14:16:01 -0800
+Subject: [PATCH 1/1] bionic: Use max_page_size for LOAD segment alignment
+
+This patch introduces no functional change since the max_page_size
+is currently set to the runtime page size.
+
+Change-Id: Ib7522e9fb08d95c4f61d411ae4b3a6fded361920
+Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+---
+ linker/linker_phdr.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/linker/linker_phdr.cpp b/linker/linker_phdr.cpp
+index e19c2ce8d..35e3ce30f 100644
+--- a/linker/linker_phdr.cpp
++++ b/linker/linker_phdr.cpp
+@@ -708,8 +708,8 @@ bool ElfReader::LoadSegments() {
+     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+     ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
+ 
+-    ElfW(Addr) seg_page_start = page_start(seg_start);
+-    ElfW(Addr) seg_page_end = page_end(seg_end);
++    ElfW(Addr) seg_page_start = align_down(seg_start, max_page_size_);
++    ElfW(Addr) seg_page_end = align_up(seg_end, max_page_size_);
+ 
+     ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
+ 
+@@ -717,7 +717,7 @@ bool ElfReader::LoadSegments() {
+     ElfW(Addr) file_start = phdr->p_offset;
+     ElfW(Addr) file_end   = file_start + phdr->p_filesz;
+ 
+-    ElfW(Addr) file_page_start = page_start(file_start);
++    ElfW(Addr) file_page_start = align_down(file_start, max_page_size_);
+     ElfW(Addr) file_length = file_end - file_page_start;
+ 
+     if (file_size_ <= 0) {
+@@ -774,7 +774,7 @@ bool ElfReader::LoadSegments() {
+       memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
+     }
+ 
+-    seg_file_end = page_end(seg_file_end);
++    seg_file_end = align_up(seg_file_end, max_page_size_);
+ 
+     // seg_file_end is now the first page address after the file
+     // content. If seg_end is larger, we need to zero anything
+-- 
+2.43.0.rc2.451.g8631bc7472-goog
+
