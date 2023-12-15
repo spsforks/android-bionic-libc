@@ -68,6 +68,7 @@ struct ElfProgramProperty {
 #if defined(__aarch64__)
   bool bti_compatible = false;
 #endif
+  bool map_segment_gap = false;
 };
 
 // Representation of the .note.gnu.property section found in the segment
@@ -82,6 +83,8 @@ class GnuPropertySection {
 #if defined(__aarch64__)
   bool IsBTICompatible() const;
 #endif
+
+  bool MapSegmentGap() const;
 
  private:
   const ElfW(NhdrGNUProperty)* FindSegment(const ElfW(Phdr)* phdr, size_t phdr_count,

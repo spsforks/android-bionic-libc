@@ -704,6 +704,11 @@ bool ElfReader::LoadSegments() {
       continue;
     }
 
+    if (note_gnu_property_.MapSegmentGap()) {
+      // TODO: Extend LOAD segment
+      return false;
+    }
+
     // Segment addresses in memory.
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
