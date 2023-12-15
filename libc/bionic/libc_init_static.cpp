@@ -47,6 +47,7 @@
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_asm.h"
 #include "private/bionic_asm_note.h"
+#include "private/bionic_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
@@ -157,40 +158,19 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 }
 
 #ifdef __aarch64__
-static bool __get_elf_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
-                           const ElfW(Addr) load_bias, unsigned desired_type,
-                           const char* desired_name, const ElfW(Nhdr) * *note_out,
-                           const char** desc_out) {
+static bool __get_elf_note(unsigned int note_type, const char* note_name,
+                           const ElfW(Phdr)* phdr_start, size_t phdr_ct,
+                           const ElfW(Nhdr)** note_hdr, const char** note_desc,
+                           const ElfW(Addr) load_bias) {
   for (size_t i = 0; i < phdr_ct; ++i) {
     const ElfW(Phdr)* phdr = &phdr_start[i];
-    if (phdr->p_type != PT_NOTE) {
-      continue;
-    }
-    ElfW(Addr) p = load_bias + phdr->p_vaddr;
-    ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
-    while (p + sizeof(ElfW(Nhdr)) <= note_end) {
-      const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
-      p += sizeof(ElfW(Nhdr));
-      const char* name = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_namesz, 4);
-      const char* desc = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_descsz, 4);
-      if (p > note_end) {
-        break;
-      }
-      if (note->n_type != desired_type) {
-        continue;
-      }
-      size_t desired_name_len = strlen(desired_name);
-      if (note->n_namesz != desired_name_len + 1 ||
-          strncmp(desired_name, name, desired_name_len) != 0) {
-        break;
-      }
-      *note_out = note;
-      *desc_out = desc;
+
+    ElfW(Addr) note_addr = load_bias + phdr->p_vaddr;
+    if (find_elf_note(note_type, note_name, note_addr, phdr, note_hdr, note_desc)) {
       return true;
     }
   }
+
   return false;
 }
 
@@ -198,8 +178,8 @@ static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_sta
                                                      const ElfW(Addr) load_bias, bool* stack) {
   const ElfW(Nhdr) * note;
   const char* desc;
-  if (!__get_elf_note(phdr_start, phdr_ct, load_bias, NT_ANDROID_TYPE_MEMTAG, "Android", &note,
-                      &desc)) {
+  if (!__get_elf_note(NT_ANDROID_TYPE_MEMTAG, "Android", phdr_start, phdr_ct, &note, &desc,
+                      load_bias)) {
     return M_HEAP_TAGGING_LEVEL_TBI;
   }
 
