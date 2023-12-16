@@ -33,8 +33,14 @@
 __BEGIN_DECLS
 
 #if !defined(__BIONIC_NO_PAGE_SIZE_MACRO)
+
+#if defined(__BIONIC_DEPRECATED_PAGE_SIZE_MODE)
 #define PAGE_SIZE 4096
 #define PAGE_MASK (~(PAGE_SIZE - 1))
+#else
+#define PAGE_SIZE "PAGE_SIZE is going away in Android. Prefer pagesize() instead. To undefine it, compile with __BIONIC_NO_PAGE_SIZE_MACRO. To temporarily use the old behavior, define __BIONIC_DEPRECATED_PAGE_SIZE_MODE. Please see http://FIXME for more info."
+#endif
+
 #endif
 
 __END_DECLS
