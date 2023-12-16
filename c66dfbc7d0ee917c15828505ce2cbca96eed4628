@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "083a326a_3f382565",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-12-16T02:41:15Z",
+      "side": 1,
+      "message": "this will allow app developers to easily restore their compile, but we\u0027d want to deprecate this",
+      "range": {
+        "startLine": 37,
+        "startChar": 12,
+        "endLine": 37,
+        "endChar": 46
+      },
+      "revId": "c66dfbc7d0ee917c15828505ce2cbca96eed4628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6399f3ff_041c8c16",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-12-16T02:41:15Z",
+      "side": 1,
+      "message": "defining PAGE_SIZE as this rather than doing \u0027#error\u0027 so it\u0027s only an error if PAGE_SIZE is used",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 17
+      },
+      "revId": "c66dfbc7d0ee917c15828505ce2cbca96eed4628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff0c1bb3_b388ca3d",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-12-16T02:41:15Z",
+      "side": 1,
+      "message": "this will be DAC link",
+      "range": {
+        "startLine": 41,
+        "startChar": 238,
+        "endLine": 41,
+        "endChar": 243
+      },
+      "revId": "c66dfbc7d0ee917c15828505ce2cbca96eed4628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
