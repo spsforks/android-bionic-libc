@@ -32,7 +32,21 @@
 
 __BEGIN_DECLS
 
-#if !defined(__BIONIC_NO_PAGE_SIZE_MACRO)
+// PAGE_SIZE is going away in Android. Prefer getpagesize() instead.
+//
+// To test whether your code works without PAGE_SIZE, compile with
+// __BIONIC_NO_PAGE_SIZE_MACRO. This mode will become the default
+// in the future.
+//
+// If your code requires PAGE_SIZE, you can temporarily restore the
+// original behavior and have PAGE_SIZE and PAGE_MASK defined by
+// defining __BIONIC_DEPRECATED_PAGE_SIZE_MACRO. However, you should
+// only use this temporarily as your application will not be supported
+// in the future.
+//
+// Please see https://developer.android.com/16kb-page-size for more info!
+
+#if !defined(__BIONIC_NO_PAGE_SIZE_MACRO) || defined(__BIONIC_DEPRECATED_PAGE_SIZE_MACRO)
 #define PAGE_SIZE 4096
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 #endif
