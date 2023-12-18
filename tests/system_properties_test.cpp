@@ -586,14 +586,14 @@ TEST(properties, __system_property_extra_long_read_only) {
 #endif  // __BIONIC__
 }
 
-// pa_size is 128 * 1024 currently, if a property is longer then we expect it to fail gracefully.
+// if a property is longer then pa_size we expect it to fail gracefully.
 TEST(properties, __system_property_extra_long_read_only_too_long) {
 #if defined(__BIONIC__)
   SystemPropertiesTest system_properties;
   ASSERT_TRUE(system_properties.valid());
 
   auto name = "ro.super_long_property"s;
-  auto value = std::string(256 * 1024 + 1, 'x');
+  auto value = std::string(PA_SIZE + 1, 'x');
   ASSERT_NE(0, system_properties.Add(name.c_str(), name.size(), value.c_str(), value.size()));
 
 #else   // __BIONIC__
