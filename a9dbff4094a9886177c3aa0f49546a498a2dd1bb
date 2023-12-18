@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ade2b24f_223a352f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142034
+      },
+      "writtenOn": "2023-12-18T13:08:54Z",
+      "side": 1,
+      "message": "This change is quite big in scope. I would suggest you to split it up into fewer changes",
+      "revId": "a9dbff4094a9886177c3aa0f49546a498a2dd1bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
