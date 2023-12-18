@@ -586,7 +586,7 @@ TEST(properties, __system_property_extra_long_read_only) {
 #endif  // __BIONIC__
 }
 
-// pa_size is 128 * 1024 currently, if a property is longer then we expect it to fail gracefully.
+// if a property is longer than pa_size, we expect it to fail gracefully.
 TEST(properties, __system_property_extra_long_read_only_too_long) {
 #if defined(__BIONIC__)
   SystemPropertiesTest system_properties;
