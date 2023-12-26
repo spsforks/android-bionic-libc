@@ -69,7 +69,7 @@
 #   Is prepended to each generated header.
 #------------------------------------------------------------------------------
 
-import sys, cpp, kernel, glob, os, re, getopt, textwrap
+import sys, cpp, kernel, glob, os, re, getopt
 from defaults import *
 from utils import *
 
@@ -116,14 +116,7 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     blocks.replaceTokens(kernel_token_replacements)
 
     out = StringOutput()
-    out.write(textwrap.dedent("""\
-        /*
-         * This file is auto-generated. Modifications will be lost.
-         *
-         * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
-         * for more information.
-         */
-        """))
+    out.write(kernel_disclaimer)
     blocks.write(out)
     return out.get()
 
