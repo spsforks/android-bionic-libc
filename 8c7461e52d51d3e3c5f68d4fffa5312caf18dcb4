@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82b93799_055016cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-02T23:31:54Z",
+      "side": 1,
+      "message": "no, we already talked about this. i\u0027m fine with adding the runtime cache size stuff to bionic, but not by pulling in an external library.\n\n(if you look at bionic/libc/bionic/sysconf.cpp and compare the way x86-64 works to how riscv64 works, you can\u0027t help but wish that the x86-64 kernel provided this stuff via ELF auxval too... but you can still make the sysconf code work earlier.)",
+      "revId": "8c7461e52d51d3e3c5f68d4fffa5312caf18dcb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f1aa5b4_31b953b0",
+        "filename": "libc/arch-x86/string/sse2-memmove-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-02T23:31:54Z",
+      "side": 1,
+      "message": "Android is always PIC.",
+      "revId": "8c7461e52d51d3e3c5f68d4fffa5312caf18dcb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
