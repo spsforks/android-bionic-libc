@@ -87,6 +87,24 @@
       "parentUuid": "c29d13d8_55000379",
       "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af92492a_3cd2ff08",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-04T23:34:43Z",
+      "side": 1,
+      "message": "well, if a copy of the linker is being _included_ in their apex, i\u0027d say that\u0027s _definitely_ a bug, and the fix is to stop doing that --- there\u0027s no way that\u0027s something we should be doing!\n\n\noh... wait... \"com.android.runtime\" is _us_, isn\u0027t it? sorry. i keep thinking that\u0027s ART. duh, yes, in that case, this is completely expected. _unfortunate_ (because we should never have been in an apex, since we\u0027re not a mainline module), but expected.",
+      "parentUuid": "f3d9e0bc_eafe7467",
+      "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
