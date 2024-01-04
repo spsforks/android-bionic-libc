@@ -69,6 +69,24 @@
       "parentUuid": "cf88c9e6_eb1119c0",
       "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3d9e0bc_eafe7467",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1878380
+      },
+      "writtenOn": "2024-01-04T23:02:23Z",
+      "side": 1,
+      "message": "Ohh I see what you mean. I would like Colin\u0027s opinion as well, but I think this is WAI. `apex_available` indicates availability for being _included_ in an apex, and not a transitive dependency at runtime\n\nFrom go/Android.bp\n```\napex_available list of string, Availability of this module in APEXes. Only the listed APEXes can contain this module. If the module has stubs then other APEXes and the platform may access it through them (subject to visibility). \"//apex_available:anyapex\" is a pseudo APEX name that matches to any APEX. \"//apex_available:platform\" refers to non-APEX partitions like \"system.img\". \"com.android.gki.*\" matches any APEX module name with the prefix \"com.android.gki.\". Default is [\"//apex_available:platform\"].\n\n```\n\nEven though we have other native apexes with binaries and those binaries transitively depend on these libraries, none of these libraries are actually installed into those apexes. So, I believe it is appropriate for `libblinker_main` and co. to not have any of those other apexes in its apex_available",
+      "parentUuid": "c29d13d8_55000379",
+      "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
