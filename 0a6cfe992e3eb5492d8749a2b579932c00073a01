@@ -51,6 +51,24 @@
       "parentUuid": "3599671b_f1b94c18",
       "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c29d13d8_55000379",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-04T21:55:32Z",
+      "side": 1,
+      "message": "oh, yeah, that\u0027s why i\u0027ve been +2ing all these changes without paying much attention. but this one is bizarre, and seems like a build system bug? sure, _every_ binary \"depends\" on the linker, but not in _this_ sense. (and why would this only affect com.android.runtime?! that can\u0027t be the only apex with an executable in it, surely?)",
+      "parentUuid": "cf88c9e6_eb1119c0",
+      "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
