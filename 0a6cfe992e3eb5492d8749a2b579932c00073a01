@@ -33,6 +33,24 @@
       "message": "+ccross ... are these really needed? this seems unlikely, unless it\u0027s working around a bug in the build system?",
       "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf88c9e6_eb1119c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1878380
+      },
+      "writtenOn": "2024-01-04T21:51:43Z",
+      "side": 1,
+      "message": "Hi Elliott, could you elaborate on which of these libraries seem suspicious to you from an apex_available perspective? Currently, Soong makes them available to `com.android.runtime` implicitly using this [map](https://source.corp.google.com/h/googleplex-android/platform/build/soong/+/0413492a5db2fb8adb5e4121213fac162db29f16:apex/apex.go;l\u003d2856-2873;drc\u003d69d083a065180280f8473663c195210dd4b9c3a9;bpv\u003d1;bpt\u003d0). This CL makes them explicit in Android.bp\n\nAs a concrete example, this CL adds `apex_available: [com.android.runtime]` to `liblinker_main`. This soong module is part of the runtime apex via this dependency chain\n\n```\ncom.android.runtime --(binary)--\u003e linker --(static_lib)--\u003e liblinker_main\n```",
+      "parentUuid": "3599671b_f1b94c18",
+      "revId": "0a6cfe992e3eb5492d8749a2b579932c00073a01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
