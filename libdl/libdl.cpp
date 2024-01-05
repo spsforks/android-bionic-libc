@@ -19,6 +19,7 @@
 #include <link.h>
 #include <signal.h>
 #include <stdlib.h>
+#include "bionic/pthread_internal.h"
 
 // These functions are exported by the loader
 // TODO(dimitry): replace these with reference to libc.so
@@ -81,7 +82,6 @@ __attribute__((__weak__))
 void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   __loader_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
 }
-
 __attribute__((__weak__))
 void* dlopen(const char* filename, int flag) {
   const void* caller_addr = __builtin_return_address(0);
