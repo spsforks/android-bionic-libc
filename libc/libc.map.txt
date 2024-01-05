@@ -1730,6 +1730,7 @@ LIBC_PRIVATE {
     __popcount_tab; # arm
     __popcountsi2; # arm x86
     __pthread_gettid; # arm x86
+    __pthread_internal_remap_stack_with_mte;
     __sclose; # arm x86
     __sdidinit; # arm x86
     __set_errno; # arm x86
