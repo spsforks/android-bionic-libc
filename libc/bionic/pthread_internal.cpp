@@ -40,6 +40,7 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedRWLock.h"
 #include "private/bionic_futex.h"
+#include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 
 static pthread_internal_t* g_thread_list = nullptr;
@@ -117,6 +118,90 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id, const char* cal
     }
   }
   return nullptr;
+}
+
+static uintptr_t __get_main_stack_startstack() {
+  FILE* fp = fopen("/proc/self/stat", "re");
+  if (fp == nullptr) {
+    async_safe_fatal("couldn't open /proc/self/stat: %m");
+  }
+
+  char line[BUFSIZ];
+  if (fgets(line, sizeof(line), fp) == nullptr) {
+    async_safe_fatal("couldn't read /proc/self/stat: %m");
+  }
+
+  fclose(fp);
+
+  // See man 5 proc. There's no reason comm can't contain ' ' or ')',
+  // so we search backwards for the end of it. We're looking for this field:
+  //
+  //  startstack %lu (28) The address of the start (i.e., bottom) of the stack.
+  uintptr_t startstack = 0;
+  const char* end_of_comm = strrchr(line, ')');
+  if (sscanf(end_of_comm + 1,
+             " %*c "
+             "%*d %*d %*d %*d %*d "
+             "%*u %*u %*u %*u %*u %*u %*u "
+             "%*d %*d %*d %*d %*d %*d "
+             "%*u %*u %*d %*u %*u %*u %" SCNuPTR,
+             &startstack) != 1) {
+    async_safe_fatal("couldn't parse /proc/self/stat");
+  }
+
+  return startstack;
+}
+
+int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_size) {
+  ErrnoRestorer errno_restorer;
+
+  rlimit stack_limit;
+  if (getrlimit(RLIMIT_STACK, &stack_limit) == -1) {
+    return errno;
+  }
+
+  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack
+  // in case callers such as ART take infinity too literally.
+  if (stack_limit.rlim_cur == RLIM_INFINITY) {
+    stack_limit.rlim_cur = 8 * 1024 * 1024;
+  }
+
+  // Ask the kernel where our main thread's stack started.
+  uintptr_t startstack = __get_main_stack_startstack();
+
+  // Hunt for the region that contains that address.
+  FILE* fp = fopen("/proc/self/maps", "re");
+  if (fp == nullptr) {
+    async_safe_fatal("couldn't open /proc/self/maps: %m");
+  }
+  char line[BUFSIZ];
+  while (fgets(line, sizeof(line), fp) != nullptr) {
+    uintptr_t lo, hi;
+    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
+      if (lo <= startstack && startstack <= hi) {
+        *stack_size = stack_limit.rlim_cur;
+        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
+        fclose(fp);
+        return 0;
+      }
+    }
+  }
+  async_safe_fatal("stack not found in /proc/self/maps");
+}
+
+void __pthread_internal_remap_stack_with_mte() {
+  bool prev = true;
+  __libc_globals.mutate(
+      [&prev](libc_globals* globals) { prev = atomic_exchange(&globals->memtag_stack, true); });
+  if (prev) return;
+  void* stack_base;
+  size_t stack_size;
+  if (__pthread_attr_getstack_main_thread(&stack_base, &stack_size)) {
+    async_safe_fatal("error: failed to get main thead");
+  }
+  if (mprotect(stack_base, stack_size, PROT_READ | PROT_WRITE | PROT_MTE)) {
+    async_safe_fatal("error: failed to set PROT_MTE on main thread");
+  }
 }
 
 bool android_run_on_all_threads(bool (*func)(void*), void* arg) {
