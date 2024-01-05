@@ -44,8 +44,9 @@
 #include <android-base/strings.h>
 #include <android-base/test_utils.h>
 
-#include "private/bionic_constants.h"
 #include "SignalUtils.h"
+#include "platform/bionic/mte.h"
+#include "private/bionic_constants.h"
 #include "utils.h"
 
 using pthread_DeathTest = SilentDeathTest;
@@ -3086,5 +3087,60 @@ TEST(pthread, run_on_all_threads) {
   ASSERT_EQ(nullptr, retval);
 #else
   GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+extern "C" void __pthread_internal_remap_stack_with_mte();
+
+#if defined(__BIONIC__) && defined(__aarch64__)
+_attribute__((target("mte"))) bool is_stack_mte_on() {
+  // Check whether tags are being stored, if they are, the stack is already
+  // mapped with MTE and we cannot run the test below.
+  alignas(16) int x = 0;
+  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) | (1UL << 57));
+  void* p_cpy = p;
+  __builtin_arm_stg(p);
+  p = __builtin_arm_ldg(p);
+  return p == p_cpy;
+}
+#endif
+
+TEST(pthread, __pthread_internal_remap_stack_with_mte) {
+#if defined(__BIONIC__) && defined(__aarch64__)
+  if (!mte_supported() || !running_with_mte()) {
+    GTEST_SKIP() << "MTE required";
+  }
+  if (is_stack_mte_on()) {
+    GTEST_SKIP() << "Stack MTE must be off";
+  }
+  int x = 0;
+  volatile int* p = const_cast<volatile int*>(
+      reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(&x) | (1UL << 57)));
+  *p = 1;  // no crash.
+  EXPECT_DEATH(
+      {
+        __pthread_internal_remap_stack_with_mte();
+        *p = 2;
+      },
+      "");
+  EXPECT_DEATH(
+      {
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_t id;
+        pthread_create(
+            &id, &attr,
+            [](void* ptr) -> void* {
+              __pthread_internal_remap_stack_with_mte();
+              *const_cast<volatile int*>(reinterpret_cast<int*>(ptr)) = 2;
+              return nullptr;
+            },
+            const_cast<int*>(p));
+        void* res;
+        pthread_join(id, &res);
+      },
+      "");
+#else
+  GTEST_SKIP() << "aarch64 bionic-only test";
 #endif
 }
