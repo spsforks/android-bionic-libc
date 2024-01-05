@@ -410,6 +410,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
 }
+
 #else   // __aarch64__
 void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}
 #endif  // __aarch64__
