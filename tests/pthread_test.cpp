@@ -22,6 +22,7 @@
 #include <malloc.h>
 #include <pthread.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
@@ -44,8 +45,9 @@
 #include <android-base/strings.h>
 #include <android-base/test_utils.h>
 
-#include "private/bionic_constants.h"
 #include "SignalUtils.h"
+#include "platform/bionic/mte.h"
+#include "private/bionic_constants.h"
 #include "utils.h"
 
 using pthread_DeathTest = SilentDeathTest;
@@ -3086,5 +3088,142 @@ TEST(pthread, run_on_all_threads) {
   ASSERT_EQ(nullptr, retval);
 #else
   GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+extern "C" void __pthread_internal_remap_stack_with_mte();
+
+#if defined(__BIONIC__) && defined(__aarch64__)
+__attribute__((target("mte"))) bool is_stack_mte_on() {
+  // Check whether tags are being stored, if they are, the stack is already
+  // mapped with MTE and we cannot run the test below.
+  alignas(16) int x = 0;
+  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
+  void* p_cpy = p;
+  __builtin_arm_stg(p);
+  p = __builtin_arm_ldg(p);
+  __builtin_arm_stg(&x);
+  return p == p_cpy;
+}
+
+static void __find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
+  uintptr_t startstack = reinterpret_cast<uintptr_t>(__builtin_frame_address(0));
+
+  // Hunt for the region that contains that address.
+  FILE* fp = fopen("/proc/self/maps", "re");
+  if (fp == nullptr) {
+    abort();
+  }
+  char line[BUFSIZ];
+  while (fgets(line, sizeof(line), fp) != nullptr) {
+    uintptr_t lo, hi;
+    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
+      if (lo <= startstack && startstack <= hi) {
+        *low = lo;
+        *high = hi;
+        fclose(fp);
+        return;
+      }
+    }
+  }
+  abort();
+}
+
+template <typename Fn>
+unsigned int fault_new_stack_page(uintptr_t low, Fn f) {
+  uintptr_t new_low;
+  uintptr_t new_high;
+  volatile char buf[4096];
+  buf[4095] = 1;
+  __find_main_stack_limits(&new_low, &new_high);
+  if (new_low < low) {
+    f();
+    return new_high;
+  }
+  // Useless, but should defeat TCO.
+  return new_low + fault_new_stack_page(low, f);
+}
+
+#endif
+
+void invalid_access() {
+  int x = 0;
+  volatile int* invalid_p = const_cast<volatile int*>(
+      reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(&x) | (1UL << 57)));
+  *invalid_p = 1;
+}
+
+void valid_access() {
+  int x = 0;
+  volatile int* correct_p =
+      const_cast<volatile int*>(reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(&x)));
+  *correct_p = 1;
+}
+
+TEST(pthread, __pthread_internal_remap_stack_with_mte) {
+#if defined(__BIONIC__) && defined(__aarch64__)
+  if (!mte_supported() || !running_with_mte()) {
+    GTEST_SKIP() << "MTE required";
+  }
+  if (is_stack_mte_on()) {
+    GTEST_SKIP() << "Stack MTE must be off";
+  }
+  invalid_access();  // no crash
+  {
+    uintptr_t low;
+    uintptr_t high;
+    __find_main_stack_limits(&low, &high);
+    fault_new_stack_page(low, [&] { invalid_access(); });  // no crash
+  }
+  EXPECT_EXIT(
+      {
+        __pthread_internal_remap_stack_with_mte();
+        exit(0);
+      },
+      ::testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(
+      {
+        __pthread_internal_remap_stack_with_mte();
+        invalid_access();
+      },
+      ::testing::KilledBySignal(SIGSEGV), "");
+  EXPECT_EXIT(
+      {
+        uintptr_t low;
+        uintptr_t high;
+        __find_main_stack_limits(&low, &high);
+        __pthread_internal_remap_stack_with_mte();
+        fault_new_stack_page(low, [&] { valid_access(); });
+        exit(0);
+      },
+      ::testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(
+      {
+        uintptr_t low;
+        uintptr_t high;
+        __find_main_stack_limits(&low, &high);
+        __pthread_internal_remap_stack_with_mte();
+        fault_new_stack_page(low, [&] { invalid_access(); });
+      },
+      ::testing::KilledBySignal(SIGSEGV), "");
+  EXPECT_EXIT(
+      {
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_t id;
+        __pthread_internal_remap_stack_with_mte();
+        pthread_create(
+            &id, &attr,
+            [](void*) -> void* {
+              invalid_access();
+              return nullptr;
+            },
+            nullptr);
+        void* res;
+        pthread_join(id, &res);
+      },
+      ::testing::KilledBySignal(SIGSEGV), "");
+#else
+  GTEST_SKIP() << "aarch64 bionic-only test";
 #endif
 }
