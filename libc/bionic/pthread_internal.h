@@ -30,6 +30,7 @@
 
 #include <pthread.h>
 #include <stdatomic.h>
+#include <sys/cdefs.h>
 
 #if __has_feature(hwaddress_sanitizer)
 #include <sanitizer/hwasan_interface.h>
@@ -207,6 +208,7 @@ __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id
 __LIBC_HIDDEN__ pid_t __pthread_internal_gettid(pthread_t pthread_id, const char* caller);
 __LIBC_HIDDEN__ void __pthread_internal_remove(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __pthread_internal_remove_and_free(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __find_main_stack_limis(uintptr_t* low, uintptr_t* high);
 
 static inline __always_inline bionic_tcb* __get_bionic_tcb() {
   return reinterpret_cast<bionic_tcb*>(&__get_tls()[MIN_TLS_SLOT]);
@@ -267,5 +269,6 @@ __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
 
 extern "C" bool android_run_on_all_threads(bool (*func)(void*), void* arg);
+extern "C" void __pthread_internal_remap_stack_with_mte();
 
 extern pthread_rwlock_t g_thread_creation_lock;
