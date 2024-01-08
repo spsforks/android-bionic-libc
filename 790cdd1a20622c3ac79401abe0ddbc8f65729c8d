@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51d93c87_a59323f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1878380
+      },
+      "writtenOn": "2024-01-08T19:18:56Z",
+      "side": 1,
+      "message": "An alternative I tried was to add `apex_available: [com.android.runtime]` explicitly in Android.bp ([CL](https://android-review.git.corp.google.com/c/platform/external/zlib/+/2897162)), but this approach ran into linking issues in coverage builds ([error](https://android-build.corp.google.com/artifact/pending/P67536437/aosp_cf_x86_64_phone-trunk_staging-userdebug_coverage/latest/view/logs%2Fbuild_error.log))",
+      "revId": "790cdd1a20622c3ac79401abe0ddbc8f65729c8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
