@@ -16,6 +16,23 @@
       "message": "Fixes this build error:\n\n```\nIn file included from bionic/libc/malloc_debug/malloc_debug.cpp:48:\nIn file included from bionic/libc/bionic/malloc_tagged_pointers.h:37:\nIn file included from bionic/libc/private/bionic_globals.h:39:\nbionic/libc/private/WriteProtected.h:47:17: error: static assertion failed due to requirement \u0027__is_pod(libc_globals)\u0027: WriteProtected only supports POD contents\n  static_assert(__is_pod(T), \"WriteProtected only supports POD contents\");\n                ^~~~~~~~~~~\nbionic/libc/bionic/malloc_tagged_pointers.h:59:10: note: in instantiation of template class \u0027WriteProtected\u003clibc_globals\u003e\u0027 requested here\n  return __libc_globals-\u003eheap_pointer_tag \u0026 TAG_MASK;\n         ^\nbionic/libc/bionic/malloc_tagged_pointers.h:63:25: error: member reference type \u0027WriteProtected\u003clibc_globals\u003e\u0027 is not a pointer; did you mean to use \u0027.\u0027?\n  return (__libc_globals-\u003eheap_pointer_tag \u003c\u003c (TAG_SHIFT - CHECK_SHIFT)) \u0026 TAG_MASK;\n          ~~~~~~~~~~~~~~^~\n                        .\nbionic/libc/bionic/malloc_tagged_pointers.h:63:27: error: no member named \u0027heap_pointer_tag\u0027 in \u0027WriteProtected\u003clibc_globals\u003e\u0027\n  return (__libc_globals-\u003eheap_pointer_tag \u003c\u003c (TAG_SHIFT - CHECK_SHIFT)) \u0026 TAG_MASK;\n          ~~~~~~~~~~~~~~  ^\nbionic/libc/bionic/malloc_tagged_pointers.h:67:26: error: member reference type \u0027WriteProtected\u003clibc_globals\u003e\u0027 is not a pointer; did you mean to use \u0027.\u0027?\n  return ~(__libc_globals-\u003eheap_pointer_tag \u003c\u003c (TAG_SHIFT - UNTAG_SHIFT));\n           ~~~~~~~~~~~~~~^~\n                         .\nbionic/libc/bionic/malloc_tagged_pointers.h:67:28: error: no member named \u0027heap_pointer_tag\u0027 in \u0027WriteProtected\u003clibc_globals\u003e\u0027\n  return ~(__libc_globals-\u003eheap_pointer_tag \u003c\u003c (TAG_SHIFT - UNTAG_SHIFT));\n           ~~~~~~~~~~~~~~  ^\n5 errors generated.\n```",
       "revId": "72507e4ed5eeda526e899a58674e4c4b9e148a65",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f15f426_a31ad6a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-08T23:25:25Z",
+      "side": 1,
+      "message": "yeah, that seems like what we were trying to say. (first time i\u0027ve heard of `constinit` though!)",
+      "revId": "72507e4ed5eeda526e899a58674e4c4b9e148a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
