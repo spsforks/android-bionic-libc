@@ -33,6 +33,23 @@
       "message": "yeah, that seems like what we were trying to say. (first time i\u0027ve heard of `constinit` though!)",
       "revId": "72507e4ed5eeda526e899a58674e4c4b9e148a65",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd1cdafb_e5c930f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-01-08T23:38:56Z",
+      "side": 1,
+      "message": "In case someone\u0027s curious later...\n\nThis build failure happens in libc_malloc_debug. The loader also includes bionic_globals.h but does not use __libc_globals, so WriteProtected\u003clibc_globals\u003e isn\u0027t instantiated, which avoids hitting the static assertion.\n\nlibc proper *does* instantiate WriteProtected\u003clibc_globals\u003e, but it doesn\u0027t hit this problem because it doesn\u0027t use libc++, so its `_Atomic(T)` is the C type, `_Atomic T`, which is still POD. When C++ code is compiled against libc++, `_Atomic(T)` becomes `std::atomic\u003cT\u003e`. The loader and libc_malloc_debug.so both use libc++.\n\nlibc_malloc_debug.so includes malloc_debug.cpp, which includes bionic/malloc_tagged_pointers.h for (at least) UntagPointer. UntagPointer doesn\u0027t actually use __libc_globals, which is good because __libc_globals isn\u0027t exported from libc.so to libc_malloc_debug.so.",
+      "revId": "72507e4ed5eeda526e899a58674e4c4b9e148a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
