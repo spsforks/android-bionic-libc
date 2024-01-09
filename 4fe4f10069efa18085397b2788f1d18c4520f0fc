@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8cbdd2e_8ef56bd2",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2024-01-09T22:55:20Z",
+      "side": 0,
+      "message": "Don\u0027t we risk overwriting stuff here (like vtable)?",
+      "revId": "4fe4f10069efa18085397b2788f1d18c4520f0fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
