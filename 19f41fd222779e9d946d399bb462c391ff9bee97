@@ -16,6 +16,24 @@
       "message": "I\u0027m not completely certain if this one makes what it\u0027s supposed to, so please double check after me.",
       "revId": "19f41fd222779e9d946d399bb462c391ff9bee97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18e2ba85_cb44620d",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-01-09T22:53:06Z",
+      "side": 1,
+      "message": "I already fixed this part of the issue here, https://android-review.googlesource.com/c/platform/bionic/+/2901170.",
+      "parentUuid": "cfa22ae0_4a69f30a",
+      "revId": "19f41fd222779e9d946d399bb462c391ff9bee97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
