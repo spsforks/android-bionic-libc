@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b387d698_fc9863e1",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-09T22:32:49Z",
+      "side": 1,
+      "message": "Isn\u0027t this to do the strrchr above?",
+      "parentUuid": "0f45c6a1_cd82c216",
+      "revId": "e8c9ad0eaf3daf7af00e7e9ed121665a06fbb2ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5806457d_08bf9e8c",
         "filename": "libc/bionic/pthread_internal.cpp",
         "patchSetId": 12
