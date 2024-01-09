@@ -360,6 +360,11 @@ TEST(fcntl, open_O_TMPFILE_mode) {
   ASSERT_EQ(0, close(fd));
 }
 
+<<<<<<< TARGET BRANCH (62d990 Merge changes from topic "am-6e49f3db6dd44f3ba4b8bd688225b20)
 TEST_F(fcntl_DeathTest, fcntl_F_SETFD) {
   EXPECT_DEATH(fcntl(0, F_SETFD, O_NONBLOCK), "only supports FD_CLOEXEC");
+=======
+TEST(fcntl_DeathTest, fcntl_F_SETFD) {
+  EXPECT_DEATH(fcntl(0, F_SETFD, O_NONBLOCK), "FD_CLOEXEC");
+>>>>>>> SOURCE BRANCH (7922ce [RESTRICT AUTOMERGE] fcntl_F_SETFD test: allow both Android )
 }
