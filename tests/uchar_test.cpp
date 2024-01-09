@@ -169,10 +169,14 @@ TEST(uchar, mbrtoc16_null) {
   ASSERT_EQ(0U, mbrtoc16(nullptr, nullptr, 0, nullptr));
 }
 
+<<<<<<< HEAD   (3f7cd8 Merge "Merge "time.mktime_EOVERFLOW: set an explicit timezon)
 TEST(uchar, mbrtoc16_zero_len) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
+=======
+TEST(uchar, DISABLED_mbrtoc16_zero_len) {
+>>>>>>> BRANCH (30fc7d [RESTRICT AUTOMERGE] uchar/wchar tests: allow both Android 1)
   char16_t out;
 
   out = L'x';
@@ -185,7 +189,7 @@ TEST(uchar, mbrtoc16_zero_len) {
   EXPECT_EQ(L'h', out);
 }
 
-TEST(uchar, mbrtoc16) {
+TEST(uchar, DISABLED_mbrtoc16) {
   char16_t out;
 
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
@@ -295,10 +299,14 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   ASSERT_ERRNO(EILSEQ);
 }
 
+<<<<<<< HEAD   (3f7cd8 Merge "Merge "time.mktime_EOVERFLOW: set an explicit timezon)
 TEST(uchar, mbrtoc16_incomplete) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
+=======
+TEST(uchar, DISABLED_mbrtoc16_incomplete) {
+>>>>>>> BRANCH (30fc7d [RESTRICT AUTOMERGE] uchar/wchar tests: allow both Android 1)
   mbstate_t ps;
   memset(&ps, 0, sizeof(ps));
 
@@ -381,7 +389,7 @@ TEST(uchar, mbrtoc32_out_of_range) {
   }
 }
 
-TEST(uchar, mbrtoc32) {
+TEST(uchar, DISABLED_mbrtoc32) {
   char32_t out[8];
 
   out[0] = L'x';
