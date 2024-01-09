@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c65f23e6_fba3400e",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-09T22:38:19Z",
+      "side": 1,
+      "message": "ah, yes ... i was surprised i\u0027d used sscanf() since i\u0027m usually the one complaining about other people doing this!",
+      "parentUuid": "b387d698_fc9863e1",
+      "revId": "e8c9ad0eaf3daf7af00e7e9ed121665a06fbb2ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5806457d_08bf9e8c",
