@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5806457d_08bf9e8c",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-01-09T21:15:47Z",
+      "side": 1,
+      "message": "Don\u0027t you need GROWSDOWN, too?\nAlso, AFAIR, remapping just one page at the top with GROWSDOWN is enough. I do not remember if it has to be at the top, either - could you check what happens if only the page that contains the current stack pointer is remapped?\n\nPlease update the test to check that the stack keeps growing down and the new pages are PROT_MTE.",
+      "revId": "e8c9ad0eaf3daf7af00e7e9ed121665a06fbb2ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
