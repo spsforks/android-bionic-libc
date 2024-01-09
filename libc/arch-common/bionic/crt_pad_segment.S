@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,9 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm_note.h>
 
-#define NT_ANDROID_TYPE_IDENT 1
-#define NT_ANDROID_TYPE_KUSER 3
-#define NT_ANDROID_TYPE_MEMTAG 4
-#define NT_ANDROID_TYPE_PAD_SEGMENT 5
+  .section ".note.android.pad_segment", "a", %note
+  .balign 4
+  .long 1f - 0f                       // int32_t namesz
+  .long 3f - 2f                       // int32_t descsz
+  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
+0:
+  .asciz "Android"                    // char name[]
+1:
+  .balign 2
+2:
+  .long NT_SEGMENT_GAP_FILL           // value
+  .long 1    // 1 indicates to align up p_filesz/p_memsz.
+             // If/when aligning becomes the default,
+             // 0 can be used to disable the behavior.
+3:
+  .balign 2
