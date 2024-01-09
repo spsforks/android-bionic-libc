@@ -69,6 +69,24 @@
       "message": "Don\u0027t you need GROWSDOWN, too?\nAlso, AFAIR, remapping just one page at the top with GROWSDOWN is enough. I do not remember if it has to be at the top, either - could you check what happens if only the page that contains the current stack pointer is remapped?\n\nPlease update the test to check that the stack keeps growing down and the new pages are PROT_MTE.",
       "revId": "e8c9ad0eaf3daf7af00e7e9ed121665a06fbb2ae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd7bf5ac_6a1f49f6",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-09T23:25:44Z",
+      "side": 1,
+      "message": "It did work without the GROWSDOWN, but added test and changed here to make it easier to understand.\n\n\nI used this program, and the `gd` is still there even if not part of the `mprotect`, so it seems like it\u0027s magically sticky:\n\n```c++\n#include \u003ciostream\u003e\n#include \u003cfstream\u003e\n\nextern \"C\" void __pthread_internal_remap_stack_with_mte();\n\nint main() {\n  __pthread_internal_remap_stack_with_mte();\n  std::ifstream fp;\n  fp.open(\"/proc/self/smaps\");\n  std::cout \u003c\u003c fp.rdbuf() \u003c\u003c std::endl;\n\n  return 0;\n}\n```\n\nChanged the code to this:\n\n```\n  if (mprotect(reinterpret_cast\u003cvoid*\u003e(lo), getpagesize(),\n               PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {\n    async_safe_fatal(\"error: failed to set PROT_MTE on main thread\");\n  }\n```\n\nthen re-ran the test program above, it doesn\u0027t work:\n\n```\n7fe2e24000-7fe2e25000 rw-p 00000000 00:00 0 \nSize:                  4 kB\nKernelPageSize:        4 kB\nMMUPageSize:           4 kB\nRss:                   0 kB\nPss:                   0 kB\nShared_Clean:          0 kB\nShared_Dirty:          0 kB\nPrivate_Clean:         0 kB\nPrivate_Dirty:         0 kB\nReferenced:            0 kB\nAnonymous:             0 kB\nLazyFree:              0 kB\nAnonHugePages:         0 kB\nShmemPmdMapped:        0 kB\nFilePmdMapped:         0 kB\nShared_Hugetlb:        0 kB\nPrivate_Hugetlb:       0 kB\nSwap:                  0 kB\nSwapPss:               0 kB\nLocked:                0 kB\nTHPeligible:    0\nVmFlags: rd wr mr mw me gd ac mt \n7fe2e25000-7fe2e46000 rw-p 00000000 00:00 0                              [stack]\nSize:                132 kB\nKernelPageSize:        4 kB\nMMUPageSize:           4 kB\nRss:                  36 kB\nPss:                  36 kB\nShared_Clean:          0 kB\nShared_Dirty:          0 kB\nPrivate_Clean:         0 kB\nPrivate_Dirty:        36 kB\nReferenced:           36 kB\nAnonymous:            36 kB\nLazyFree:              0 kB\nAnonHugePages:         0 kB\nShmemPmdMapped:        0 kB\nFilePmdMapped:         0 kB\nShared_Hugetlb:        0 kB\nPrivate_Hugetlb:       0 kB\nSwap:                  0 kB\nSwapPss:               0 kB\nLocked:                0 kB\nTHPeligible:    0\nVmFlags: rd wr mr mw me gd ac \n```",
+      "parentUuid": "5806457d_08bf9e8c",
+      "revId": "e8c9ad0eaf3daf7af00e7e9ed121665a06fbb2ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
