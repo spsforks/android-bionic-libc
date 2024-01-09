@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfa22ae0_4a69f30a",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2024-01-09T22:24:46Z",
+      "side": 1,
+      "message": "I\u0027m not completely certain if this one makes what it\u0027s supposed to, so please double check after me.",
+      "revId": "19f41fd222779e9d946d399bb462c391ff9bee97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
