@@ -16,6 +16,24 @@
       "message": "usually when i want a comment to cover a bunch of stuff i use the\n```\n\n//\n// section comment\n//\n\n...\n```\nstyle, so it\u0027s clearer that it\u0027s not \"attached\" to anything...\n\nalthough in this specific case, isn\u0027t that the whole file?",
       "revId": "e46387e8943793e4b6845d2d43336a67a035f0fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bcd3c3f_7a5c6bdb",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-01-10T20:58:02Z",
+      "side": 1,
+      "message": "This comment is pretty useless, I think it\u0027s better to remove it.",
+      "parentUuid": "1ef41bb3_2264e873",
+      "revId": "e46387e8943793e4b6845d2d43336a67a035f0fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
