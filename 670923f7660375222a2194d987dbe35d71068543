@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60203d57_6654f0c4",
+        "filename": "tests/wctype_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2024-01-10T18:06:50Z",
+      "side": 1,
+      "message": "nit: I would suggest to cast once and use this value everywhere. Same with pointer dereference. e.g.:\n```\nfor (const wchar_t* p \u003d trues; *p; ++p) {\n    const wchar_t valCh \u003d *p;\n    const int valInt \u003d static_cast\u003cint\u003e(valCh);\n    ...\n}\n```",
+      "range": {
+        "startLine": 42,
+        "startChar": 27,
+        "endLine": 42,
+        "endChar": 47
+      },
+      "revId": "670923f7660375222a2194d987dbe35d71068543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
