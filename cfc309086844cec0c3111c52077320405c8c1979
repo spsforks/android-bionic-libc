@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a08e1a1_83ad291f",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-01-11T00:24:11Z",
+      "side": 1,
+      "message": "I think this is the nitiest nit I\u0027ve ever nited, but previously you used two dashes, and here you are using three. Did you mean to do use only two dashes?",
+      "range": {
+        "startLine": 105,
+        "startChar": 39,
+        "endLine": 105,
+        "endChar": 42
+      },
+      "revId": "cfc309086844cec0c3111c52077320405c8c1979",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
