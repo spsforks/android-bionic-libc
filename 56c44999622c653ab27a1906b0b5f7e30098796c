@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56101cb3_4c20aa48",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2196,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-01-11T21:48:09Z",
+      "side": 1,
+      "message": "Use `\"minimum\"` and then you won\u0027t have to keep this up to date (not that you do anyway, 16 should be pulling up automatically).",
+      "range": {
+        "startLine": 2196,
+        "startChar": 22,
+        "endLine": 2196,
+        "endChar": 24
+      },
+      "revId": "56c44999622c653ab27a1906b0b5f7e30098796c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
