@@ -22,6 +22,30 @@
       },
       "revId": "cfc309086844cec0c3111c52077320405c8c1979",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c3ff474_80d56ae9",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-11T15:29:49Z",
+      "side": 1,
+      "message": "yeah, `--` is the ASCII \"en dash\" and `---` is the ASCII \"em dash\": https://en.wikipedia.org/wiki/Dash\n\n(TL;DR: \"if it could be replaced by `(` and `)`, it\u0027s a pair of `--`s; if it could be replaced by a `:`, it\u0027s a `---`\".)",
+      "parentUuid": "4a08e1a1_83ad291f",
+      "range": {
+        "startLine": 105,
+        "startChar": 39,
+        "endLine": 105,
+        "endChar": 42
+      },
+      "revId": "cfc309086844cec0c3111c52077320405c8c1979",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
