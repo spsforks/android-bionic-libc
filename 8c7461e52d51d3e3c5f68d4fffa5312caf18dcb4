@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c566f278_1a3582e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-01-12T08:46:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e276f899_fa42ae6c",
+      "revId": "8c7461e52d51d3e3c5f68d4fffa5312caf18dcb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2f1aa5b4_31b953b0",
@@ -49,6 +67,24 @@
       "writtenOn": "2024-01-02T23:31:54Z",
       "side": 1,
       "message": "Android is always PIC.",
+      "revId": "8c7461e52d51d3e3c5f68d4fffa5312caf18dcb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56f9f47a_554b8abf",
+        "filename": "libc/arch-x86/string/sse2-memmove-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-01-12T08:46:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f1aa5b4_31b953b0",
       "revId": "8c7461e52d51d3e3c5f68d4fffa5312caf18dcb4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
