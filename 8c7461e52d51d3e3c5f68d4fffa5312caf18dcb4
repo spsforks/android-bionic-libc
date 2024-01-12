@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e276f899_fa42ae6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-01-12T07:00:28Z",
+      "side": 1,
+      "message": "removed the use of external library. \naccessing cache size with help of bionic/libc/bionic/sysconf.cpp",
+      "parentUuid": "82b93799_055016cf",
+      "revId": "8c7461e52d51d3e3c5f68d4fffa5312caf18dcb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2f1aa5b4_31b953b0",
         "filename": "libc/arch-x86/string/sse2-memmove-slm.S",
         "patchSetId": 2
