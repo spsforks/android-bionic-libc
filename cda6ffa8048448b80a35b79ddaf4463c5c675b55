@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1217eb43_7940bbfc",
+        "filename": "libc/arch-common/bionic/crt_pad_segment.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-01-12T18:23:59Z",
+      "side": 1,
+      "message": "Good catch. Forgot to remove it.",
+      "parentUuid": "00b1580f_3ff4dbac",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "cda6ffa8048448b80a35b79ddaf4463c5c675b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b8626e82_c934d5aa",
@@ -37,6 +61,24 @@
       "writtenOn": "2024-01-12T07:01:00Z",
       "side": 1,
       "message": "It seems there are three behaviors the loader could provide:\n\n0. The current behavior.\n\n1. For all segments but the last, extend the filesz/memsz forward to fill any unmapped pages up to the next segment.\n\n2. For each segment, align the start and end addresses to the max-page-size (e.g. 16/64KiB) rather than the device page-size.\n\nAFAIK we\u0027re only planning to implement #1 -- I\u0027m not sure we want to refer to that with the term \"align\", because it\u0027s not actually aligning the addresses.",
+      "revId": "cda6ffa8048448b80a35b79ddaf4463c5c675b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a870515_d94a2be7",
+        "filename": "libc/arch-common/bionic/crt_pad_segment.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-01-12T18:23:59Z",
+      "side": 1,
+      "message": "Reworded it to align with the approach in 1",
+      "parentUuid": "b8626e82_c934d5aa",
       "revId": "cda6ffa8048448b80a35b79ddaf4463c5c675b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
