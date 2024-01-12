@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00b1580f_3ff4dbac",
+        "filename": "libc/arch-common/bionic/crt_pad_segment.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-01-12T07:01:00Z",
+      "side": 1,
+      "message": "Where is this defined?",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "cda6ffa8048448b80a35b79ddaf4463c5c675b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8626e82_c934d5aa",
+        "filename": "libc/arch-common/bionic/crt_pad_segment.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-01-12T07:01:00Z",
+      "side": 1,
+      "message": "It seems there are three behaviors the loader could provide:\n\n0. The current behavior.\n\n1. For all segments but the last, extend the filesz/memsz forward to fill any unmapped pages up to the next segment.\n\n2. For each segment, align the start and end addresses to the max-page-size (e.g. 16/64KiB) rather than the device page-size.\n\nAFAIK we\u0027re only planning to implement #1 -- I\u0027m not sure we want to refer to that with the term \"align\", because it\u0027s not actually aligning the addresses.",
+      "revId": "cda6ffa8048448b80a35b79ddaf4463c5c675b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
