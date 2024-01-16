@@ -1659,6 +1659,7 @@ filegroup {
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
+        "bionic/debuggerd_get_callbacks.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
         "bionic/android_profiling_dynamic.cpp",

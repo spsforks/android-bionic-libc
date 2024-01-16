@@ -70,5 +70,6 @@ void linker_debuggerd_init() {
 #endif
     .post_dump = notify_gdb_of_libraries,
   };
+  __libc_shared_globals()->debuggerd_callbacks = callbacks;
   debuggerd_init(&callbacks);
 }
