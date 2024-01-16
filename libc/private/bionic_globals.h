@@ -31,6 +31,7 @@
 
 #include <inttypes.h>
 #include <link.h>
+#include <platform/bionic/debuggerd.h>
 #include <platform/bionic/malloc.h>
 #include <pthread.h>
 #include <stdatomic.h>
@@ -135,6 +136,7 @@ struct libc_shared_globals {
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;
   int64_t heap_tagging_upgrade_timer_sec = 0;
+  debuggerd_callbacks_t debuggerd_callbacks;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
