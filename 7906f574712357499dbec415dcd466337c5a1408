@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cb99d5f_7d618545",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-16T18:54:36Z",
+      "side": 1,
+      "message": "otherwise lgtm",
+      "revId": "7906f574712357499dbec415dcd466337c5a1408",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d44034ee_d58d6b1b",
+        "filename": "libm/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-16T18:54:36Z",
+      "side": 1,
+      "message": "add a code comment?\n\ni\u0027m assuming you checked 32-bit x86 too?",
+      "revId": "7906f574712357499dbec415dcd466337c5a1408",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
