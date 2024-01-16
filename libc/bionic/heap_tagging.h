@@ -29,6 +29,7 @@
 #pragma once
 
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/debuggerd.h>
 #include <platform/bionic/malloc.h>
 #include <stddef.h>
 

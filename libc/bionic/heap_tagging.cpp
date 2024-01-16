@@ -27,6 +27,7 @@
  */
 
 #include "heap_tagging.h"
+#include "bionic/debuggerd.h"
 #include "malloc_common.h"
 #include "malloc_tagged_pointers.h"
 
@@ -214,4 +215,8 @@ extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_ha
 #if __has_feature(hwaddress_sanitizer)
   __hwasan_handle_longjmp(sp_dst);
 #endif  // __has_feature(hwaddress_sanitizer)
+}
+
+__attribute__((visibility("default"))) debuggerd_callbacks_t* debuggerd_get_callbacks() {
+  return &__libc_shared_globals()->debuggerd_callbacks;
 }
