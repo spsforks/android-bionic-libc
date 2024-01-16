@@ -316,8 +316,6 @@ static inline bool running_with_mte() {
 
 bool IsLowRamDevice();
 
-int64_t NanoTime();
-
 class Errno {
  public:
   Errno(int e) : errno_(e) {}
