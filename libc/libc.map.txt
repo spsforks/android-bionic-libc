@@ -1582,6 +1582,8 @@ LIBC_U { # introduced=UpsideDownCake
     memset_explicit;
     posix_spawn_file_actions_addchdir_np;
     posix_spawn_file_actions_addfchdir_np;
+    # Used by libdebuggerd_ndk.
+    debuggerd_get_callbacks; # apex
 } LIBC_T;
 
 LIBC_V { # introduced=VanillaIceCream
