@@ -32,15 +32,13 @@
 
 #include "context_node.h"
 #include "contexts.h"
-#include "properties_filename.h"
 
 class ContextsSerialized : public Contexts {
  public:
   virtual ~ContextsSerialized() override {
   }
 
-  virtual bool Initialize(bool writable, const char* dirname, bool* fsetxattr_failed,
-                          bool load_default_path) override;
+  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) override;
   virtual prop_area* GetPropAreaForName(const char* name) override;
   virtual prop_area* GetSerialPropArea() override {
     return serial_prop_area_;
@@ -51,12 +49,10 @@ class ContextsSerialized : public Contexts {
 
  private:
   bool InitializeContextNodes();
-  bool InitializeProperties(bool load_default_path);
+  bool InitializeProperties();
   bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
 
-  const char* dirname_;
-  PropertiesFilename tree_filename_;
-  PropertiesFilename serial_filename_;
+  const char* filename_;
   android::properties::PropertyInfoAreaFile property_info_area_file_;
   ContextNode* context_nodes_ = nullptr;
   size_t num_context_nodes_ = 0;

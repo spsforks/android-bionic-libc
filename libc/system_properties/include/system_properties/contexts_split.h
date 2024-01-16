@@ -38,8 +38,7 @@ class ContextsSplit : public Contexts {
   virtual ~ContextsSplit() override {
   }
 
-  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed,
-                          bool) override;
+  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) override;
   virtual prop_area* GetPropAreaForName(const char* name) override;
   virtual prop_area* GetSerialPropArea() override {
     return serial_prop_area_;
