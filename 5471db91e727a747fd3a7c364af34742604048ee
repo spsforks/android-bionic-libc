@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8fa814f_0d0d1601",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-17T01:22:29Z",
+      "side": 1,
+      "message": "Moved the function to `LIBC_PRIVATE` for now (for the test).\n\nThere are two options, one needs the function exposed to Zygote, and the other will be fully in libc. We can move it to a apex symbol if we go with the former.",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
