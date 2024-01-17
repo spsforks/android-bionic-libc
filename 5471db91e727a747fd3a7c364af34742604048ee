@@ -16,6 +16,57 @@
       "message": "Moved the function to `LIBC_PRIVATE` for now (for the test).\n\nThere are two options, one needs the function exposed to Zygote, and the other will be fully in libc. We can move it to a apex symbol if we go with the former.",
       "revId": "5471db91e727a747fd3a7c364af34742604048ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff306f05_eb7e8458",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-01-17T21:34:42Z",
+      "side": 1,
+      "message": "Can this check that we are on the main thread, and single-threaded?\n\nOr just document that as a requirement, otherwise it is easy to misuse.",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2073541a_3ba57512",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3103,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-01-17T21:34:42Z",
+      "side": 1,
+      "message": "don\u0027t you want to clear the tag before exiting?",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1295aa14_433a6f78",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3187,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-01-17T21:34:42Z",
+      "side": 1,
+      "message": "I do not understand what this does. You run the lambda on the newly faulted stack page, but the memory access goes to \"x\" in the grand-parent.",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
