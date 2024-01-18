@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8098043d_113ef49c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-18T01:03:27Z",
+      "side": 1,
+      "message": "(noticed [no pun intended] while cleaning up https://android-review.git.corp.google.com/c/platform/bionic/+/2879773)",
+      "revId": "78afa49091144f490fd3f88e2be3437055c38e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
