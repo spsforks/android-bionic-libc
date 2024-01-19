@@ -16,6 +16,24 @@
       "message": "Looks like the assembler isn\u0027t completely happy with this.\n\nBy the way, thank you, I was getting tired of all of those warning from weak symbols.",
       "revId": "3e497b7e60026635f9ec5ab98ef0026f07dd69ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75bcbda6_dba92549",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-19T23:59:08Z",
+      "side": 1,
+      "message": "\u003e Looks like the assembler isn\u0027t completely happy with this.\n\nit\u0027s almost as if i only built arm... fixed now. funnily enough, this was caused by me \"fixing\" an obvious \"bug\" in the assembler. i\u0027ve added a comment explaining why the \"wrong\" code is actually right.\n\n(but i plan on coming back to remove all this sa_restorer stuff. i don\u0027t believe we actually need it.)\n\n\u003e By the way, thank you, I was getting tired of all of those warning from weak symbols.\n\nthis doesn\u0027t fix the \"linker_reloc_bench\" ones. i\u0027ll come back for those, when i\u0027ve worked out how to fix them...",
+      "parentUuid": "e039294c_0ef08279",
+      "revId": "3e497b7e60026635f9ec5ab98ef0026f07dd69ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
