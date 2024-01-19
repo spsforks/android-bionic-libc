@@ -28,6 +28,7 @@
 
 #include <android-base/silent_death_test.h>
 
+#include "platform/bionic/mte.h"
 #include "private/bionic_tls.h"
 
 extern "C" pid_t gettid(); // glibc defines this but doesn't declare it anywhere.
@@ -100,6 +101,13 @@ TEST(stack_protector, global_guard) {
 #endif
 }
 
+// Make sure that a stack variable is tagged under MTE, by forcing the stack
+// safety analysis to fail.
+int z;
+__attribute__((noinline)) void escape_stack_safety_analysis(int* p) {
+  *p = z;
+}
+
 using stack_protector_DeathTest = SilentDeathTest;
 
 TEST_F(stack_protector_DeathTest, modify_stack_protector) {
@@ -109,6 +117,16 @@ TEST_F(stack_protector_DeathTest, modify_stack_protector) {
   ASSERT_EXIT(modify_stack_protector_test(),
               testing::KilledBySignal(SIGABRT), "tag-mismatch");
 #else
+
+  if (mte_supported()) {
+    int stack_variable;
+    escape_stack_safety_analysis(&stack_variable);
+#ifdef __aarch64__
+    if (reinterpret_cast<uintptr_t>(&stack_variable) & (0xfull << 56)) {
+      GTEST_SKIP() << "Stack MTE is enabled, stack protector is not available";
+    }
+#endif  // defined(__aarch64__)
+  }
   ASSERT_EXIT(modify_stack_protector_test(),
               testing::KilledBySignal(SIGABRT), "stack corruption detected");
 #endif
