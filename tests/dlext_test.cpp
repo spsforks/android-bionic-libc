@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <link.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -39,11 +40,13 @@
 #include <procinfo/process_map.h>
 #include <ziparchive/zip_archive.h>
 
+#include "bionic/mte.h"
+#include "bionic/page.h"
 #include "core_shared_libs.h"
-#include "gtest_globals.h"
-#include "utils.h"
 #include "dlext_private.h"
 #include "dlfcn_symlink_support.h"
+#include "gtest_globals.h"
+#include "utils.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
     ASSERT_TRUE((ptr) != nullptr) << "dlerror: " << dlerror()
@@ -1998,30 +2001,47 @@ TEST(dlext, ns_anonymous) {
   typedef const char* (*fn_t)();
   fn_t ns_get_dlopened_string_private = reinterpret_cast<fn_t>(ns_get_dlopened_string_addr);
 
-  std::vector<map_record> maps;
-  Maps::parse_maps(&maps);
+#define MAYBE_MAP_FLAG(x, from, to) (((x) & (from)) ? (to) : 0)
+#define PFLAGS_TO_PROT(x)                                                        \
+  (MAYBE_MAP_FLAG((x), PF_X, PROT_EXEC) | MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
+   MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
-  uintptr_t addr_start = 0;
-  uintptr_t addr_end = 0;
-  bool has_executable_segment = false;
+  Dl_info private_library_info;
+  ASSERT_NE(dladdr(reinterpret_cast<void*>(ns_get_dlopened_string_addr), &private_library_info), 0)
+      << dlerror();
   std::vector<map_record> maps_to_copy;
+  std::tuple dl_iterate_arg = {&private_library_info, &maps_to_copy};
+  dl_iterate_phdr(
+      [](dl_phdr_info* info, size_t /* size */, void* data) -> int {
+        auto [private_library_info, maps_to_copy] =
+            *reinterpret_cast<decltype(dl_iterate_arg)*>(data);
+        if (info->dlpi_addr != reinterpret_cast<ElfW(Addr)>(private_library_info->dli_fbase))
+          return 0;
 
-  for (const auto& rec : maps) {
-    if (rec.pathname == private_library_absolute_path) {
-      if (addr_start == 0) {
-        addr_start = rec.addr_start;
-      }
-      addr_end = rec.addr_end;
-      has_executable_segment = has_executable_segment || (rec.perms & PROT_EXEC) != 0;
+        for (size_t i = 0; i < info->dlpi_phnum; ++i) {
+          const ElfW(Phdr)* phdr = info->dlpi_phdr + i;
+          if (phdr->p_type != PT_LOAD) continue;
+          maps_to_copy->push_back({
+              .addr_start = page_start(info->dlpi_addr + phdr->p_vaddr),
+              .addr_end = page_end(info->dlpi_addr + phdr->p_vaddr + phdr->p_memsz),
+              .perms = PFLAGS_TO_PROT(phdr->p_flags),
+          });
+        }
+        return 0;
+      },
+      &dl_iterate_arg);
 
-      maps_to_copy.push_back(rec);
-    }
-  }
+  bool has_executable_segment =
+      std::any_of(maps_to_copy.begin(), maps_to_copy.end(),
+                  [](const map_record& record) -> bool { return record.perms & PROT_EXEC; });
 
   // Some validity checks.
+  ASSERT_NE(maps_to_copy.size(), 0u);
+  uintptr_t addr_start = maps_to_copy.front().addr_start;
+  uintptr_t addr_end = maps_to_copy.back().addr_end;
+
   ASSERT_TRUE(addr_start > 0);
   ASSERT_TRUE(addr_end > 0);
-  ASSERT_TRUE(maps_to_copy.size() > 0);
   ASSERT_TRUE(ns_get_dlopened_string_addr > addr_start);
   ASSERT_TRUE(ns_get_dlopened_string_addr < addr_end);
 
@@ -2046,15 +2066,22 @@ TEST(dlext, ns_anonymous) {
                                                              -1, 0));
   ASSERT_TRUE(reinterpret_cast<void*>(reserved_addr) != MAP_FAILED);
 
-  for (const auto& rec : maps_to_copy) {
-    uintptr_t offset = rec.addr_start - addr_start;
-    size_t size = rec.addr_end - rec.addr_start;
-    void* addr = reinterpret_cast<void*>(reserved_addr + offset);
-    void* map = mmap(addr, size, PROT_READ | PROT_WRITE,
-                     MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
-    ASSERT_TRUE(map != MAP_FAILED);
-    memcpy(map, reinterpret_cast<void*>(rec.addr_start), size);
-    mprotect(map, size, rec.perms);
+  {
+    // Disable MTE while copying the PROT_MTE-protected global variables from
+    // the existing mappings. We don't really care about turning on PROT_MTE for
+    // the new copy of the mappings, as this isn't the behaviour under test and
+    // tags will be ignored.
+    ScopedDisableMTE disable_mte_for_copying_global_variables;
+    for (const auto& rec : maps_to_copy) {
+      uintptr_t offset = rec.addr_start - addr_start;
+      size_t size = rec.addr_end - rec.addr_start;
+      void* addr = reinterpret_cast<void*>(reserved_addr + offset);
+      void* map =
+          mmap(addr, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
+      ASSERT_TRUE(map != MAP_FAILED);
+      memcpy(map, reinterpret_cast<void*>(rec.addr_start), size);
+      mprotect(map, size, rec.perms);
+    }
   }
 
   // call the function copy
