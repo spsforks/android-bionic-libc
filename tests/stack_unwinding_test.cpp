@@ -132,7 +132,7 @@ TEST(stack_unwinding, unwind_through_signal_frame) {
   SignalUnwindTest();
 }
 
-// On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
+// On LP32, the SA_SIGINFO flag gets you __kernel_rt_sigreturn instead of __kernel_sigreturn.
 TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 

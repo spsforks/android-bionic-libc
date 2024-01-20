@@ -247,23 +247,13 @@ TEST(signal, sigsuspend64_sigpending64) {
 }
 
 template <typename SigActionT, typename SigSetT>
-static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*),
-                          int (sigaddset_fn)(SigSetT*, int),
-                          int sig) {
-  // Both bionic and glibc set SA_RESTORER when talking to the kernel on arm,
-  // arm64, x86, and x86-64. The version of glibc we're using also doesn't
-  // define SA_RESTORER, but luckily it's the same value everywhere.
-  static const unsigned sa_restorer = 0x4000000;
-
+static void TestSigAction(int(sigaction_fn)(int, const SigActionT*, SigActionT*),
+                          int(sigaddset_fn)(SigSetT*, int), int sig) {
   // See what's currently set for this signal.
   SigActionT original_sa = {};
   ASSERT_EQ(0, sigaction_fn(sig, nullptr, &original_sa));
   ASSERT_TRUE(original_sa.sa_handler == nullptr);
   ASSERT_TRUE(original_sa.sa_sigaction == nullptr);
-  ASSERT_EQ(0U, original_sa.sa_flags & ~sa_restorer);
-#ifdef SA_RESTORER
-  ASSERT_EQ(bool(original_sa.sa_flags & sa_restorer), bool(original_sa.sa_restorer));
-#endif
 
   // Set a traditional sa_handler signal handler.
   auto no_op_signal_handler = [](int) {};
@@ -278,10 +268,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   ASSERT_EQ(0, sigaction_fn(sig, nullptr, &sa));
   ASSERT_TRUE(sa.sa_handler == no_op_signal_handler);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
-  ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK), sa.sa_flags & ~sa_restorer);
-#ifdef SA_RESTORER
-  ASSERT_EQ(bool(sa.sa_flags & sa_restorer), bool(sa.sa_restorer));
-#endif
+  ASSERT_TRUE(sa.sa_flags & SA_ONSTACK);
 
   // Set a new-style sa_sigaction signal handler.
   auto no_op_sigaction = [](int, siginfo_t*, void*) {};
@@ -296,10 +283,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   ASSERT_EQ(0, sigaction_fn(sig, nullptr, &sa));
   ASSERT_TRUE(sa.sa_sigaction == no_op_sigaction);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
-  ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
-#ifdef SA_RESTORER
-  ASSERT_EQ(bool(sa.sa_flags & sa_restorer), bool(sa.sa_restorer));
-#endif
+  ASSERT_EQ(SA_ONSTACK | SA_SIGINFO, sa.sa_flags & (SA_ONSTACK | SA_SIGINFO));
 
   // Put everything back how it was.
   ASSERT_EQ(0, sigaction_fn(sig, &original_sa, nullptr));
