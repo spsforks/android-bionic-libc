@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a38d23ad_0be11d6b",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-20T01:55:31Z",
+      "side": 1,
+      "message": "Done in header",
+      "parentUuid": "ff306f05_eb7e8458",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2073541a_3ba57512",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aed5baac_b9d21f9c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3103,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-20T01:55:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2073541a_3ba57512",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1295aa14_433a6f78",
@@ -65,6 +101,24 @@
       "writtenOn": "2024-01-17T21:34:42Z",
       "side": 1,
       "message": "I do not understand what this does. You run the lambda on the newly faulted stack page, but the memory access goes to \"x\" in the grand-parent.",
+      "revId": "5471db91e727a747fd3a7c364af34742604048ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80f5b6f9_515a4ecf",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3187,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-20T01:55:31Z",
+      "side": 1,
+      "message": "Thanks.",
+      "parentUuid": "1295aa14_433a6f78",
       "revId": "5471db91e727a747fd3a7c364af34742604048ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
