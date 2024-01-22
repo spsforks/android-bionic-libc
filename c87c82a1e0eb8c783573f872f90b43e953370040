@@ -16,6 +16,24 @@
       "message": "this is getting a bit hard to read... worth breaking into three separate tests, one for hwasan, one for mte, and one for \"normal\"?",
       "revId": "c87c82a1e0eb8c783573f872f90b43e953370040",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc503170_4fca98bb",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-22T18:59:45Z",
+      "side": 1,
+      "message": "\"or that\" :-)",
+      "parentUuid": "b7003c2b_221a3fdc",
+      "revId": "c87c82a1e0eb8c783573f872f90b43e953370040",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
