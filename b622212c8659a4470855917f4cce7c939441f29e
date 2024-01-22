@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f3e2811_c4a3700a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-22T18:14:11Z",
+      "side": 1,
+      "message": "intel folks: the CI boot failures have occurred often enough (and only on x86) that i assume they\u0027re actually legit --- have you successfully booted x86 devices/emulators with these changes?",
+      "revId": "b622212c8659a4470855917f4cce7c939441f29e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
