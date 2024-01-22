@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00b24f30_143a8e37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-01-22T20:57:32Z",
+      "side": 1,
+      "message": "Looks like riscv64 still uses sa_restorer somewhere.",
+      "revId": "fd1c4eaa8e8c626ebd0086db89f50f9fd06a99ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
