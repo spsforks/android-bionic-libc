@@ -2057,6 +2057,7 @@ cc_library_headers {
         "//external/jemalloc_new",
         "//external/libunwind_llvm",
         "//external/scudo",
+        "//external/libbrillo:__subpackages__",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
     ],
