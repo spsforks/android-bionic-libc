@@ -16,6 +16,24 @@
       "message": "Looks like riscv64 still uses sa_restorer somewhere.",
       "revId": "fd1c4eaa8e8c626ebd0086db89f50f9fd06a99ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d285dc78_6cec5d20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-22T21:28:35Z",
+      "side": 1,
+      "message": "it\u0027s actually the opposite --- riscv64 doesn\u0027t even have the sa_restorer field. that\u0027s trivially fixable (by putting the `#if defined(SA_RESTORER)` back) but tbh i think if we do go this route, we should consider stopping touching that field completely, and ignore it as an input [that is: stop copying it _in_ to the kernel request] and ignore it as an output [that is: stop copying it _out_ of the kernel\u0027s response].\n\nbut... the interesting part here that i haven\u0027t looked at yet is that we seem to have a genuine of test failure on arm32:\n```\nbionic/tests/stack_unwinding_test.cpp:(111) Failure in test stack_unwinding.unwind_through_signal_frame\nExpected: (unwind_data.handler_frame_count) \u003e (unwind_data.expected_frame_count + 1), actual: 1 vs 15\nstack_unwinding.unwind_through_signal_frame exited with exitcode 1.\n```\n\nthat\u0027s odd to me, because the whole reason i\u0027m here in the first place is that the recent warning work made me look at all the __restore/__restore_rt routines again, and wonder why we have them if the whole point is that they need to be identical to the kernel\u0027s ones (which is why they\u0027re written so weirdly). if that\u0027s the case, why don\u0027t we just use the kernel\u0027s ones?\n\nit may be that there is a reason why we need this for arm32, in which case i\u0027ll happily take the x86/x86-64 cleanup and write a better comment for the arm32 code. but i\u0027ve no idea why that would be?",
+      "parentUuid": "00b24f30_143a8e37",
+      "revId": "fd1c4eaa8e8c626ebd0086db89f50f9fd06a99ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
