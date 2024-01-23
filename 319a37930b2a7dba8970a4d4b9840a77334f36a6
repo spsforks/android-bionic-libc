@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb30b010_13c88830",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 1733,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-23T20:48:23Z",
+      "side": 1,
+      "message": "As per the comment previously:\n\n\u003e Moved the function to LIBC_PRIVATE for now (for the test).\n\n\u003e There are two options, one needs the function exposed to Zygote, and the other will be fully in libc. We can move it to a apex symbol if we go with the former.\n\n\"Two options\" being for the problem that memtag-stack doesn\u0027t work in the NDK.\n\nIf we need it in zygote, I will expose it more widely. But I think it makes sense to submit this as is first.",
+      "parentUuid": "b8e7985d_1815f2d4",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10f75a1f_40cbdafe",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-01-23T20:46:18Z",
       "side": 1,
       "message": "use the pthread call instead (since you\u0027re not trying to test that here)?",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37b72af8_53491e3d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3109,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-23T20:48:23Z",
+      "side": 1,
+      "message": "That one is not accessible from the test, because it\u0027s not even in LIBC_PRIVATE.",
+      "parentUuid": "10f75a1f_40cbdafe",
       "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
