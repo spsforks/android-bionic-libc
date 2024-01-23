@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "abf8a868_d51a0132",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 1733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T20:53:45Z",
+      "side": 1,
+      "message": "ah, if it\u0027s deliberately only accessible to tests right now, i\u0027d say so in the commit message.",
+      "parentUuid": "bb30b010_13c88830",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "10f75a1f_40cbdafe",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 16
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "That one is not accessible from the test, because it\u0027s not even in LIBC_PRIVATE.",
       "parentUuid": "10f75a1f_40cbdafe",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71f33a7d_eb855364",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T20:53:45Z",
+      "side": 1,
+      "message": "no, the public interface: pthread_getattr_np()",
+      "parentUuid": "37b72af8_53491e3d",
       "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
