@@ -34,6 +34,24 @@
       "parentUuid": "d35c40d8_263ab3a2",
       "revId": "e22e5d64cf8946b1ee86f4935608b4c6e0586ec7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc304c56_18097a1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T00:00:10Z",
+      "side": 1,
+      "message": "\u003candroid/fdsan.h\u003e is an NDK header (and i just checked it actually makes it into the ndk!) so \"citation needed\". what\u0027s the full error?",
+      "parentUuid": "0ba49d5d_fa5ecae7",
+      "revId": "e22e5d64cf8946b1ee86f4935608b4c6e0586ec7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
