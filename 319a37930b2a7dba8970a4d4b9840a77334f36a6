@@ -223,6 +223,24 @@
       "parentUuid": "7904da15_6a8d5280",
       "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c98ab1e_d08a0607",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3109,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-01-23T22:06:22Z",
+      "side": 1,
+      "message": "\u003e  (and why don\u0027t we fix that?)\n\nI think that\u0027s on purpose, because it\u0027s for user apps asking \"how much stack do I have\" rather than \"how much stack do you currently have mapped\".",
+      "parentUuid": "faf153df_9778bb92",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
