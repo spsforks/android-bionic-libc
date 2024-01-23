@@ -34,6 +34,24 @@
       "parentUuid": "b7003c2b_221a3fdc",
       "revId": "c87c82a1e0eb8c783573f872f90b43e953370040",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbc6d49f_42a2a20a",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2024-01-23T09:21:34Z",
+      "side": 1,
+      "message": "yeah, i re-read it and particularly the ifdefs made it harder to grok on first parse.\n\ni\u0027ve refactored them out and made the conditionals a lot clearer. hope this is what you also had in mind, i reckon three different tests with various `if (not_supported) SKIP()` is probably uglier.",
+      "parentUuid": "b7003c2b_221a3fdc",
+      "revId": "c87c82a1e0eb8c783573f872f90b43e953370040",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
