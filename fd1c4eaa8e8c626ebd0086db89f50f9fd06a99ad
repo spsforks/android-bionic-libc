@@ -52,6 +52,24 @@
       "parentUuid": "d285dc78_6cec5d20",
       "revId": "fd1c4eaa8e8c626ebd0086db89f50f9fd06a99ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07076920_12e471a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T22:25:50Z",
+      "side": 1,
+      "message": "actually, i realize that it doesn\u0027t work on x86-64 either --- it\u0027s my _other_ in-flight change where we have hwasan issues; this one fails for x86-64. and running with -DSHOW_FRAMES\u003d1 i do repro this for arm32, and the unwind stops exactly where there __restore frame should be.\n\nso without improving the unwinder (which might not even be possible --- i might actually mean \"without building for x86-64 with a frame pointer[1]\"), i think only 32-bit x86 can benefit from this? (and i haven\u0027t actually _tested_ that; i\u0027m just assuming because arm64 and 32-bit x86 are the only architectures with this in the vdso. though arm64 definitely uses a frame pointer, so the vdso bit might be a red herring?)\n\n____\n1. which is actually in fashion right now, and something we might want to consider: https://www.phoronix.com/news/Ubuntu-Frame-Pointers-Default",
+      "parentUuid": "4c7d30e7_2a35736e",
+      "revId": "fd1c4eaa8e8c626ebd0086db89f50f9fd06a99ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
