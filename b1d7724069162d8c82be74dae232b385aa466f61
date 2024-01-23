@@ -16,6 +16,24 @@
       "message": "I looked at some of the debuggerd failures, and the hwasan ones seem to be where the function name is not present (no function name is). I don\u0027t know why this change would cause that though.",
       "revId": "b1d7724069162d8c82be74dae232b385aa466f61",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11c8c3a1_604d4b7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T21:24:45Z",
+      "side": 1,
+      "message": "yeah, i definitely regret letting clang-format reformat this file --- it turns out that a lot of the newlines were actually meaningful. i thought i\u0027d added enough `;`s back to fix things, but apparently still not quite. (and i\u0027m not sure what\u0027s left!)\n\ni kicked off a cheetah hwasan build this morning so hopefully something will stand out...",
+      "parentUuid": "b95e0be4_16a3d2d3",
+      "revId": "b1d7724069162d8c82be74dae232b385aa466f61",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
