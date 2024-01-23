@@ -16,6 +16,40 @@
       "message": "PTAL",
       "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8e7985d_1815f2d4",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 1733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T20:46:18Z",
+      "side": 1,
+      "message": "does this actually work? we had to expose a system properties function that\u0027s only needed by the zygote more widely recently because the person trying to use it said the zygote wouldn\u0027t link with it private...",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10f75a1f_40cbdafe",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-23T20:46:18Z",
+      "side": 1,
+      "message": "use the pthread call instead (since you\u0027re not trying to test that here)?",
+      "revId": "319a37930b2a7dba8970a4d4b9840a77334f36a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
