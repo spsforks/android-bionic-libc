@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb2363df_1029c7d6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-24T01:09:10Z",
+      "side": 1,
+      "message": "can you stack those patches on top? i\u0027m not sure i understand how any of this fits together... (in particular, the \"ndk\" in the name but the \"apex\" in the linker map are confusing.)",
+      "revId": "93b1bbd576fec0ed03aa9787aaced8428f9d1335",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ca9cb5c_fe32de65",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-24T01:09:10Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "93b1bbd576fec0ed03aa9787aaced8428f9d1335",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b56227a_107a069c",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 1577,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-24T01:09:10Z",
+      "side": 1,
+      "message": "can\u0027t change the past...",
+      "revId": "93b1bbd576fec0ed03aa9787aaced8428f9d1335",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "386a0cbb_f359c1ae",
+        "filename": "libc/platform/bionic/debuggerd.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-24T01:09:10Z",
+      "side": 1,
+      "message": "this is c++ anyway (thanks to the `namespace` above), so drop the unnecessary `typedef`s?",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 7
+      },
+      "revId": "93b1bbd576fec0ed03aa9787aaced8428f9d1335",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
