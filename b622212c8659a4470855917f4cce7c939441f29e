@@ -34,6 +34,24 @@
       "parentUuid": "7f3e2811_c4a3700a",
       "revId": "b622212c8659a4470855917f4cce7c939441f29e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04370540_d3ed837e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-24T20:42:17Z",
+      "side": 1,
+      "message": "you\u0027ll have to talk to the chromeos folks you work with about that then. i kicked off another presubmit run, and i still appear to be seeing x86 boot failures.",
+      "parentUuid": "cef892cf_376995e2",
+      "revId": "b622212c8659a4470855917f4cce7c939441f29e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
