@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0637e1fe_1da84ba6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-25T22:47:07Z",
+      "side": 1,
+      "message": "(i\u0027m going to work my way up to removing the obsolete \"ndk\" subset [since it just caused ndesaulniers trouble], but this seemed like the most trivial place to start... i don\u0027t understand why we even had this splinter in the first place!)",
+      "revId": "99cc916f7a26bb244ab897488824ee36acfdf650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
