@@ -16,6 +16,29 @@
       "message": "This func is cheap to call, worst case it scans through list calling strlen() and seeing non-zero\n\nTechnically the 2nd function should be unconditional too...\nbut we\u0027d need to keep track of *whether* we need to call ioctls...",
       "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bafbbcf4_0389a530",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2024-01-26T21:33:21Z",
+      "side": 1,
+      "message": "most likely this should be done from resolve_or_remove_nameless_interfaces() since I *think* it only needs to be done for nameless ones... since a named one would have gotten the data from GETLINK",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 331,
+        "endChar": 39
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
