@@ -320,10 +320,12 @@ int getifaddrs(ifaddrs** out) {
     return -1;
   }
 
+  // If we weren't able to depend on GETLINK messages, it's possible some
+  // interfaces never got their name set. Resolve them using if_indextoname or remove them.
+  // Furthermore, new interfaces w/ addresses might have showed up between GETLINK and GETADDR.
+  resolve_or_remove_nameless_interfaces(out);
+
   if (!getlink_success) {
-    // If we weren't able to depend on GETLINK messages, it's possible some
-    // interfaces never got their name set. Resolve them using if_indextoname or remove them.
-    resolve_or_remove_nameless_interfaces(out);
     // Similarly, without GETLINK messages, interfaces will not have their flags set.
     // Resolve them using the SIOCGIFFLAGS ioctl call.
     get_interface_flags_via_ioctl(out);
