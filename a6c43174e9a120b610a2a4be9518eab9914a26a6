@@ -18,6 +18,29 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "3feb1825_c7b6a774",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-27T00:13:15Z",
+      "side": 1,
+      "message": "i think this adds confusion rather than clarifies --- you mean \"with addresses [that we haven\u0027t seen]\", but i think just \"...new interfaces might have showed up...\" makes your point clearer. (because it\u0027s the \"when\" that\u0027s important.)",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
@@ -31,6 +54,30 @@
       "writtenOn": "2024-01-26T21:33:21Z",
       "side": 1,
       "message": "most likely this should be done from resolve_or_remove_nameless_interfaces() since I *think* it only needs to be done for nameless ones... since a named one would have gotten the data from GETLINK",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 331,
+        "endChar": 39
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a03c1ad4_529412a7",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-27T00:13:15Z",
+      "side": 1,
+      "message": "but can we tell whether we need to call this in resolve_or_remove_nameless_interfaces()?",
+      "parentUuid": "bafbbcf4_0389a530",
       "range": {
         "startLine": 331,
         "startChar": 0,
