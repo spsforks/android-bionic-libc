@@ -88,6 +88,24 @@
       "parentUuid": "01f66803_ba77d9d0",
       "revId": "de973aed505c579e372aab16ed04e717c044d548",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e897d68c_893d17dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-01-27T00:55:28Z",
+      "side": 1,
+      "message": "So, about L35, I guess depending on how we remove PAGE_SIZE, we may want to keep it on some modes.\n\nI think this change could go in today. We can\u0027t define PAGE_SIZE to be the error string itself since people use defined(PAGE_SIZE).\n\nIf everything else goes to plan, we could enable __BIONIC_DEPRECATED_PAGE_SIZE_MODE in the platform where __BIONIC_NO_PAGE_SIZE_MACRO is disabled today. Then we remove __BIONIC_NO_PAGE_SIZE_MACRO here? That way, NDK devs will get it by default",
+      "parentUuid": "6cc0840f_a6da0b0e",
+      "revId": "de973aed505c579e372aab16ed04e717c044d548",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
