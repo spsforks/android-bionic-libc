@@ -248,53 +248,49 @@ static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
   }
 }
 
-static void resolve_or_remove_nameless_interfaces(ifaddrs** list) {
-  ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list);
-  ifaddrs_storage* prev_addr = nullptr;
-  while (addr != nullptr) {
-    ifaddrs* next_addr = addr->ifa.ifa_next;
-
-    // Try resolving interfaces without a name first.
-    if (strlen(addr->name) == 0) {
-      if (if_indextoname(addr->interface_index, addr->name) != nullptr) {
-        addr->ifa.ifa_name = addr->name;
-      }
-    }
-
-    // If the interface could not be resolved, remove it.
-    if (strlen(addr->name) == 0) {
-      if (prev_addr == nullptr) {
-        *list = next_addr;
-      } else {
-        prev_addr->ifa.ifa_next = next_addr;
-      }
-      free(addr);
-    } else {
-      prev_addr = addr;
-    }
-
-    addr = reinterpret_cast<ifaddrs_storage*>(next_addr);
-  }
-}
-
-static void get_interface_flags_via_ioctl(ifaddrs** list) {
-  ScopedFd s(socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0));
-  if (s.get() == -1) {
+static void fixup_nameless_interfaces(ifaddrs** list) {
+  static int s = socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0);
+  if (s == -1) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc",
                           "socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC) failed in ifaddrs: %m");
     return;
   }
 
-  for (ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list); addr != nullptr;
-       addr = reinterpret_cast<ifaddrs_storage*>(addr->ifa.ifa_next)) {
-    ifreq ifr = {};
-    strlcpy(ifr.ifr_name, addr->ifa.ifa_name, sizeof(ifr.ifr_name));
-    if (ioctl(s.get(), SIOCGIFFLAGS, &ifr) != -1) {
-      addr->ifa.ifa_flags = ifr.ifr_flags;
-    } else {
-      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+  while (*list) {
+    ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list);
+
+    if (!addr->name[0]) {
+      // Interface without a name, try resolving it.
+      if (if_indextoname(addr->interface_index, addr->name)) {
+        addr->ifa.ifa_name = addr->name;
+      }
+
+      ifreq ifr = {};
+      strlcpy(ifr.ifr_name, addr->ifa.ifa_name, sizeof(ifr.ifr_name));
+      if (ioctl(s, SIOCGIFFLAGS, &ifr) != -1) {
+        addr->ifa.ifa_flags = ifr.ifr_flags;
+      } else {
+        async_safe_format_log(ANDROID_LOG_ERROR, "libc",
                             "ioctl(SIOCGIFFLAGS) for \"%s\" failed in ifaddrs: %m",
                             addr->ifa.ifa_name);
+      }
+    }
+
+    list = &addr->ifa.ifa_next;
+  }
+}
+
+static void remove_nameless_interfaces(ifaddrs** list) {
+  while (*list) {
+    ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list);
+
+    if (addr->name[0]) {
+      // Interface has a name, move to next one in the list.
+      list = &addr->ifa.ifa_next;
+    } else {
+      // Interface does not have a name (could not be resolved), remove it.
+      *list = addr->ifa.ifa_next;
+      free(addr);
     }
   }
 }
@@ -303,31 +299,29 @@ int getifaddrs(ifaddrs** out) {
   // We construct the result directly into `out`, so terminate the list.
   *out = nullptr;
 
-  // Open the netlink socket and ask for all the links and addresses.
+  // Open the netlink socket and ask for all the addresses and links.
   NetlinkConnection nc;
-  // SELinux policy only allows RTM_GETLINK messages to be sent by system apps.
-  bool getlink_success = false;
-  if (getuid() < FIRST_APPLICATION_UID) {
-    getlink_success = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
-  }
-  bool getaddr_success =
-    nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
 
-  if (!getaddr_success) {
+  if (!nc.SendRequest(RTM_GETADDR) ||
+      !nc.ReadResponses(__getifaddrs_callback, out)) {
     freeifaddrs(*out);
     // Ensure that callers crash if they forget to check for success.
     *out = nullptr;
     return -1;
   }
 
-  if (!getlink_success) {
+  // SELinux policy only allows RTM_GETLINK messages to be sent by system apps.
+  if (getuid() >= FIRST_APPLICATION_UID ||
+      !nc.SendRequest(RTM_GETLINK) ||
+      !nc.ReadResponses(__getifaddrs_callback, out)) {
     // If we weren't able to depend on GETLINK messages, it's possible some
-    // interfaces never got their name set. Resolve them using if_indextoname or remove them.
-    resolve_or_remove_nameless_interfaces(out);
-    // Similarly, without GETLINK messages, interfaces will not have their flags set.
-    // Resolve them using the SIOCGIFFLAGS ioctl call.
-    get_interface_flags_via_ioctl(out);
+    // interfaces never got their name and interface flags set.
+    // Resolve them using if_indextoname() and SIOCGIFFLAGS ioctl.
+    fixup_nameless_interfaces(out);
   }
+
+  // Some interfaces might have vanished between GETADDR and GETLINK
+  remove_nameless_interfaces(out);
 
   return 0;
 }
