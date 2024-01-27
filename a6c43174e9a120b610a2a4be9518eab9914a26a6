@@ -76,6 +76,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a3a69b2_31177325",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2024-01-27T00:21:29Z",
+      "side": 1,
+      "message": "no, actually the point is we call GETLINK then GETADDR\n\nGETLINK returns set of all interfaces (along with their names), thus getting us a ifindex-\u003eifname map\n\nGETADDR returns set of all addresses (along with the ifindex they are on), thus getting us a addr-\u003eifindex map\n\nthen we try to merge the two, but new interfaces w/ addresses might have\nshown up between GETLINK and GETADDR, thus there may be addr-\u003eifindex that don\u0027t have corresponding ifindex-\u003eifname\n\n--\n\nWe could reverse the order: first call GETADDR, then call GETLINK.\n\nNow interfaces could have vanished between GETADDR and GETLINK,\nso now we could just filter out anything without a name...\n\nBUT because GETLINK might fail due to selinux, we might not call it at all,\nso we still need the if_indextoname() backup path for non-priv users...",
+      "parentUuid": "3feb1825_c7b6a774",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
