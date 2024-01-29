@@ -388,6 +388,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "11c23f59_9784b0cf",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2024-01-29T23:24:37Z",
+      "side": 1,
+      "message": "My theory is that what happens is:\nprivileged (getlink capable process) -\u003e getifaddrs() -\u003e GETLINK -\u003e (other thread/process/cpu: create an interface and add 1+ ipv6 addresses to it) -\u003e GETADDR -\u003e we see the new addresses, but fail to map it to the new interface, so the name stays null -\u003e crash",
+      "parentUuid": "9d1e55a6_f48eaca7",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
