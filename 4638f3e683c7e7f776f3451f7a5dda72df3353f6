@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0546e0f_35796d55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T21:36:20Z",
+      "side": 1,
+      "message": "t",
+      "revId": "4638f3e683c7e7f776f3451f7a5dda72df3353f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d84ea2d_dd9e8e97",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T21:36:20Z",
+      "side": 1,
+      "message": "(i don\u0027t suppose there\u0027s any kind of sequence number so we can check that not only was our GETADDR not interrupted, and our GETLINK not interrupted, but also the GETADDR and GETLINK correspond to the same global state?)",
+      "range": {
+        "startLine": 329,
+        "startChar": 44,
+        "endLine": 329,
+        "endChar": 91
+      },
+      "revId": "4638f3e683c7e7f776f3451f7a5dda72df3353f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7827cb1_cd17dab7",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T21:36:20Z",
+      "side": 1,
+      "message": "is that fixable?",
+      "revId": "4638f3e683c7e7f776f3451f7a5dda72df3353f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9bfdfc0_da5d4c3a",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T21:36:20Z",
+      "side": 1,
+      "message": "why would GETADDR before GETLINK solve the problem? why wouldn\u0027t we have the same problem, but for the opposite messages?\n\ndoes the interrupt notification thing address any of this?",
+      "revId": "4638f3e683c7e7f776f3451f7a5dda72df3353f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

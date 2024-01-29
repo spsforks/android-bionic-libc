@@ -316,6 +316,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "82634c80_52a5e6d1",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T21:36:20Z",
+      "side": 1,
+      "message": "\u003e this is imho still an improvement, but really this entire file should be redone...\n\nyeah, i believe you on both points --- i just don\u0027t know what the right version looks like.\n\ni wonder whether we should be doing GETADDR _or_ GETLINK? i think we\u0027re unique in trying to combine them? (that at least dodges the \"were the two consistent with each other?\" issue...)",
+      "parentUuid": "c2cd733e_f5366fc0",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
