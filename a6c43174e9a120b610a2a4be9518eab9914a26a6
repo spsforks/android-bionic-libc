@@ -364,6 +364,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d1e55a6_f48eaca7",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T23:20:31Z",
+      "side": 1,
+      "message": "okay, i _love_ this comment... don\u0027t worry about how large it is, just get it pasted in there!\n\n\u003e [and yeah, the above still assumes GETLINK/GETADDR are atomic / not interrupted, in practice I don\u0027t think android really has to care about their being too many addresses/interfaces for the dumps to not fit in single atomic messages, provided the netlink socket\u0027s receive buffer is large enough - we shouldn\u0027t have more than a few dozen interfaces with a hundred or so ips]\n\n(but isn\u0027t that still our best^Wleast worst theory for what $VENDOR saw that started this whole conversation? can _they_ repro? should we get a one-line logging change in so they can confirm/deny?)",
+      "parentUuid": "890cee9f_7afbd17c",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
