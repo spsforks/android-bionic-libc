@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fdcfc00_32d1e169",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T23:18:01Z",
+      "side": 1,
+      "message": "getpagesize()",
+      "range": {
+        "startLine": 35,
+        "startChar": 46,
+        "endLine": 35,
+        "endChar": 54
+      },
+      "revId": "abbe47339bfe74e679639651257456732f3d7169",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01624674_179eb013",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T23:18:01Z",
+      "side": 1,
+      "message": "test whether your code works without `PAGE_SIZE`",
+      "range": {
+        "startLine": 36,
+        "startChar": 3,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "abbe47339bfe74e679639651257456732f3d7169",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a71acafa_d19a9151",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T23:18:01Z",
+      "side": 1,
+      "message": "this part doesn\u0027t really make enough sense to me to suggest what you _should_ say ... who would use this and why?",
+      "range": {
+        "startLine": 37,
+        "startChar": 3,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "abbe47339bfe74e679639651257456732f3d7169",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6577e56a_dc1089a4",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T23:18:01Z",
+      "side": 1,
+      "message": "this probably makes sense after the first sentence. \"tell me why, not what\".",
+      "revId": "abbe47339bfe74e679639651257456732f3d7169",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a381e4ba_c2e7f099",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-29T23:18:01Z",
+      "side": 1,
+      "message": "(`MACRO` to match the other option)",
+      "range": {
+        "startLine": 40,
+        "startChar": 83,
+        "endLine": 40,
+        "endChar": 87
+      },
+      "revId": "abbe47339bfe74e679639651257456732f3d7169",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
