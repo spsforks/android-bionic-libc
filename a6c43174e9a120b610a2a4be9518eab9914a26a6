@@ -244,6 +244,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "19fed8a6_48abea5f",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2024-01-29T21:10:45Z",
+      "side": 1,
+      "message": "search for ifa_label through kernel cs finds:\n\nhttps://source.corp.google.com/search?q\u003dIFA_LABEL\u0026sq\u003drepo:prodkernel%2Fkernel%2Fupstream%2Ftorvalds%2Flinux-2.6%20branch:master%09\n\nie. basically only:\n\nhttps://source.corp.google.com/h/prodkernel/kernel/upstream/torvalds/linux-2.6/+/master:net/ipv4/devinet.c;l\u003d679;drc\u003d8a696a29c6905594e4abf78eaafcb62165ac61f1;bpv\u003d0;bpt\u003d1\n\nat *first glance* it looks like this is an ipv4 only feature - likely for eth0:1 style aliases which is some ancient ioctl-only way to handle multiple ip-s on interfaces via ioctl instead of netlink...\n\nit\u0027s actually likely the *wrong* thing from the point of view of most userspace nowadays??",
+      "parentUuid": "7417f367_3768af9e",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
