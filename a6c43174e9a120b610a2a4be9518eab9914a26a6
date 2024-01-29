@@ -268,6 +268,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6f5c9ba_aad11708",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2024-01-29T21:12:59Z",
+      "side": 1,
+      "message": "(luckily the normally created labels are equal to interface names if you use ip cli to add extra ipv4 addresses, and I don\u0027t think existing android code uses the old ioctl address adding apis any more)",
+      "parentUuid": "19fed8a6_48abea5f",
+      "range": {
+        "startLine": 325,
+        "startChar": 33,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "a6c43174e9a120b610a2a4be9518eab9914a26a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bafbbcf4_0389a530",
