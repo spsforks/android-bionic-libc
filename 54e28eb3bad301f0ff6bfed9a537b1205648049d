@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7057e1f_b86c5651",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-01-30T23:33:12Z",
+      "side": 1,
+      "message": "Good point. We don\u0027t know when it will be fully removed yet, so I will leave it generic for a bit, but maybe can update next time I touch this file. Mainly making sure we have a plan that makes sense here.",
+      "parentUuid": "9c0e2e7a_872e3980",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 35,
+        "endChar": 37
+      },
+      "revId": "54e28eb3bad301f0ff6bfed9a537b1205648049d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d60d0363_681bcf24",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-30T01:27:04Z",
       "side": 1,
       "message": "so your point here is \"i\u0027m assuming this is the copy of the header that\u0027s in the NDK _before_ V ships, but also the NDK people are still using if/when Play starts hassling app developers\"? (but even if so, who\u0027s setting __BIONIC_NO_PAGE_SIZE_MACRO in that case?)\n\nis the actual confusion here that you have _app developer_ documentation mixed with _OS developer_ documentation? in which case, separate the two out and make it clear which is which?",
+      "range": {
+        "startLine": 41,
+        "startChar": 56,
+        "endLine": 41,
+        "endChar": 63
+      },
+      "revId": "54e28eb3bad301f0ff6bfed9a537b1205648049d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eedf90d8_1571e8b5",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-01-30T23:33:12Z",
+      "side": 1,
+      "message": "The plan would be to remove __BIONIC_NO_PAGE_SIZE_MACRO here, and make the platform build system set the inverse, so that you get this by default and you can opt into the deprecated path.",
+      "parentUuid": "d60d0363_681bcf24",
       "range": {
         "startLine": 41,
         "startChar": 56,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78750678_6fb3c34a",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-01-30T23:33:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3486cc74_32afb5f9",
+      "range": {
+        "startLine": 44,
+        "startChar": 37,
+        "endLine": 44,
+        "endChar": 48
+      },
+      "revId": "54e28eb3bad301f0ff6bfed9a537b1205648049d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "281e39df_5dde0e70",
@@ -83,6 +155,24 @@
       "writtenOn": "2024-01-30T01:27:04Z",
       "side": 1,
       "message": "(still think this works better up with \"going away\"...)",
+      "revId": "54e28eb3bad301f0ff6bfed9a537b1205648049d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19c0b59a_1c56ed9b",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-01-30T23:33:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "281e39df_5dde0e70",
       "revId": "54e28eb3bad301f0ff6bfed9a537b1205648049d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
