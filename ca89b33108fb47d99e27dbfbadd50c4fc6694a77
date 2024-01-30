@@ -51,6 +51,23 @@
       "message": "(i\u0027ll merge this at the beginning of january rather than the end of december...)",
       "revId": "ca89b33108fb47d99e27dbfbadd50c4fc6694a77",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e258952_ea3f0110",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2024-01-30T17:25:40Z",
+      "side": 1,
+      "message": "Naive nit/question: Looking at this due to b/318600839, with admittedly very little background here.\n\nMore just to learn for myself.  Naively, it seems like this would be simpler to call, and less prone to a potential bug from the caller, with:\n\n```\ntemplate \u003ctypename T, typename CharT\u003e\n[...]\nconstexpr T Min \u003d std::numeric_limits\u003cT\u003e::min();\nconstexpr T Max \u003d std::numeric_limits\u003cT\u003e::max();\n```\n\nI believe it should still all be resolved at compile time, but maybe there\u0027s a difference in how this works as a template argument vs. a constexpr.",
+      "revId": "ca89b33108fb47d99e27dbfbadd50c4fc6694a77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
