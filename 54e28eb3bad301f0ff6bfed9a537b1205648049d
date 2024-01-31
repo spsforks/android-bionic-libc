@@ -169,6 +169,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1d240f6a_b0edbda5",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-01-31T00:17:47Z",
+      "side": 1,
+      "message": "yeah, exactly. (and i think being specific in these docs that you\u0027re talking about _OS_ development [for now] is helpful information for everyone. _i_ was confused for most of this conversation :-) )",
+      "parentUuid": "87d264e5_2e6fc83f",
+      "range": {
+        "startLine": 41,
+        "startChar": 56,
+        "endLine": 41,
+        "endChar": 63
+      },
+      "revId": "54e28eb3bad301f0ff6bfed9a537b1205648049d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3486cc74_32afb5f9",
         "filename": "libc/include/bits/page_size.h",
         "patchSetId": 6
