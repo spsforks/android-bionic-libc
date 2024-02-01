@@ -42,6 +42,8 @@
 #include "linker_debug.h"
 #include "linker_utils.h"
 
+#include "private/bionic_asm_note.h"
+#include "private/bionic_note.h"
 #include "private/CFIShadow.h" // For kLibraryAlignment
 
 static int GetTargetElfMachine() {
@@ -164,6 +166,7 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
       ReadProgramHeaders() &&
       ReadSectionHeaders() &&
       ReadDynamicSection()) {
+    pad_segments_ = ReadPadSegmentNote();
     did_read_ = true;
   }
 
@@ -692,6 +695,46 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   load_start_ = start;
   load_bias_ = reinterpret_cast<uint8_t*>(start) - addr;
   return true;
+}
+
+// Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
+bool ElfReader::ReadPadSegmentNote() {
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
+
+    if (phdr->p_type != PT_NOTE) {
+      continue;
+    }
+
+    MappedFileFragment note_fragment;
+
+    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
+      DL_ERR("\"%s\" note mmap failed: %s", name_.c_str(), strerror(errno));
+      return false;
+    }
+
+    const ElfW(Nhdr)* note_hdr = nullptr;
+    const char* note_desc = nullptr;
+
+    if (!find_elf_note(NT_ANDROID_TYPE_PAD_SEGMENT, "Android",
+                       reinterpret_cast<ElfW(Addr)>(note_fragment.data()),
+                       phdr, &note_hdr, &note_desc)) {
+      // The ELF can have multiple PT_NOTE's, check them all
+      continue;
+    }
+
+    // n_desc is of type long
+    if (note_hdr->n_descsz != sizeof(ElfW(Word))) {
+      return false;
+    }
+
+    // 1 == enabled, 0 == disabled
+    if (*reinterpret_cast<const ElfW(Word)*>(note_desc) == 1) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool ElfReader::LoadSegments() {
