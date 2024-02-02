@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50891c5c_e81bdfa1",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-02T01:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c868d608_2d770268",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4690aa3_ff054a51",
@@ -48,6 +66,30 @@
       "writtenOn": "2024-02-02T00:20:35Z",
       "side": 1,
       "message": "why?",
+      "range": {
+        "startLine": 273,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 10
+      },
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50869245_44a7b8c7",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-02T01:03:36Z",
+      "side": 1,
+      "message": "because this was in the libc.map.txt, but not needed anymore.",
+      "parentUuid": "a4690aa3_ff054a51",
       "range": {
         "startLine": 273,
         "startChar": 0,
@@ -75,6 +117,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e7d4932_8b3853ab",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 24
+      },
+      "lineNbr": 1733,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-02T01:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea05b23c_fa8117d4",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9340b217_f3ff162f",
@@ -88,6 +148,24 @@
       "writtenOn": "2024-02-02T00:20:35Z",
       "side": 1,
       "message": "(i\u0027ll ignore this since it\u0027s copy \u0026 paste from above, but i\u0027m curious why we don\u0027t use it anyway and then turn host back off? is the comment just bad, and there just isn\u0027t much we\u0027d use anyway?)",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c72311b_85f18880",
+        "filename": "tests/Android.bp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-02T01:03:36Z",
+      "side": 1,
+      "message": "I don\u0027t remember, but yes there isn\u0027t much we use anyway.",
+      "parentUuid": "9340b217_f3ff162f",
       "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -109,6 +187,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "922b1a62_092cd365",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 24
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-02T01:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9554eb92_3bb691ae",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9c375e69_30f63f8a",
@@ -122,6 +218,24 @@
       "writtenOn": "2024-02-02T00:20:35Z",
       "side": 1,
       "message": "move all this into the other test? it\u0027s all dead code here anyway, right, except in the case where the other test runs?",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df0d2bce_6f875d35",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 3094,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-02T01:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c375e69_30f63f8a",
       "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
