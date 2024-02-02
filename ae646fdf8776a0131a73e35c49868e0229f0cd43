@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1526db44_d3844a55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "(yes, starting to make more sense!)",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c868d608_2d770268",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "wouldn\u0027t `bool is_main() { return start_routine \u003d\u003d null; }` get you this without storage?",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4690aa3_ff054a51",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "why?",
+      "range": {
+        "startLine": 273,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 10
+      },
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea05b23c_fa8117d4",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 24
+      },
+      "lineNbr": 1733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "not needed any more, right?",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9340b217_f3ff162f",
+        "filename": "tests/Android.bp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "(i\u0027ll ignore this since it\u0027s copy \u0026 paste from above, but i\u0027m curious why we don\u0027t use it anyway and then turn host back off? is the comment just bad, and there just isn\u0027t much we\u0027d use anyway?)",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9554eb92_3bb691ae",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 24
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "should be in another section of its own, like hwasan_test...\n\n(\"dlfcn tests\" above should say \"dlfcn_test\" i think?)",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c375e69_30f63f8a",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 3094,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-02T00:20:35Z",
+      "side": 1,
+      "message": "move all this into the other test? it\u0027s all dead code here anyway, right, except in the case where the other test runs?",
+      "revId": "ae646fdf8776a0131a73e35c49868e0229f0cd43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
