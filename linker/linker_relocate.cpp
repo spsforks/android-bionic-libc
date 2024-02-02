@@ -443,7 +443,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       {
         ElfW(Addr) addend = reloc.r_addend;
         TlsDescriptor* desc = static_cast<TlsDescriptor*>(rel_target);
-        if (found_in == nullptr) {
+        if (found_in == nullptr || relocator.si->is_linker()) {
           // Unresolved weak relocation.
           desc->func = tlsdesc_resolver_unresolved_weak;
           desc->arg = addend;
