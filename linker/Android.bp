@@ -579,6 +579,86 @@ cc_test {
     },
 }
 
+cc_test {
+    name: "linker-crt-pad-segment-tests",
+    test_suites: ["device-tests"],
+
+    cflags: [
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+
+    srcs: [
+        // Tests.
+        "linker_crt_pad_segment_test.cpp",
+
+        // Parts of the linker that we're testing.
+        "linker_block_allocator.cpp",
+        "linker_debug.cpp",
+        "linker_dlwarning.cpp",
+        "linker_globals.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_phdr.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_test_globals.cpp",
+        "linker_utils.cpp",
+        "linker.cpp",
+    ],
+
+    static_libs: [
+        "libasync_safe",
+        "libbase",
+        "liblog_for_runtime_apex",
+        "libziparchive",
+    ],
+
+    arch: {
+        arm: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+            data: [
+                "testdata/arm/crt_pad_segment_disabled.so",
+                "testdata/arm/crt_pad_segment_enabled.so",
+                "testdata/arm/no_crt_pad_segment.so",
+            ],
+        },
+        arm64: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+            data: [
+                "testdata/arm64/crt_pad_segment_disabled.so",
+                "testdata/arm64/crt_pad_segment_enabled.so",
+                "testdata/arm64/no_crt_pad_segment.so",
+            ],
+        },
+        x86_64: {
+            data: [
+                "testdata/x86_64/crt_pad_segment_disabled.so",
+                "testdata/x86_64/crt_pad_segment_enabled.so",
+                "testdata/x86_64/no_crt_pad_segment.so",
+            ],
+        },
+        x86: {
+            data: [
+                "testdata/x86/crt_pad_segment_disabled.so",
+                "testdata/x86/crt_pad_segment_enabled.so",
+                "testdata/x86/no_crt_pad_segment.so",
+            ],
+        },
+        riscv64: {
+            data: [
+                "testdata/riscv64/crt_pad_segment_disabled.so",
+                "testdata/riscv64/crt_pad_segment_enabled.so",
+                "testdata/riscv64/no_crt_pad_segment.so",
+            ],
+        },
+    },
+}
+
 cc_benchmark {
     name: "linker-benchmarks",
 
