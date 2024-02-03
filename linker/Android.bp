@@ -579,6 +579,62 @@ cc_test {
     },
 }
 
+cc_test {
+    name: "linker-crt-pad-segment-tests",
+    test_suites: ["device-tests"],
+
+    cflags: [
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+
+    srcs: [
+        // Tests.
+        "linker_crt_pad_segment_test.cpp",
+        ":elf_note_sources",
+
+        // Parts of the linker that we're testing.
+        "linker_block_allocator.cpp",
+        "linker_debug.cpp",
+        "linker_dlwarning.cpp",
+        "linker_globals.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_phdr.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_test_globals.cpp",
+        "linker_utils.cpp",
+        "linker.cpp",
+    ],
+
+    static_libs: [
+        "libasync_safe",
+        "libbase",
+        "liblog_for_runtime_apex",
+        "libziparchive",
+    ],
+
+    data_libs: [
+        "crt_pad_segment_disabled",
+        "crt_pad_segment_enabled",
+        "no_crt_pad_segment",
+    ],
+
+    arch: {
+        arm: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+        },
+        arm64: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+        },
+    },
+}
+
 cc_benchmark {
     name: "linker-benchmarks",
 
