@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a752f67_72d66fc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-02-05T21:01:45Z",
+      "side": 1,
+      "message": "Why are you moving this code into a header? It should not be performance critical, and the linker already has a copy of everything in libc_init_static.cpp",
+      "revId": "7c8da1528fb2a3f674f719d53f79aa00f8474888",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d6fe91d3_62614e54",
