@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6fe91d3_62614e54",
+        "filename": "libc/private/bionic_note.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T19:55:37Z",
+      "side": 1,
+      "message": "prefer `__find_elf_note`. though i\u0027m not sure these names make the distinction between \"get\" and \"find\" clear. tbh, i\u0027d argue they\u0027re backwards --- currently \"get\" is doing a search of multiple program headers, and \"find\" is only looking in one. that mistake would probably have been more obvious with both functions in the same file.",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "7c8da1528fb2a3f674f719d53f79aa00f8474888",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
