@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4187f83c_1ec2080f",
+        "filename": "linker/testdata/generate_prebuilts.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T19:38:57Z",
+      "side": 1,
+      "message": "do this as a genrule in the .bp file instead, so humans don\u0027t need to do this (and we don\u0027t need to check in prebuilts)?",
+      "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
