@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "320b612c_5f4cec0e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "is there a reason you didn\u0027t do this like the others, with a side-effect?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "073106a3_89219e70",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "aren\u0027t you duplicating the loop from the original function here?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e5ec59f_275a4d4a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "(this comment is probably more useful above, explaining why this code loops and [potentially] maps a bunch of fragments, unlike the other uses of MappedFileFragment.)",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5fbbab7_b0c9d5f5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "this comment seems less helpful and less accurate than the line of code below it?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7463224_fea92cea",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "this should never happen (unless we\u0027ve fucked up the toolchain), so log?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc4e0961_8e31175f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "is this actually the behavior you want? or should this be\n```\n  return (*reinterpret_cast\u003cconst ElfW(Word)*\u003e(note_desc) \u003d\u003d 1);\n```\n?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4dcf78c_4683f33e",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-05T20:13:44Z",
+      "side": 1,
+      "message": "ugh, that\u0027s a hard one to name. obviously \"avoid verbs for getters\" says this is a _bad_ name, but \"is_pad_segments()\" makes no sense. \"should_pad_segments()\" or \"segments_padded()\" are the least worst i came up with, but i can\u0027t say i love either of them. (but either is better than \"pad_segments()\".)",
+      "range": {
+        "startLine": 61,
+        "startChar": 7,
+        "endLine": 61,
+        "endChar": 19
+      },
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
