@@ -34,6 +34,24 @@
       "parentUuid": "d53b6d2f_9793c9af",
       "revId": "51389e64b8ec86c6fe6cfa2eb5b756dc9845a84f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0fd0a03_02509077",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:53:44Z",
+      "side": 1,
+      "message": "i _think_ what eugenis was actually asking was \"why are the _definitions_ in a header at all?\". (i think the answer is \"because the MTE stuff is in the static libc startup code, not the dynamic linker\", but whether or not there\u0027s a reason for that/better fix is a conversation for you and him --- i wouldn\u0027t know :-) )",
+      "parentUuid": "90da6e87_18a97cb9",
+      "revId": "51389e64b8ec86c6fe6cfa2eb5b756dc9845a84f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
