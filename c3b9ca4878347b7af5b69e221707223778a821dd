@@ -52,6 +52,24 @@
       "parentUuid": "216c71c5_fa92b0e9",
       "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5338068_8ce27ecd",
+        "filename": "linker/testdata/generate_prebuilts.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T17:29:01Z",
+      "side": 1,
+      "message": "\u003e no way to do which part?\n\nI think both building and copying the binaries to the expected path for the tests didn\u0027t have support from genrule. @colin to confirm",
+      "parentUuid": "0ff9ea7a_bee23a35",
+      "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
