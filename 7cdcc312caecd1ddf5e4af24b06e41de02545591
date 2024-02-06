@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "865ec059_b6947773",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2024-02-06T17:44:28Z",
+      "side": 1,
+      "message": "Use:\n```\n    data_libs: [\n        \":crt_pad_segment_disabled\",\n        \":crt_pad_segment_enabled\",\n        \":no_crt_pad_segment\",\n    ],\n```",
+      "revId": "7cdcc312caecd1ddf5e4af24b06e41de02545591",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

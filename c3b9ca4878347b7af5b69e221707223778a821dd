@@ -70,6 +70,24 @@
       "parentUuid": "0ff9ea7a_bee23a35",
       "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f794f74_f3690f1b",
+        "filename": "linker/testdata/generate_prebuilts.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2024-02-06T17:44:28Z",
+      "side": 1,
+      "message": "A classic XY problem, you asked whether you could run `cp $OUT/system/${LIB}/${elf}.so ${TARGETDIR}` in a genrule, and the answer is no, but that\u0027s not the right question.  You don\u0027t need to check in copies of these libraries at all, just build them as part of the same build that builds the test.  I don\u0027t think you even need a genrule here, just use `data_libs` to depend on the  test libraries from the test.",
+      "parentUuid": "c5338068_8ce27ecd",
+      "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
