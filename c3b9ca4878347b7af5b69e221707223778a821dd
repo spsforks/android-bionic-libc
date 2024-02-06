@@ -16,6 +16,24 @@
       "message": "do this as a genrule in the .bp file instead, so humans don\u0027t need to do this (and we don\u0027t need to check in prebuilts)?",
       "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "216c71c5_fa92b0e9",
+        "filename": "linker/testdata/generate_prebuilts.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:21:04Z",
+      "side": 1,
+      "message": "Hi enh, thanks for the reviews.\n\nI took a stab at making this a gen rule and after checking with the soong folks seems there isn\u0027t anyway to do this in a genrule since it runs in a sandbox.\n\nThe artifacts here are not really expected to change often (or at all, unless the tests change). The script serves as a documentation.\n\nI couldn\u0027t find other tests that execute the elf reader path, so maybe it\u0027s worth checking in the prebuilts. WDYT?",
+      "parentUuid": "4187f83c_1ec2080f",
+      "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
