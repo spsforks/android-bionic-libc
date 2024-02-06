@@ -88,6 +88,24 @@
       "parentUuid": "c5338068_8ce27ecd",
       "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06c7d165_4931faef",
+        "filename": "linker/testdata/generate_prebuilts.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T18:27:55Z",
+      "side": 1,
+      "message": "My misunderstanding, sorry for the confusing. @enh@google.com\n\n@ccross@android.com `data_libs` works. Thanks for the tip :)",
+      "parentUuid": "7f794f74_f3690f1b",
+      "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
