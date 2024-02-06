@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5340873b_89032ae8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:04:41Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be set_should_pad_segments()?",
+      "range": {
+        "startLine": 642,
+        "startChar": 9,
+        "endLine": 642,
+        "endChar": 25
+      },
+      "revId": "5c3ad6c052d41ba4d76618f68e2361e12052e378",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a54f08e9_c0480248",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:04:41Z",
+      "side": 1,
+      "message": "stray blank line.",
+      "revId": "5c3ad6c052d41ba4d76618f68e2361e12052e378",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa2f1a9c_d8fc68e4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:04:41Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "5c3ad6c052d41ba4d76618f68e2361e12052e378",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f157876_996e1430",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:04:41Z",
+      "side": 1,
+      "message": "set_should_pad_segments()/should_pad_segments() for consistency with the others (and the other file)?",
+      "revId": "5c3ad6c052d41ba4d76618f68e2361e12052e378",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12d2bca7_74584af1",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:04:41Z",
+      "side": 1,
+      "message": "(and the variable)",
+      "revId": "5c3ad6c052d41ba4d76618f68e2361e12052e378",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
