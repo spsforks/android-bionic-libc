@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aecbdbb_16ef5f88",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-06T01:58:36Z",
+      "side": 1,
+      "message": "@enh@google.com had to add this to make the boot happy on some devices. Not sure why I didn\u0027t need this on my test aosp_shiba.",
+      "range": {
+        "startLine": 2215,
+        "startChar": 8,
+        "endLine": 2215,
+        "endChar": 31
+      },
+      "revId": "01cdf776a2cc0a785af29dc7a04717bc865ba101",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
