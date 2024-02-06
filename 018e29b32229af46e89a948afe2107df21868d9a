@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64051f70_7da3ca30",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "Made it consistent with the others",
+      "parentUuid": "320b612c_5f4cec0e",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "073106a3_89219e70",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-02-05T20:13:44Z",
       "side": 1,
       "message": "aren\u0027t you duplicating the loop from the original function here?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8cddb55_de31e526",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "We need to loop since `find_elf_note` only operates on a single mapped PT_NOTE, and there could potentially be more. Move comment to beginning here.",
+      "parentUuid": "073106a3_89219e70",
       "revId": "018e29b32229af46e89a948afe2107df21868d9a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef0039ba_1cfd732a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "Done. Moved to start of loop. Added comment on note_fragment.",
+      "parentUuid": "1e5ec59f_275a4d4a",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b5fbbab7_b0c9d5f5",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-02-05T20:13:44Z",
       "side": 1,
       "message": "this comment seems less helpful and less accurate than the line of code below it?",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2b8e65d_d3fd7809",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "b5fbbab7_b0c9d5f5",
       "revId": "018e29b32229af46e89a948afe2107df21868d9a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -86,6 +158,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bbe26f8_f3b49681",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7463224_fea92cea",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc4e0961_8e31175f",
@@ -103,6 +193,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba3aef4c_03f91b8e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "You are right, we can stop at this point. Done",
+      "parentUuid": "fc4e0961_8e31175f",
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4dcf78c_4683f33e",
@@ -116,6 +224,30 @@
       "writtenOn": "2024-02-05T20:13:44Z",
       "side": 1,
       "message": "ugh, that\u0027s a hard one to name. obviously \"avoid verbs for getters\" says this is a _bad_ name, but \"is_pad_segments()\" makes no sense. \"should_pad_segments()\" or \"segments_padded()\" are the least worst i came up with, but i can\u0027t say i love either of them. (but either is better than \"pad_segments()\".)",
+      "range": {
+        "startLine": 61,
+        "startChar": 7,
+        "endLine": 61,
+        "endChar": 19
+      },
+      "revId": "018e29b32229af46e89a948afe2107df21868d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9dc5636_149afb2d",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:11:17Z",
+      "side": 1,
+      "message": "Thanks for the suggestions, went with `should_pad_segments()`",
+      "parentUuid": "f4dcf78c_4683f33e",
       "range": {
         "startLine": 61,
         "startChar": 7,
