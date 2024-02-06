@@ -70,6 +70,24 @@
       "parentUuid": "d0fd0a03_02509077",
       "revId": "51389e64b8ec86c6fe6cfa2eb5b756dc9845a84f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2d38b02_aaafa06f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T23:36:48Z",
+      "side": 1,
+      "message": "Moved to separate cpp file which is included in `libc_init_static`",
+      "parentUuid": "0537266c_d4971b76",
+      "revId": "51389e64b8ec86c6fe6cfa2eb5b756dc9845a84f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
