@@ -22,6 +22,30 @@
       },
       "revId": "01cdf776a2cc0a785af29dc7a04717bc865ba101",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e007ad88_2056cacd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T15:57:37Z",
+      "side": 1,
+      "message": "which devices?\n\nthat\u0027s mildly worrying, because it suggests that we might have _blobs_ that poke at the non-public soinfo struct [by casting the result of dlopen()]? +rprichard fyi, since i thought we thought this was a thing of the past, and had largely dropped version checks (or at least aren\u0027t very careful about ensuring we have them any more)?",
+      "parentUuid": "8aecbdbb_16ef5f88",
+      "range": {
+        "startLine": 2215,
+        "startChar": 8,
+        "endLine": 2215,
+        "endChar": 31
+      },
+      "revId": "01cdf776a2cc0a785af29dc7a04717bc865ba101",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
