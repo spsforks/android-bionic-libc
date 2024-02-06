@@ -39,6 +39,30 @@
       },
       "revId": "7c8da1528fb2a3f674f719d53f79aa00f8474888",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e750ef7_ad889569",
+        "filename": "libc/private/bionic_note.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-06T03:10:10Z",
+      "side": 1,
+      "message": "Swapped the names and added comments to document the usage. Moved both to the same file.",
+      "parentUuid": "d6fe91d3_62614e54",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "7c8da1528fb2a3f674f719d53f79aa00f8474888",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
