@@ -34,6 +34,24 @@
       "parentUuid": "4187f83c_1ec2080f",
       "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ff9ea7a_bee23a35",
+        "filename": "linker/testdata/generate_prebuilts.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-06T17:10:43Z",
+      "side": 1,
+      "message": "\u003e I took a stab at making this a gen rule and after checking with the soong folks seems there isn\u0027t anyway to do this in a genrule since it runs in a sandbox.\n\nno way to do which part? +ccross\n\n(if you mean \"i can\u0027t build the rv64 binary when i\u0027m targeting arm64\" or whatever, that seems fine? any given cts build only needs _its_ binaries [64 and possibly 32], no? we don\u0027t actually need/want _all_ the binaries?)",
+      "parentUuid": "216c71c5_fa92b0e9",
+      "revId": "c3b9ca4878347b7af5b69e221707223778a821dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
