@@ -70,6 +70,30 @@
       },
       "revId": "ddd6bf1bfe7299a56f6b661c60baa548111c4291",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb4c1360_a6606f5e",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-02-07T00:24:16Z",
+      "side": 1,
+      "message": "Both of you are right. /odm and vendor APEXes should be considered here, but this change itself is not a regression anyway. I filed b/324142245",
+      "parentUuid": "a85ad1f4_135966dc",
+      "range": {
+        "startLine": 46,
+        "startChar": 38,
+        "endLine": 46,
+        "endChar": 51
+      },
+      "revId": "ddd6bf1bfe7299a56f6b661c60baa548111c4291",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
