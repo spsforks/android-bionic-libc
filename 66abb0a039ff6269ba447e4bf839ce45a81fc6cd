@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55aa7f96_5afd7e11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-07T22:44:34Z",
+      "side": 1,
+      "message": "(i haven\u0027t set auto-submit this time, in case you +2 with resolved comments again :-) )",
+      "revId": "66abb0a039ff6269ba447e4bf839ce45a81fc6cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
