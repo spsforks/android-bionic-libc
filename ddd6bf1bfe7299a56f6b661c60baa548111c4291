@@ -94,6 +94,30 @@
       },
       "revId": "ddd6bf1bfe7299a56f6b661c60baa548111c4291",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "652590e6_45b0793d",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-07T16:05:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "cb4c1360_a6606f5e",
+      "range": {
+        "startLine": 46,
+        "startChar": 38,
+        "endLine": 46,
+        "endChar": 51
+      },
+      "revId": "ddd6bf1bfe7299a56f6b661c60baa548111c4291",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
