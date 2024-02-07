@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21ca3463_e91cc4f0",
+        "filename": "linker/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-07T00:04:15Z",
+      "side": 1,
+      "message": "It was to avoid linking issues since some of the of test redefine symbols like error_buffer.",
+      "parentUuid": "86903fdd_6c08da9a",
+      "revId": "dd344dc12bf00aa8726bad59c47e147b3cfc0fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff228a7e_72499ae0",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-02-06T23:22:59Z",
       "side": 1,
       "message": "if you actually want to test it\u0027s missing (rather than trust the build system), we already have tests that use readelf.\n\n(might be worth teaching readelf about this note specifically, so it can decode it better? https://source.corp.google.com/h/android/platform/superproject/main/+/main:external/toybox/toys/other/readelf.c;l\u003d423?q\u003dfile:toybox%20file:readelf\u0026sq\u003drepo:android%2Fplatform%2Fsuperproject%2Fmain%20b:main%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F )",
+      "revId": "dd344dc12bf00aa8726bad59c47e147b3cfc0fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4181b9b_13112c29",
+        "filename": "linker/linker_crt_pad_segment_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-07T00:04:15Z",
+      "side": 1,
+      "message": "Sure, I can send a follow up patch to make readelf aware of the new note.",
+      "parentUuid": "ff228a7e_72499ae0",
       "revId": "dd344dc12bf00aa8726bad59c47e147b3cfc0fe7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
