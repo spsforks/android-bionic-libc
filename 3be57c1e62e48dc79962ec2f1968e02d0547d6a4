@@ -33,6 +33,75 @@
       "message": "friendly ping, @cferris",
       "revId": "3be57c1e62e48dc79962ec2f1968e02d0547d6a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca7a61b6_d99af754",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2007,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-02-07T22:42:16Z",
+      "side": 1,
+      "message": "This is kind of confusing to read. I had to look at it a few times to understand it. Would it be better expressed something like:\n\nstatic inline int MapPflagsToProtFlags(uint32_t flags) {\n  int prot_flags \u003d 0;\n  if (PF_X \u0026 flags) prot_flags |\u003d PROT_EXEC;\n  if (PF_W \u0026 flags) prot_flags |\u003d PROT_WRITE;\n  if (PF_R \u0026 flags) prot_flags |\u003d PROT_READ;\n  return prot_flags;\n}\n\nI believe the p_flags value is uint32_t for both 32 and 64 bit elf data.\n\nThis is more of a style nit though.",
+      "range": {
+        "startLine": 2003,
+        "startChar": 0,
+        "endLine": 2007,
+        "endChar": 41
+      },
+      "revId": "3be57c1e62e48dc79962ec2f1968e02d0547d6a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11c4c97f_d4505c20",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2041,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-02-07T22:42:16Z",
+      "side": 1,
+      "message": "Is it guaranteed that dl_iterate will go from lowest to highest address? It\u0027s probably practically guaranteed since it should return the load order of the share library, which should go in order.\n\nAlthough, you could compute this and the has_executable_segment in the original loop and avoid these values. But since this is test code, I don\u0027t think it matters that much.",
+      "range": {
+        "startLine": 2041,
+        "startChar": 0,
+        "endLine": 2041,
+        "endChar": 52
+      },
+      "revId": "3be57c1e62e48dc79962ec2f1968e02d0547d6a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aab39785_fdcc61fa",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2074,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-02-07T22:42:16Z",
+      "side": 1,
+      "message": "Might be worth adding a comment saying something about this only applies for devices with MTE enabled.",
+      "range": {
+        "startLine": 2074,
+        "startChar": 21,
+        "endLine": 2074,
+        "endChar": 61
+      },
+      "revId": "3be57c1e62e48dc79962ec2f1968e02d0547d6a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
