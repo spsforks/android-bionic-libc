@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ac8c404_4dd9f3bb",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2024-02-07T14:51:04Z",
+      "side": 1,
+      "message": "this might end-up being 0, since there is no guarantee on initialization order of globals. Unless something have changed in c++ standard.",
+      "revId": "1dd68583492d36d8f4ad5053e1ff00bb832ed6e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
