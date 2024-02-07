@@ -16,6 +16,24 @@
       "message": "this might end-up being 0, since there is no guarantee on initialization order of globals. Unless something have changed in c++ standard.",
       "revId": "1dd68583492d36d8f4ad5053e1ff00bb832ed6e5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1567f860_539f297a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-07T16:54:57Z",
+      "side": 1,
+      "message": "Hi Dimitry, this should be ok since it\u0027s in will be initialized in top down order within this translation unit.\n\nhttps://en.cppreference.com/w/cpp/language/siof",
+      "parentUuid": "8ac8c404_4dd9f3bb",
+      "revId": "1dd68583492d36d8f4ad5053e1ff00bb832ed6e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
