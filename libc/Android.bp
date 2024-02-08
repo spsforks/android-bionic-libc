@@ -839,6 +839,7 @@ cc_library_static {
         "bionic/clock_getcpuclockid.cpp",
         "bionic/clock_nanosleep.cpp",
         "bionic/clone.cpp",
+        "bionic/crash_detail.cpp",
         "bionic/ctype.cpp",
         "bionic/dirent.cpp",
         "bionic/dup.cpp",
