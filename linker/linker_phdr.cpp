@@ -722,7 +722,8 @@ bool ElfReader::ReadPadSegmentNote() {
     MappedFileFragment note_fragment;
     if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
       DL_ERR("\"%s\" note mmap failed: %s", name_.c_str(), strerror(errno));
-      return false;
+      // If mmap failed, skip the optimization but don't block ELF loading
+      return true;
     }
 
     const ElfW(Nhdr)* note_hdr = nullptr;
