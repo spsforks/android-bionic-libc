@@ -28,6 +28,8 @@
 
 #include <android/set_abort_message.h>
 
+#include <bionic/set_abort_message_internal.h>
+
 #include <pthread.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -96,4 +98,41 @@ void android_set_abort_message(const char* msg) {
   new_magic_abort_message->msg.size = size;
   strcpy(new_magic_abort_message->msg.msg, msg);
   __libc_shared_globals()->abort_msg = &new_magic_abort_message->msg;
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+crash_detail_t* android_add_crash_detail(const char* name, const char* data, size_t n) {
+  ScopedPthreadMutexLocker locker(&__libc_shared_globals()->crash_detail_page_lock);
+  struct crash_detail_page_t* prev = nullptr;
+  struct crash_detail_page_t* page = __libc_shared_globals()->crash_detail_page;
+  if (page != nullptr && page->used == kNumCrashDetails) {
+    prev = page;
+    page = nullptr;
+  }
+  if (page == nullptr) {
+    size_t size = sizeof(crash_detail_page_t);
+    void* map = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+    if (map == MAP_FAILED) {
+      return nullptr;
+    }
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map, size, "crash details");
+    page = reinterpret_cast<struct crash_detail_page_t*>(map);
+    page->prev = prev;
+    __libc_shared_globals()->crash_detail_page = page;
+  }
+  crash_detail_t* result = &page->crash_details[page->used];
+  result->name = name;
+  result->name_size = strlen(name);
+  result->data = data;
+  result->data_size = n;
+  page->used++;
+  return result;
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void android_remove_crash_detail(crash_detail_t* crash_detail) {
+  if (crash_detail) {
+    crash_detail->data = nullptr;
+    crash_detail->name = nullptr;
+  }
 }
