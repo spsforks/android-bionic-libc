@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96a00b3b_e16f1cd8",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2024-02-08T00:13:44Z",
+      "side": 1,
+      "message": "Instead of an early return here, just\n`if (... \u003d\u003d PT_LOAD \u0026\u0026 phdr-\u003ep_vaddr \u003d\u003d relro_phdr-\u003ep_vaddr)` ?",
+      "revId": "f7bf0c61a831b1aa2151b66e7f5dab3bb0b89efa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69bfb894_1b426a07",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2024-02-08T00:13:44Z",
+      "side": 1,
+      "message": "typo: PT_GNU_RELRO",
+      "revId": "f7bf0c61a831b1aa2151b66e7f5dab3bb0b89efa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
