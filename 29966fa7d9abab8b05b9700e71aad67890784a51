@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48a6587f_3f44b90e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T16:45:04Z",
+      "side": 1,
+      "message": "(+2 anyway because things are broken.)",
+      "revId": "29966fa7d9abab8b05b9700e71aad67890784a51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14413009_c692de56",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T16:45:04Z",
+      "side": 1,
+      "message": "probably DL_WARN in that case then?\n\ndo we know _why_ we\u0027re seeing failures here? (that would be useful for the comment too.)",
+      "revId": "29966fa7d9abab8b05b9700e71aad67890784a51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
