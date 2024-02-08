@@ -16,6 +16,24 @@
       "message": "not sure how this could cause the test failure, but let\u0027s roll back and investigate.",
       "revId": "c20e1c2bdfc00b3fb7931da5e88ceac3fa4df4b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50563e03_d13b2afa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T19:26:04Z",
+      "side": 1,
+      "message": "(i suspect what actually happened here is that sojinmoon forgot to abandon this when they went off-shift as build monitor... you should generally ignore these --- they\u0027ll get a build team override and submit directly if it actually turns out to be the problem. it happens all the time, not just at 설날 :-) )",
+      "tag": "mailMessageId\u003d\u003cCAJgzZorkQ23bYd_05b4Y9yWOiZQfYFQL-C4LFpXhCB5h41ZfPg@mail.gmail.com\u003e",
+      "revId": "c20e1c2bdfc00b3fb7931da5e88ceac3fa4df4b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
