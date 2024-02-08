@@ -18,6 +18,42 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f06cbc5_514d0172",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7301ee7d_88e2d1ae",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5c940af_3ecb36dc",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7301ee7d_88e2d1ae",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b803635_e4f564dc",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-02-08T20:40:31Z",
       "side": 1,
       "message": "oh, i was actually imagining removing from the list. this seems less helpful for RAII use? (but obviously has the advantage of not needing to implement deallocation...)",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9369e2c_f02850cb",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "I guess we can maintain a freelist, which wouldn\u0027t be too hard, and would allow the RAII use case, which would be nice to support.",
+      "parentUuid": "5064d84e_78d336d9",
       "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -92,6 +146,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b44b626_34cf5546",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f2811b4_dde34094",
+      "range": {
+        "startLine": 54,
+        "startChar": 7,
+        "endLine": 54,
+        "endChar": 15
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99b2cb2a_c3fbc564",
@@ -109,6 +187,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64b549f9_cf6ec46d",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Yes, but I don\u0027t use it. But sure, I can also null it to avoid future mistakes.",
+      "parentUuid": "99b2cb2a_c3fbc564",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16984089_ba73dfe7",
@@ -122,6 +218,30 @@
       "writtenOn": "2024-02-08T20:40:31Z",
       "side": 1,
       "message": "bytes",
+      "range": {
+        "startLine": 57,
+        "startChar": 52,
+        "endLine": 57,
+        "endChar": 58
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cf0c511_fae59487",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16984089_ba73dfe7",
       "range": {
         "startLine": 57,
         "startChar": 52,
@@ -155,6 +275,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53d722d6_90b97d20",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "881717ed_06e34fd8",
+      "range": {
+        "startLine": 58,
+        "startChar": 12,
+        "endLine": 58,
+        "endChar": 30
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70d1b7e8_319de17e",
@@ -172,6 +316,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "09b659c7_4db33ec2",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70d1b7e8_319de17e",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4e2f453_601e9fc3",
@@ -185,6 +347,30 @@
       "writtenOn": "2024-02-08T20:40:31Z",
       "side": 1,
       "message": "crash_detail_t\n\n(or drop \"the\")",
+      "range": {
+        "startLine": 67,
+        "startChar": 64,
+        "endLine": 67,
+        "endChar": 76
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "317d707d_0453e499",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4e2f453_601e9fc3",
       "range": {
         "startLine": 67,
         "startChar": 64,
@@ -218,6 +404,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5e4ac5c_7566816a",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f6101fa_f957ade5",
+      "range": {
+        "startLine": 70,
+        "startChar": 27,
+        "endLine": 70,
+        "endChar": 41
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39f83c6f_837d33d7",
@@ -235,6 +445,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "251fe6be_745ed29f",
+        "filename": "libc/platform/bionic/set_abort_message_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39f83c6f_837d33d7",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "241e4612_e66f549e",
@@ -248,6 +476,24 @@
       "writtenOn": "2024-02-08T20:40:31Z",
       "side": 1,
       "message": "why isn\u0027t this calculated at runtime?",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cc37c0e_477516f6",
+        "filename": "libc/platform/bionic/set_abort_message_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T21:03:42Z",
+      "side": 1,
+      "message": "It simplifies the implementation. I was going to add some compile time magic to tune it, but I don\u0027t think it\u0027s particularly important because \"128 crash details ought to be enough for anyone\". At that point we will end up with some seriously cluttered tombstones, so some wasted memory might be the smaller issue :)",
+      "parentUuid": "241e4612_e66f549e",
       "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
