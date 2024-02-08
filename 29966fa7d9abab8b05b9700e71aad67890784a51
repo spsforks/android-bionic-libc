@@ -33,6 +33,24 @@
       "message": "probably DL_WARN in that case then?\n\ndo we know _why_ we\u0027re seeing failures here? (that would be useful for the comment too.)",
       "revId": "29966fa7d9abab8b05b9700e71aad67890784a51",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "132ccf0c_72513565",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-08T16:59:38Z",
+      "side": 1,
+      "message": "Updated to DL_WARN\n\n\u003e do we know why we\u0027re seeing failures here?\n\nI don\u0027t know yet, mmap failed with EINVAL although the offset is aligned to the page-boundary before.\n\nWill look into it further to root cause.",
+      "parentUuid": "14413009_c692de56",
+      "revId": "29966fa7d9abab8b05b9700e71aad67890784a51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
