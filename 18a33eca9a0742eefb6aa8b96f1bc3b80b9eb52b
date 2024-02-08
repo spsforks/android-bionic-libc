@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8abef457_2906810c",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T02:37:37Z",
+      "side": 1,
+      "message": "I\u0027d happily revisit reusing this file and add a new one, but those functions seem so closely related I think the slightly awkward name is outweighed by having them grouped together.",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
