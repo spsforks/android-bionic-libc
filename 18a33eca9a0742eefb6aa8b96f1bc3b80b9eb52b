@@ -514,6 +514,24 @@
       "parentUuid": "241e4612_e66f549e",
       "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "282a5e59_343fda06",
+        "filename": "libc/platform/bionic/set_abort_message_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T21:54:44Z",
+      "side": 1,
+      "message": "if we reused LinkerBlockAllocator, that would make this go away too...",
+      "parentUuid": "9cc37c0e_477516f6",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
