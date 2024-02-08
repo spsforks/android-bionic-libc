@@ -34,6 +34,24 @@
       "tag": "mailMessageId\u003d\u003cCAJgzZorkQ23bYd_05b4Y9yWOiZQfYFQL-C4LFpXhCB5h41ZfPg@mail.gmail.com\u003e",
       "revId": "c20e1c2bdfc00b3fb7931da5e88ceac3fa4df4b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11c6e554_63ffba55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T20:16:19Z",
+      "side": 1,
+      "message": "http://b/324348078#comment8 claims that the test passes after this revert, so rolling back for now. still seems spurious to me, but no harm reproducing locally and relanding if its\u0027 unrelated.",
+      "parentUuid": "50563e03_d13b2afa",
+      "revId": "c20e1c2bdfc00b3fb7931da5e88ceac3fa4df4b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
