@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,40 +28,20 @@
 
 #pragma once
 
-/**
- * @file android/set_abort_message.h
- * @brief Attach extra information to android crashes.
- */
-
 #include <stddef.h>
 #include <sys/cdefs.h>
 
-__BEGIN_DECLS
+struct crash_detail_t {
+  const char* name;
+  const char* data;
+  size_t name_size;
+  size_t data_size;
+};
 
-typedef struct crash_detail_t crash_detail_t;
+constexpr auto kNumCrashDetails = 128;
 
-
-/**
- * android_set_abort_message() sets the abort message that will be shown
- * by [debuggerd](https://source.android.com/devices/tech/debug/native-crash).
- * This is meant for use by libraries that deliberately abort so that they can
- * provide an explanation. It is used within bionic to implement assert() and
- * all FORTIFY/fdsan aborts.
- */
-void android_set_abort_message(const char* _Nullable __msg);
-
-/**
- * Add a new string that gets logged into a tombstone.
- * The lifetime of the string has to be valid until the program crashes, or until
- * android_remove_crash_detail is called.
- */
-crash_detail_t* _Nullable android_add_crash_detail(const char* _Nonnull name, const char*  _Nonnull data, size_t n);
-
-/*
- * Remove crash detail from being logged into tombstones.
- * After this function returns, the lifetime of the objects the crash_detail was
- * constructed from no longer needs to be valid.
- */
-void android_remove_crash_detail(crash_detail_t* _Nonnull crash_detail);
-
-__END_DECLS
+struct crash_detail_page_t {
+  struct crash_detail_page_t* prev;
+  size_t used;
+  struct crash_detail_t crash_details[kNumCrashDetails];
+};
