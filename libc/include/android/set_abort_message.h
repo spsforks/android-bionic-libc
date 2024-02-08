@@ -30,12 +30,15 @@
 
 /**
  * @file android/set_abort_message.h
- * @brief The android_set_abort_message() function.
+ * @brief Attach extra information to android crashes.
  */
 
+#include <stddef.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
+
+typedef struct crash_detail_t crash_detail_t;
 
 /**
  * android_set_abort_message() sets the abort message that will be shown
@@ -45,5 +48,26 @@ __BEGIN_DECLS
  * all FORTIFY/fdsan aborts.
  */
 void android_set_abort_message(const char* _Nullable __msg);
+
+/**
+ * Add a new string that gets logged into a tombstone.
+ * The lifetime both pointers has to be valid until the program crashes, or until
+ * android_remove_crash_detail is called.
+ * \param name identifying name for this extra data
+ * \param data a buffer containing the extra detail string
+ * \param n size of the buffer pointed to by data
+ *
+ * \return a handle to the extra crash detail
+ */
+crash_detail_t* _Nullable android_add_crash_detail(const char* _Nonnull name, const char*  _Nonnull data, size_t n);
+
+/**
+ * Remove crash detail from being logged into tombstones.
+ * After this function returns, the lifetime of the objects the crash_detail was
+ * constructed from no longer needs to be valid.
+ *
+ * \param crash_detail the handle to the crash_detail that should be removed.
+ */
+void android_remove_crash_detail(crash_detail_t* _Nonnull crash_detail);
 
 __END_DECLS
