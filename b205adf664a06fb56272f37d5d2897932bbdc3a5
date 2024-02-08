@@ -22,6 +22,30 @@
       },
       "revId": "b205adf664a06fb56272f37d5d2897932bbdc3a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd48f177_4e922d87",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-08T21:28:47Z",
+      "side": 1,
+      "message": "Good catch, thanks Ryan!",
+      "parentUuid": "9faadf54_85c71301",
+      "range": {
+        "startLine": 820,
+        "startChar": 34,
+        "endLine": 820,
+        "endChar": 42
+      },
+      "revId": "b205adf664a06fb56272f37d5d2897932bbdc3a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
