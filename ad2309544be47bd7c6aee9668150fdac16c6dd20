@@ -16,6 +16,24 @@
       "message": "I think bionic should take ownership of the string. This is consistent with android_set_abort_message and harder to abuse. It may cause us to do one more heap memory allocation sometimes. But I expect a lot of time the string is actually dynamically generated with insufficient lifetime in the app, so the caller would have to do the same anyway.",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6cb6353b_01969dfe",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-08T23:13:52Z",
+      "side": 1,
+      "message": "IMO this is a strictly superior API. It allows you to keep track of e.g. some global integer (or a field of an object, if you unregister at the proper point, which is easy if we create an RAII wrapper (which we should)).\n\nIf you want something to take ownership, you can always do that in a wrapper in your own program (which we could even provide, but not as part of the platform), it doesn\u0027t need to be in libc. If we take ownership here, there is no way for people to use this for a use-case where they don\u0027t want that.",
+      "parentUuid": "8fd8556f_bff14257",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
