@@ -222,11 +222,6 @@ cc_library_static {
     name: "libc_bootstrap",
 }
 
-filegroup {
-    name: "elf_note_sources",
-    srcs: ["bionic/elf_note.cpp"],
-}
-
 // libc_init_static.cpp and libc_init_dynamic.cpp need to be built without stack protector.
 // libc_init_static.cpp sets up TLS for static executables, and libc_init_dynamic.cpp initializes
 // the stack protector global variable.
@@ -234,10 +229,7 @@ filegroup {
 cc_library_static {
     name: "libc_init_static",
     defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/libc_init_static.cpp",
-        ":elf_note_sources",
-    ],
+    srcs: ["bionic/libc_init_static.cpp"],
     cflags: [
         "-fno-stack-protector",
 
