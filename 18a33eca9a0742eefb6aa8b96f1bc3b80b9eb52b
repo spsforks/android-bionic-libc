@@ -3,6 +3,57 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7301ee7d_88e2d1ae",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "if this needs to be weak, don\u0027t both?",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b803635_e4f564dc",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "log? (or abort, since this feels like there\u0027s probably a bug here, quite possibly \"you tried to do the RAII thing with pairs of add/remove, but that\u0027s currently a leak\"?)",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5064d84e_78d336d9",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "oh, i was actually imagining removing from the list. this seems less helpful for RAII use? (but obviously has the advantage of not needing to implement deallocation...)",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8abef457_2906810c",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 6
@@ -14,6 +65,189 @@
       "writtenOn": "2024-02-08T02:37:37Z",
       "side": 1,
       "message": "I\u0027d happily revisit reusing this file and add a new one, but those functions seem so closely related I think the slightly awkward name is outweighed by having them grouped together.",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f2811b4_dde34094",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "of",
+      "range": {
+        "startLine": 54,
+        "startChar": 7,
+        "endLine": 54,
+        "endChar": 15
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99b2cb2a_c3fbc564",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "(you aren\u0027t currently nulling `name` in remove...)",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16984089_ba73dfe7",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "bytes",
+      "range": {
+        "startLine": 57,
+        "startChar": 52,
+        "endLine": 57,
+        "endChar": 58
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "881717ed_06e34fd8",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "number of bytes\n\n(\"size of buffer\" sounds more like we\u0027re going to write to it)",
+      "range": {
+        "startLine": 58,
+        "startChar": 12,
+        "endLine": 58,
+        "endChar": 30
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70d1b7e8_319de17e",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "make explicit that this is only for passing to android_remove_crash_detail()",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4e2f453_601e9fc3",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "crash_detail_t\n\n(or drop \"the\")",
+      "range": {
+        "startLine": 67,
+        "startChar": 64,
+        "endLine": 67,
+        "endChar": 76
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f6101fa_f957ade5",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "(remove)",
+      "range": {
+        "startLine": 70,
+        "startChar": 27,
+        "endLine": 70,
+        "endChar": 41
+      },
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39f83c6f_837d33d7",
+        "filename": "libc/platform/bionic/set_abort_message_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "no need to separate these since sizeof(size_t) is always sizeof(char*)",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "241e4612_e66f549e",
+        "filename": "libc/platform/bionic/set_abort_message_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-08T20:40:31Z",
+      "side": 1,
+      "message": "why isn\u0027t this calculated at runtime?",
       "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
