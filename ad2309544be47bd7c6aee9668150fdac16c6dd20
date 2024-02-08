@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fd8556f_bff14257",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-02-08T23:10:16Z",
+      "side": 1,
+      "message": "I think bionic should take ownership of the string. This is consistent with android_set_abort_message and harder to abuse. It may cause us to do one more heap memory allocation sometimes. But I expect a lot of time the string is actually dynamically generated with insufficient lifetime in the app, so the caller would have to do the same anyway.",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
