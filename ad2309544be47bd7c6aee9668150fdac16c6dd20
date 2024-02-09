@@ -70,6 +70,24 @@
       "parentUuid": "a10e8489_c63e31d5",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8339f3f_ffd79e9b",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T04:43:21Z",
+      "side": 1,
+      "message": "\u003e  would gladly trade that for a copy/don\u0027t-copy dichotomy :-) \n\nI don\u0027t think it\u0027s a good idea to have a function that has a different ownership semantic based on an enum value. If we want a function that takes ownership, we should have one that does that and calls into the non-owning version of this.\n\nIMO the best way to do that would be a C++, not C library, that can use move semantics to actually take ownership. But that all needn\u0027t be (and in the case of C++ can\u0027t) be in the platform, can probably just be a relatively short header-only library.\n\nAs Dan put it to me once, the libc exported functions should be building blocks that allow you to construct a good wrapper API.",
+      "parentUuid": "39433daa_976a545d",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

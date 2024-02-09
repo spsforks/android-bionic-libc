@@ -22,6 +22,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "186c115d_982fb1b5",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T04:43:21Z",
+      "side": 1,
+      "message": "it\u0027s not fully meaningless in the proto, because some runtimes use different types for string vs bytes, C++ is just dumb in that it doesn\u0027t have that :) For instance, Go: https://protobuf.dev/reference/go/go-generated/#oneof. Also, the runtime is supposed to validate utf8-ness of `strings` unless told otherwise: https://protobuf.dev/editions/features/#utf8_validation\n\nI like PRINTABLE / BINARY.",
+      "parentUuid": "8acd929c_ed1d30be",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
