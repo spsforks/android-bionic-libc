@@ -214,6 +214,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a66f410_91ae21de",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-09T23:59:22Z",
+      "side": 1,
+      "message": "\u003e Dan Albert please advise. your comment \"IDEs aren\u0027t going to show anything more than the docs for this function, so that\u0027s a very helpful hint if the developer isn\u0027t looking at the header or online API docs\" made me think it\u0027s a good idea to repeat the doc in here.\n\nIf it\u0027s clear from the doc that the reader need to look somewhere else, that\u0027s also okay. It\u0027s a problem if the docs don\u0027t make it clear that there\u0027s additional important information elsewhere.",
+      "parentUuid": "f3a46a44_d36b962b",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
