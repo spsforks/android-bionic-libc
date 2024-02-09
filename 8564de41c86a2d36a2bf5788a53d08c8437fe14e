@@ -22,6 +22,30 @@
       },
       "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57e0e277_68de2f98",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-02-09T22:53:50Z",
+      "side": 1,
+      "message": "On the public docs, it redirects to SAC since that is visible, but on the preview branch, it\u0027s the real deal. That way, there will always be some information there, and it\u0027ll be improved when the V docs release happens.",
+      "parentUuid": "2788775d_f1b31a1a",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
