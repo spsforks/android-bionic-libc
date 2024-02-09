@@ -52,6 +52,24 @@
       "parentUuid": "cef892cf_376995e2",
       "revId": "b622212c8659a4470855917f4cce7c939441f29e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19a33584_6071c2b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-02-09T05:29:06Z",
+      "side": 1,
+      "message": "We have verified on X86_64 device, emulator and Chrome OS and all are booting fine with this patch.\nI have updated patch only for X86_64 as we know 32 bit (X86) is going to be deprecated.\nplease help to merge it.",
+      "parentUuid": "04370540_d3ed837e",
+      "revId": "b622212c8659a4470855917f4cce7c939441f29e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
