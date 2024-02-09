@@ -22,6 +22,30 @@
       },
       "revId": "499a22e36f245b851cf9f9010e7df40f06c5d8a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e02bc05_a8eb7a4b",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-09T22:50:42Z",
+      "side": 1,
+      "message": "\u003e none of these are pointers... why do it this way rather than use the correct specifier?\n\nFor the program header fields used the pointer type since we don\u0027t know if it\u0027s the 32 or 64 bit type (as other places in have done in same file).\n\n\u003e (also, keep the strerror at the end; feel free to use %m too; there\u0027s no reason to explicitly say strerror(errno) unless you\u0027re not using errno [or the same code needs to work on macOS].\n\nMoved to the end, and replaces with %m.",
+      "parentUuid": "22806fd7_a3ba9f1a",
+      "range": {
+        "startLine": 731,
+        "startChar": 66,
+        "endLine": 731,
+        "endChar": 68
+      },
+      "revId": "499a22e36f245b851cf9f9010e7df40f06c5d8a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
