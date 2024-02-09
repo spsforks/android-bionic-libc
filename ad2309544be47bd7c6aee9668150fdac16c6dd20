@@ -88,6 +88,24 @@
       "parentUuid": "39433daa_976a545d",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51bd4400_48bac1fb",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-02-09T21:26:56Z",
+      "side": 1,
+      "message": "+1 consistency of ownership is important. If it stays with the caller, can we call it \"android_register_crash_buffer\" or something to make it clear? When I \"add a crash detail\" to something, I expect that detail to stay with the thing that I added it to (i.e. transfer ownership).",
+      "parentUuid": "f8339f3f_ffd79e9b",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
