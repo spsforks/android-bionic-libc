@@ -178,6 +178,24 @@
       "parentUuid": "2cf65d2d_165115fb",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a448929c_84cc8aba",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T23:22:34Z",
+      "side": 1,
+      "message": "(yeah, that was my concern with that too, but i was curious what others felt. \"because writing signal handlers is too easy...\".)",
+      "parentUuid": "f41d5bd3_6de3e5cb",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
