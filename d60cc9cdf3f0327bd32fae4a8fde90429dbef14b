@@ -118,6 +118,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86102401_a44d52dd",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T23:17:37Z",
+      "side": 1,
+      "message": "\u003e that still means we should have two fields\n\nyou mean \"name\" and \"data\"? yes. i don\u0027t think anyone disagreed with that? (i just don\u0027t like the enum for what the \"data\" is :-) )\n\n\u003e discussions on what human-readable means\n\nyeah, that\u0027s one reason why i like \"it\u0027ll all just bytes, and none of our business\" --- it means we can _change_ this when reality tells us we\u0027ve been too restrictive/not restrictive enough. hell, we can even have a flag! (recency bias: danalbert just fixed a bug along these lines in the ndk :-) )",
+      "parentUuid": "9778be28_f45c13c1",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
