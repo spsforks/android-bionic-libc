@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "474cc49d_fb4086de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-09T22:39:59Z",
+      "side": 1,
+      "message": "Sorry about this, I\u0027m guilty, the hooks seem to want to reformat all the pointer types with double spaces `type * name` :(",
+      "revId": "68b383326266d98498eeec369e27c195462f9423",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
