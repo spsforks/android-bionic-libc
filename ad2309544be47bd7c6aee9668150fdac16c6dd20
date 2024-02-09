@@ -124,6 +124,24 @@
       "parentUuid": "51bd4400_48bac1fb",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed347b4a_2181cd16",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T23:03:30Z",
+      "side": 1,
+      "message": "\u003e that works for RAII cases (where that can be the owner), but does it work in general? i\u0027d need another API to get the data pointer at least, no?\n\n\nI do not see the problem. You need somewhere to store the handle from android_register_crash_detail, so you can just store your data pointer there as well.",
+      "parentUuid": "9e19f9d4_731c3239",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
