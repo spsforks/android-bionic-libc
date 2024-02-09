@@ -142,6 +142,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f035fc7_5ffb8670",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T23:35:23Z",
+      "side": 1,
+      "message": "\u003e yeah, that\u0027s one reason why i like \"it\u0027ll all just bytes, and none of our business\"\n\nthat can be the case for the wire-format of the proto even if we let the user specify whether it should be printable or not. a `oneof { bytes readable_data \u003d 1; bytes binary_data \u003d 2; }` is equivalent to the enum we have in the API. even if we don\u0027t have this we _have to make a decision when printing the proto_ whether we consider it human readable, and if we change it later we change the behavior of the output.\n\ni don\u0027t think just printing everything encoded as hex/base64 is an option, but i also don\u0027t like trying to automagically detect whether something is human readable or not. \"hello world\\0\\3\\4\\6\\2\" could be a struct with an inline char buffer that has \"hello world\" (binary) and a uint32_t, or it could be \"hello world\" read into a buffer that\u0027s too big but uninitialized (human readable). i also don\u0027t think we should just skip printing non-printable things to text, because i know from myself that i almost exclusively look at the text tombstones, not the protos. i would probably copy that into a python shell, then use something like https://docs.python.org/3/library/struct.html to decode it.",
+      "parentUuid": "86102401_a44d52dd",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
