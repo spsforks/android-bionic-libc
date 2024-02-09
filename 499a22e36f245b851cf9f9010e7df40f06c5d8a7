@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22806fd7_a3ba9f1a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T18:53:49Z",
+      "side": 1,
+      "message": "none of these are pointers... why do it this way rather than use the correct specifier?\n\n(also, keep the strerror at the end; feel free to use %m too; there\u0027s no reason to explicitly say strerror(errno) unless you\u0027re _not_ using errno [or the same code needs to work on macOS].)",
+      "range": {
+        "startLine": 731,
+        "startChar": 66,
+        "endLine": 731,
+        "endChar": 68
+      },
+      "revId": "499a22e36f245b851cf9f9010e7df40f06c5d8a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
