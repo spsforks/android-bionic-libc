@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8acd929c_ed1d30be",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T01:25:44Z",
+      "side": 1,
+      "message": "i think what i really dislike about this is probably just the word \"STRING\" and its [unintended] connotations. how about \"RAW\"/\"HEX\" or \"PRINTABLE\"/\"BINARY\"? and do we really want HEX or do we want something like base64? and isn\u0027t it weird that this is meaningless in the proto format, only the [deprecated] text format? should we just not include this in the text format, as a carrot/stick to encourage people to move over? or maybe this is actually a \"show as text in the text format\" switch? so \"arbitrary bytes that you can get out of the proto\" is the special case, and \"this is utf8 that shows up in the text\" is the default?\n\n(and it\u0027s really a _display_ type.)\n\n(also i\u0027d leave this documentation in the enum, not here.)",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

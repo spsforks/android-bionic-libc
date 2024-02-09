@@ -34,6 +34,24 @@
       "parentUuid": "8fd8556f_bff14257",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a10e8489_c63e31d5",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T01:25:44Z",
+      "side": 1,
+      "message": "yeah, \"i\u0027d like to see the contents of this struct _at the time of any future crash_\" was a use-case i had in mind too.\n\ni\u0027m unconvinced by the current string/bytes enum, though, and would gladly trade that for a copy/don\u0027t-copy dichotomy :-) (because the little voice in the back of my head is saying \"make easy things easy, and hard things possible\", and suggesting that right now we maybe have \"make hard things easy, and easy things possible\" instead :-) )",
+      "parentUuid": "6cb6353b_01969dfe",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
