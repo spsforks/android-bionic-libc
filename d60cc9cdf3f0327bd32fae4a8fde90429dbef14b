@@ -46,6 +46,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cafd25d_13b6e1c4",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T21:20:50Z",
+      "side": 1,
+      "message": "\u003e (and it\u0027s really a display type.)\n\njust to double clarify: it makes a difference in the proto output in that it uses a `string` or a `bytes` field there.\n\n\u003e (also i\u0027d leave this documentation in the enum, not here.)\n\n@danalbert@google.com please advise. your comment \"IDEs aren\u0027t going to show anything more than the docs for this function, so that\u0027s a very helpful hint if the developer isn\u0027t looking at the header or online API docs\" made me think it\u0027s a good idea to  repeat the doc in here.",
+      "parentUuid": "186c115d_982fb1b5",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
