@@ -160,6 +160,24 @@
       "parentUuid": "ed347b4a_2181cd16",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f41d5bd3_6de3e5cb",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T23:21:07Z",
+      "side": 1,
+      "message": "\u003e the other other alternative is that we actually just register a callback instead of the name+data?\n\nI don\u0027t think it\u0027s a good idea to provide callbacks that get called after the process has already crashed.",
+      "parentUuid": "2cf65d2d_165115fb",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
