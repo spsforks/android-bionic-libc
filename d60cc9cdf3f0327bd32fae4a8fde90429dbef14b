@@ -70,6 +70,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0fa5427_889d4d11",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T21:33:37Z",
+      "side": 1,
+      "message": "\u003e just to double clarify: it makes a difference in the proto output in that it uses a string or a bytes field there.\n\ni still think that\u0027s a bug though? i\u0027d still argue for \"all bytes, all the time\" unless we can confirm _in advance_ that it\u0027s legit utf8 (and i don\u0027t think we want to pay for that anyway).\n\nletting people do something that only fails when they try to collect their tombstone just isn\u0027t helpful. (i mean, \"this is invalid utf8\" could even be the bug they\u0027re chasing!)",
+      "parentUuid": "3cafd25d_13b6e1c4",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

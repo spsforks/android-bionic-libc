@@ -106,6 +106,24 @@
       "parentUuid": "f8339f3f_ffd79e9b",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e19f9d4_731c3239",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T21:33:37Z",
+      "side": 1,
+      "message": "\u003e If we want a function that takes ownership, we should have one that does that and calls into the non-owning version of this.\n\n+1\n\n\u003e IMO the best way to do that would be a C++\n\nthat works for RAII cases (where that can be the owner), but does it work in general? i\u0027d need another API to get the data pointer at least, no?\n\n\u003e android_register_crash_buffer\n\nyeah, +1 to \"register\"/\"deregister\" over \"add\"/\"remove\".\n\nthe _other_ other alternative is that we actually just register a _callback_ instead of the name+data?",
+      "parentUuid": "51bd4400_48bac1fb",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
