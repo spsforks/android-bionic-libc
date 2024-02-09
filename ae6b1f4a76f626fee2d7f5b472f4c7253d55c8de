@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6700e82_fe9e8f4d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T23:43:22Z",
+      "side": 1,
+      "message": "don\u0027t you just mean `%zu` in the format string?",
+      "range": {
+        "startLine": 732,
+        "startChar": 28,
+        "endLine": 732,
+        "endChar": 52
+      },
+      "revId": "ae6b1f4a76f626fee2d7f5b472f4c7253d55c8de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1ea88ea_ab5fd88c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T23:43:22Z",
+      "side": 1,
+      "message": "(would referring to Map() have been more useful for debugging than referring to mmap()? i didn\u0027t realize that the Map() arguments were so different? i didn\u0027t mean \"mmap arguments\" quite so literally, it was just a mistaken assumption that there wasn\u0027t so much going on :-) )",
+      "range": {
+        "startLine": 733,
+        "startChar": 13,
+        "endLine": 733,
+        "endChar": 54
+      },
+      "revId": "ae6b1f4a76f626fee2d7f5b472f4c7253d55c8de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
