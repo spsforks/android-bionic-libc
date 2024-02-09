@@ -166,6 +166,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ec94264_875e2987",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T23:44:22Z",
+      "side": 1,
+      "message": "the other option would be to always print the whole buffer and \\ escape the non-printable characters, say literally print \"hello world\\0\\3\\4\\6\\2\" in the example above. that would clutter C strings defined like `const char foo[] \u003d \"hello world\";\nandroid_register_crash_detail(foo, sizeof(foo), ...)` with a \\0 at the end",
+      "parentUuid": "5f035fc7_5ffb8670",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
