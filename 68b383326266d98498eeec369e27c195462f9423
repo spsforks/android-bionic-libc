@@ -16,6 +16,24 @@
       "message": "Sorry about this, I\u0027m guilty, the hooks seem to want to reformat all the pointer types with double spaces `type * name` :(",
       "revId": "68b383326266d98498eeec369e27c195462f9423",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9e70a7f_1c209676",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T23:09:32Z",
+      "side": 1,
+      "message": "you mean specifically the ElfW() stuff? yeah, that\u0027s a known bug in clang-format :-(",
+      "parentUuid": "474cc49d_fb4086de",
+      "revId": "68b383326266d98498eeec369e27c195462f9423",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
