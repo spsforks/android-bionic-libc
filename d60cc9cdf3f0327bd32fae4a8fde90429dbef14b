@@ -94,6 +94,30 @@
       },
       "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9778be28_f45c13c1",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-09T22:38:38Z",
+      "side": 1,
+      "message": "\u003e i still think that\u0027s a bug though? i\u0027d still argue for \"all bytes, all the time\" unless we can confirm in advance that it\u0027s legit utf8 (and i don\u0027t think we want to pay for that anyway).\n\u003e letting people do something that only fails when they try to collect their tombstone just isn\u0027t helpful. (i mean, \"this is invalid utf8\" could even be the bug they\u0027re chasing!)\n\nDefine fail? You have me convinced that using `bytes` for both the readable and non-readable is a good idea, mainly because that way you can sidestep the whole language-dependent runtime nonsense where  different languages handle the error case differently.\n\nBut that still means we should have two fields (just that both are bytes, the difference is the _expectation_ that one of them is human readable, and the other is not). We can have discussions on what human-readable means (ASCII would be easier to verify, UTF-8 would be nicer), and what our printer should do in the error case (probably print an error).",
+      "parentUuid": "c0fa5427_889d4d11",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "d60cc9cdf3f0327bd32fae4a8fde90429dbef14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
