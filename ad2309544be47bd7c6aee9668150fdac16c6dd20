@@ -52,6 +52,24 @@
       "parentUuid": "6cb6353b_01969dfe",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39433daa_976a545d",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-09T01:26:48Z",
+      "side": 1,
+      "message": "(the fact that i\u0027m no longer certain whether eugenis meant \"name \" or \"data\" when he said \"string\" is a great example of why i really don\u0027t want to use the word string anywhere in our api :-) )",
+      "parentUuid": "a10e8489_c63e31d5",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
