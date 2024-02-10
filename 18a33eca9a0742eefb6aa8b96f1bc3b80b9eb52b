@@ -550,6 +550,24 @@
       "parentUuid": "9cc37c0e_477516f6",
       "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7721181_9827d7aa",
+        "filename": "libc/platform/bionic/set_abort_message_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-10T01:08:18Z",
+      "side": 1,
+      "message": "Ack, is it OK to re-visit this as an optimization in a follow-up?",
+      "parentUuid": "282a5e59_343fda06",
+      "revId": "18a33eca9a0742eefb6aa8b96f1bc3b80b9eb52b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
