@@ -196,6 +196,24 @@
       "parentUuid": "f41d5bd3_6de3e5cb",
       "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "924bfd5d_37d3a5e5",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-10T01:06:29Z",
+      "side": 1,
+      "message": "Changed name to android_register_crash_detail / android_unregister_crash_detail.",
+      "parentUuid": "a448929c_84cc8aba",
+      "revId": "ad2309544be47bd7c6aee9668150fdac16c6dd20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
