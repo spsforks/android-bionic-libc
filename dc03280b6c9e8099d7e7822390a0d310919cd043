@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1aaefa62_75bbe2c6",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T21:10:31Z",
+      "side": 1,
+      "message": "(you need to update all these names in the docs)",
+      "range": {
+        "startLine": 58,
+        "startChar": 3,
+        "endLine": 58,
+        "endChar": 34
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bb019fe_34aa1241",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T21:10:31Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 69,
+        "startChar": 35,
+        "endLine": 69,
+        "endChar": 40
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b08e5d0_91a7d724",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T21:10:31Z",
+      "side": 1,
+      "message": "did danalbert tell you to do this? this (as you can see from what\u0027s already in this file) isn\u0027t what we\u0027ve done in the past.\n\nif we _do_ do this, then (a) definitely in a new header and (b) don\u0027t forget to update the docs to match the new names.\n\nbut personally i\u0027d keep bionic-style names.",
+      "range": {
+        "startLine": 76,
+        "startChar": 24,
+        "endLine": 76,
+        "endChar": 45
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
