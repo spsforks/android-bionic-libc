@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ab452116_26a2b72f",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T22:57:28Z",
+      "side": 1,
+      "message": "(\"not a regression\", but this header should probably link to the proto schema and the java api for getting tombstones. we don\u0027t have a good single place to point to for \"how the pieces fit together\".)",
+      "parentUuid": "307254db_73938648",
+      "range": {
+        "startLine": 55,
+        "startChar": 32,
+        "endLine": 55,
+        "endChar": 67
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1aaefa62_75bbe2c6",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -90,6 +114,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb31e26f_75d8504a",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T22:57:28Z",
+      "side": 1,
+      "message": "yeah, attaching arbitrary data is the whole point here.\n\n(oddly, this is the first company i\u0027ve been at that _didn\u0027t_ have this. _my_ bias is that i\u0027ve previously really did use this for every single operation.)",
+      "parentUuid": "fc95ac43_bb15a871",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0bb019fe_34aa1241",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -125,6 +167,30 @@
       "side": 1,
       "message": "either this, or we also print it with the oct-escape. i don\u0027t care either way.",
       "parentUuid": "0bb019fe_34aa1241",
+      "range": {
+        "startLine": 69,
+        "startChar": 35,
+        "endLine": 69,
+        "endChar": 40
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62b031e2_445e5d9c",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T22:57:28Z",
+      "side": 1,
+      "message": "since we\u0027re not going to actually pay to check, we should escape.",
+      "parentUuid": "6c540f78_c8e726cb",
       "range": {
         "startLine": 69,
         "startChar": 35,
@@ -266,6 +332,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e681b185_e69b0899",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T22:57:28Z",
+      "side": 1,
+      "message": "(in case you need it tomorrow, my argument is along the lines of \"1. we don\u0027t rename all the OpenGL api 2. and we have 30 functions worth of precedent in bionic\". i\u0027d also say the \"separate header\" is orthogonal; having a second header wouldn\u0027t upset me at all, but having _another_ naming convention would :-) )",
+      "parentUuid": "89d98198_99e25414",
+      "range": {
+        "startLine": 76,
+        "startChar": 24,
+        "endLine": 76,
+        "endChar": 45
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "226c2195_b48ce04b",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -300,6 +390,30 @@
       "writtenOn": "2024-02-12T22:36:35Z",
       "side": 1,
       "message": "If it\u0027s const it\u0027s not freeable. Is the caller expected to `const_cast` that away?\n\nAre we expecting the attached data to be very large? I\u0027m wondering if the API should just copy the buffer so we can get away from all the life-time management.",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "159c1d4c_cd6d9eb4",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-12T22:57:28Z",
+      "side": 1,
+      "message": "the \"this is the assembler\" argument here is basically \"we should take the cheapest choices here [if only to enable the RAII style where you\u0027re adding/removing these on every query or whatever], and assume that anyone who isn\u0027t insane is using their own RAII wrapper anyway\".\n\nbut, yes, this is something we should make clearer in the docs. (and \"should we include our own RAII wrapper?\" is a separate question. there\u0027s no good home for that kind of thing atm though, right?)",
+      "parentUuid": "6076cd94_420f4d0c",
       "range": {
         "startLine": 93,
         "startChar": 0,
