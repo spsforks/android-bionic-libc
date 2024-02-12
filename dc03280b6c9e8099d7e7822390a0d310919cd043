@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "307254db_73938648",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "Where specifically?",
+      "range": {
+        "startLine": 55,
+        "startChar": 32,
+        "endLine": 55,
+        "endChar": 67
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1aaefa62_75bbe2c6",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -50,6 +73,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fc95ac43_bb15a871",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "The scoped nature of this makes me wonder: could we just make debuggerd ATrace-aware (https://developer.android.com/ndk/reference/group/tracing)? If that\u0027s possible, we wouldn\u0027t need the API at all, and it\u0027d make use of an API that\u0027s been available for nearly a decade (iirc tracing made it to the NDK in API 23, which was 2015ish)\n\nThe existing ATrace APIs only handle a name though, not arbitrary binary data, so we\u0027d have to give that up to go that route. Is that a deal breaker? I don\u0027t know enough about what data developers need to attach here to know if that\u0027s important or not.",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0bb019fe_34aa1241",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -91,6 +131,40 @@
         "endLine": 69,
         "endChar": 40
       },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9a57c1d_42369935",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "If `name` must be ASCII (or UTF-8, which is more likely), it should be zero terminated anyway, right?",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92aeeb90_e116fca3",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "Based on the unregister docs, this should include something like \"The data must remain valid until unregister is called.\"",
       "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -161,6 +235,76 @@
         "startChar": 24,
         "endLine": 76,
         "endChar": 45
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89d98198_99e25414",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "We\u0027ve got a small handful in bionic that are `android_` (the one here predates the NDK API council entirely, fdsan matched this and is old enough that it may not have gotten real review?). Guidelines say:\n\n\u003e One of the difficulties in concrete rules is applying them to a platform that was developed without strict guidelines from the beginning, so some of the existing APIs may not adhere. In some cases, the right choice might be to go with what is consistent with APIs in the same general area of the code, rather than in the ideal rules laid out herein.\n\nI\u0027m happy to go with enh\u0027s preference for now (`android_crash_detail_*`) and argue for that in API council tomorrow, and just deal with renaming if we decide we\u0027d rather have a new header with the API-style matching names.",
+      "parentUuid": "2e25f22a_596e8664",
+      "range": {
+        "startLine": 76,
+        "startChar": 24,
+        "endLine": 76,
+        "endChar": 45
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "226c2195_b48ce04b",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "`uint8_t` if it\u0027s mean to be arbitrary bytes. If not, specify encoding in the `\\param`.",
+      "range": {
+        "startLine": 77,
+        "startChar": 55,
+        "endLine": 77,
+        "endChar": 59
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6076cd94_420f4d0c",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-12T22:36:35Z",
+      "side": 1,
+      "message": "If it\u0027s const it\u0027s not freeable. Is the caller expected to `const_cast` that away?\n\nAre we expecting the attached data to be very large? I\u0027m wondering if the API should just copy the buffer so we can get away from all the life-time management.",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
       },
       "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
