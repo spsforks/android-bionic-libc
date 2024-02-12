@@ -68,6 +68,30 @@
       },
       "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e25f22a_596e8664",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T21:13:54Z",
+      "side": 1,
+      "message": "Dan said this is the correct name. happy to revert, or to move to different header.\n\n@danalbert@google.com Please make executive decision 😊",
+      "parentUuid": "9b08e5d0_91a7d724",
+      "range": {
+        "startLine": 76,
+        "startChar": 24,
+        "endLine": 76,
+        "endChar": 45
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
