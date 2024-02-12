@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ca9b8d1_0bb659cf",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T18:02:18Z",
+      "side": 1,
+      "message": "I made this return const char* instead, it\u0027s slightly easier to implement the \"take ownership\" use case because we only have to keep track of the crash_detail_t*, rather than that and the pointer.",
+      "range": {
+        "startLine": 83,
+        "startChar": 1,
+        "endLine": 83,
+        "endChar": 12
+      },
+      "revId": "fa543b3ed4620f89c58ccc607456294ed578ca48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
