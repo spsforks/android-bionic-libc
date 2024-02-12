@@ -130,6 +130,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cffceb0d_f0bebf68",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:04:40Z",
+      "side": 1,
+      "message": "It\u0027s not necessarily scoped, this is just one of the use cases. The other one is to register a global, or a member of an object.",
+      "parentUuid": "fc95ac43_bb15a871",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0bb019fe_34aa1241",
@@ -218,6 +236,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1021e82_1ed3df39",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:04:40Z",
+      "side": 1,
+      "message": "Yes, but it doesn\u0027t have to be. I will add wrappers for when both name and data are C-strings, so people can leave out the strlen",
+      "parentUuid": "f9a57c1d_42369935",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92aeeb90_e116fca3",
@@ -231,6 +267,24 @@
       "writtenOn": "2024-02-12T22:36:35Z",
       "side": 1,
       "message": "Based on the unregister docs, this should include something like \"The data must remain valid until unregister is called.\"",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81bd32ba_a65740e6",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:04:40Z",
+      "side": 1,
+      "message": "It says this\n\n```\n * The lifetime of name and data has to be valid until the program crashes, or until\n * android_unregister_crash_detail is called.\n ```",
+      "parentUuid": "92aeeb90_e116fca3",
       "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -354,6 +408,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4e27d87_3ba78df2",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:04:40Z",
+      "side": 1,
+      "message": "I don\u0027t care either way, I thought the new style",
+      "parentUuid": "89d98198_99e25414",
+      "range": {
+        "startLine": 76,
+        "startChar": 24,
+        "endLine": 76,
+        "endChar": 45
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "226c2195_b48ce04b",
@@ -367,6 +445,30 @@
       "writtenOn": "2024-02-12T22:36:35Z",
       "side": 1,
       "message": "`uint8_t` if it\u0027s mean to be arbitrary bytes. If not, specify encoding in the `\\param`.",
+      "range": {
+        "startLine": 77,
+        "startChar": 55,
+        "endLine": 77,
+        "endChar": 59
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e501e570_dd99f80b",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:04:40Z",
+      "side": 1,
+      "message": "I am not sure that\u0027s a good idea, because char* is the only thing that is technically allowed to alias everything",
+      "parentUuid": "226c2195_b48ce04b",
       "range": {
         "startLine": 77,
         "startChar": 55,
@@ -413,6 +515,30 @@
       "writtenOn": "2024-02-12T22:57:28Z",
       "side": 1,
       "message": "the \"this is the assembler\" argument here is basically \"we should take the cheapest choices here [if only to enable the RAII style where you\u0027re adding/removing these on every query or whatever], and assume that anyone who isn\u0027t insane is using their own RAII wrapper anyway\".\n\nbut, yes, this is something we should make clearer in the docs. (and \"should we include our own RAII wrapper?\" is a separate question. there\u0027s no good home for that kind of thing atm though, right?)",
+      "parentUuid": "6076cd94_420f4d0c",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a3b4765_1cb1254a",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:04:40Z",
+      "side": 1,
+      "message": "we already discussed this. we don\u0027t want to copy so you can e.g. see the value of some struct at the point it crashes.\n\ni was leaning on reverting this to make it `void` again, which I will do.",
       "parentUuid": "6076cd94_420f4d0c",
       "range": {
         "startLine": 93,
