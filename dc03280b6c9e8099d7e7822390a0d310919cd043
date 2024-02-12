@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a8d0a93a_5105558e",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:14:53Z",
+      "side": 1,
+      "message": "At least the text tombstone result was in the description for ACrashDetail_register, but I with the name back and forth something was bound to be lost.. I added it back",
+      "parentUuid": "ab452116_26a2b72f",
+      "range": {
+        "startLine": 55,
+        "startChar": 32,
+        "endLine": 55,
+        "endChar": 67
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1aaefa62_75bbe2c6",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -209,6 +233,30 @@
       "side": 1,
       "message": "since we\u0027re not going to actually pay to check, we should escape.",
       "parentUuid": "6c540f78_c8e726cb",
+      "range": {
+        "startLine": 69,
+        "startChar": 35,
+        "endLine": 69,
+        "endChar": 40
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e8d124f_91902419",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-12T23:14:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62b031e2_445e5d9c",
       "range": {
         "startLine": 69,
         "startChar": 35,
