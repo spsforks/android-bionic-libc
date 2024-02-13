@@ -364,6 +364,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b7ad50c_e657490b",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-13T01:09:31Z",
+      "side": 1,
+      "message": "\u003e And if we take the length here, we don\u0027t have to do any work for compile-time constant strings, where strlen is free in the caller, but not in libc (because it doesn\u0027t know about the compile-time constant).\n\naye, but since we\u0027re not actually copying the name anyway, we only look at the length if we actually crash (at which point, i don\u0027t care about a few calls to strlen()!).",
+      "parentUuid": "929ed29e_19eced60",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "92aeeb90_e116fca3",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
