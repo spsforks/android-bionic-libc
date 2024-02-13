@@ -382,6 +382,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cebcead3_bb2dcca4",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-13T01:12:00Z",
+      "side": 1,
+      "message": "Oh, no, doing the `strlen` after crashing is possible but makes the implementation unnecessarily complicated. It\u0027s much easier if we know the size, then we can read the correct size in crash_dump. Otherwise we need to read an unknown-size string from crash_dump. Or fill out the strlen the debuggerd crash handler.",
+      "parentUuid": "8b7ad50c_e657490b",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "92aeeb90_e116fca3",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
