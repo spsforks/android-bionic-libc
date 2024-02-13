@@ -452,6 +452,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2268becd_aa3b9759",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-13T21:47:16Z",
+      "side": 1,
+      "message": "As discussed offline: let\u0027s make this a `void*` and interpret it as arbitrary bytes (just like the `data`), with a comment saying that generally this should be a human-readable string. The idea is that this is used in a crash-handler, and we shouldn\u0027t trust any data from the app that just crashed, because it could be corrupted.",
+      "parentUuid": "ef67a533_b3fa1562",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92aeeb90_e116fca3",
