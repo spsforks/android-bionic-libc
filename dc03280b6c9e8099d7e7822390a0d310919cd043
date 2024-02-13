@@ -436,6 +436,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ef67a533_b3fa1562",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T20:24:08Z",
+      "side": 1,
+      "message": "Okay, so how should this be encoded? Is it an arbitrary string of bytes, or is it text? If it\u0027s text, encoding must be documented. Even if it\u0027s infeasible to _enforce_ the precondition, it\u0027s helpful to the caller if they know what the rules are. go/android-ndk-api-guidelines#well-documented point 5\n\nIf it is just an arbitrary string of bytes (that is, we _intend_ for this to not be printed, and we think it\u0027s totally reasonable for callers to include embedded nulls and control characters because they\u0027re not interpreted as control characters, just bytes), shouldn\u0027t it be a `uint8_t*`?",
+      "parentUuid": "bd768438_75153927",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "92aeeb90_e116fca3",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
