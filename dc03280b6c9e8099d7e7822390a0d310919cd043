@@ -346,6 +346,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "929ed29e_19eced60",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-13T01:00:05Z",
+      "side": 1,
+      "message": "Which is what I had in the docs (`needs to be a valid ASCII-string`), but enh@ disagreed on the grounds that we should not assume it\u0027s ASCII / UTF-8 only without verifying. So now we allow an arbitrary string and oct escape in the output anything that\u0027s not printable.\n\nAnd if we take the length here, we don\u0027t have to do any work for compile-time constant strings, where strlen is free in the caller, but not in libc (because it doesn\u0027t know about the compile-time constant).\n\nThere is also the possibility that the user builds the name somehow dynamically, in which case it\u0027s also nicer to pass in the size it already knows.",
+      "parentUuid": "03a7b84a_8ed7d05b",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "92aeeb90_e116fca3",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -601,6 +619,30 @@
       "side": 1,
       "message": "`void*` then? That\u0027s how the rest of the C library works. This isn\u0027t text, so `char` is misleading.",
       "parentUuid": "e501e570_dd99f80b",
+      "range": {
+        "startLine": 77,
+        "startChar": 55,
+        "endLine": 77,
+        "endChar": 59
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0523819e_de9b0b34",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-13T01:00:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "116df409_958f0f19",
       "range": {
         "startLine": 77,
         "startChar": 55,
