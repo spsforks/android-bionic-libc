@@ -34,6 +34,24 @@
       "parentUuid": "c64b1fef_be7b303f",
       "revId": "7c83d09679fc84fa26d1c11da47aa1b90bb1c48a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98cd8db9_3a2ab231",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 43
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T23:43:45Z",
+      "side": 1,
+      "message": "Those will need to be moved somewhere that\u0027s covered by CTS. +1 so we can submit before the deadline, but that needs to be done as a follow up.",
+      "parentUuid": "acfae511_28ab7028",
+      "revId": "7c83d09679fc84fa26d1c11da47aa1b90bb1c48a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
