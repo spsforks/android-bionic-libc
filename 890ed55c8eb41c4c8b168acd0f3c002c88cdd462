@@ -22,6 +22,30 @@
       },
       "revId": "890ed55c8eb41c4c8b168acd0f3c002c88cdd462",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f35b309a_2f5a6b16",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-13T01:05:32Z",
+      "side": 1,
+      "message": "Sure, added, but if you don\u0027t know where to find the tombstone proto definition, you are unlikely to want to look at it, and are just going to look at the text output.",
+      "parentUuid": "13747cf6_642503aa",
+      "range": {
+        "startLine": 57,
+        "startChar": 28,
+        "endLine": 57,
+        "endChar": 47
+      },
+      "revId": "890ed55c8eb41c4c8b168acd0f3c002c88cdd462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
