@@ -328,6 +328,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "03a7b84a_8ed7d05b",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T00:46:11Z",
+      "side": 1,
+      "message": "Is there a good reason for the caller to have names with embedded nulls? This is supposed to be a human readable key, right? It looks like name should just be defined as a UTF-8 C string.",
+      "parentUuid": "a1021e82_1ed3df39",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "92aeeb90_e116fca3",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -357,6 +375,24 @@
       "side": 1,
       "message": "It says this\n\n```\n * The lifetime of name and data has to be valid until the program crashes, or until\n * android_unregister_crash_detail is called.\n ```",
       "parentUuid": "92aeeb90_e116fca3",
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bacf48d3_81bb73ba",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T00:46:11Z",
+      "side": 1,
+      "message": "Ah, it does above. Fair enough.",
+      "parentUuid": "81bd32ba_a65740e6",
       "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -553,6 +589,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "116df409_958f0f19",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T00:46:11Z",
+      "side": 1,
+      "message": "`void*` then? That\u0027s how the rest of the C library works. This isn\u0027t text, so `char` is misleading.",
+      "parentUuid": "e501e570_dd99f80b",
+      "range": {
+        "startLine": 77,
+        "startChar": 55,
+        "endLine": 77,
+        "endChar": 59
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6076cd94_420f4d0c",
         "filename": "libc/include/android/set_abort_message.h",
         "patchSetId": 28
@@ -612,6 +672,30 @@
       "side": 1,
       "message": "we already discussed this. we don\u0027t want to copy so you can e.g. see the value of some struct at the point it crashes.\n\ni was leaning on reverting this to make it `void` again, which I will do.",
       "parentUuid": "6076cd94_420f4d0c",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "dc03280b6c9e8099d7e7822390a0d310919cd043",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9b469c6_1a9c2e79",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T00:46:11Z",
+      "side": 1,
+      "message": "+1, `void` is fine too.",
+      "parentUuid": "3a3b4765_1cb1254a",
       "range": {
         "startLine": 93,
         "startChar": 0,

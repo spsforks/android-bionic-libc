@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13747cf6_642503aa",
+        "filename": "libc/include/android/set_abort_message.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-13T00:46:11Z",
+      "side": 1,
+      "message": "I\u0027m still not sure where I should be looking for this. Where is that proto documented? android.googlesource.com or cs.android.com link will do if there\u0027s no dac link available.",
+      "range": {
+        "startLine": 57,
+        "startChar": 28,
+        "endLine": 57,
+        "endChar": 47
+      },
+      "revId": "890ed55c8eb41c4c8b168acd0f3c002c88cdd462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
