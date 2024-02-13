@@ -16,6 +16,24 @@
       "message": "Tests?",
       "revId": "7c83d09679fc84fa26d1c11da47aa1b90bb1c48a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acfae511_28ab7028",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 43
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-13T23:01:43Z",
+      "side": 1,
+      "message": "in the system/core part of the CL: https://r.android.com/2955722",
+      "parentUuid": "c64b1fef_be7b303f",
+      "revId": "7c83d09679fc84fa26d1c11da47aa1b90bb1c48a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
