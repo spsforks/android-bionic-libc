@@ -1012,8 +1012,12 @@ static inline void _extend_gnu_relro_prot_end(const ElfW(Phdr)* relro_phdr,
       // If the PT_GNU_RELRO mem size is not at least as large as the corresponding
       // LOAD segment mem size, we need to protect only a partial region of the
       // LOAD segment and therefore cannot avoid a VMA split.
-      if (relro_phdr->p_memsz < phdr->p_memsz) {
+      if (page_end(relro_phdr->p_memsz) < page_end(phdr->p_memsz)) {
         break;
+      }
+
+      if (phdr->p_align == kPageSize) {
+        break; // No need to extend
       }
 
       ElfW(Addr) p_memsz = phdr->p_memsz;
@@ -1068,7 +1072,7 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     // by bionic, because the kernel won't map gaps so it usually contains unrelated
     // mappings which will be incorrectly protected as RO likely leading to
     // segmentation fault.
-    if (phdr->p_align > kPageSize && should_pad_segments) {
+    if (should_pad_segments) {
       _extend_gnu_relro_prot_end(phdr, phdr_table, phdr_count, load_bias, &seg_page_end);
     }
 
