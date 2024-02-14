@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8180fdb5_17e65134",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2024-02-14T21:53:57Z",
+      "side": 1,
+      "message": "Is the \"ABI change\" here just the order in which `_tolower` appears in the header file?  i.e. we don\u0027t sort symbols for these checks, and instead also consider their ordering part of the ABI?",
+      "revId": "d8fd938f2387c7b99dbab061e10d4b0cca1b0fdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
