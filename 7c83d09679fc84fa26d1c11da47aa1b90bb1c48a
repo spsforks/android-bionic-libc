@@ -70,6 +70,24 @@
       "parentUuid": "98cd8db9_3a2ab231",
       "revId": "7c83d09679fc84fa26d1c11da47aa1b90bb1c48a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b008092_3d6fb627",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 43
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-14T00:21:51Z",
+      "side": 1,
+      "message": "That would be amazing, but I don\u0027t think the setup with the special tombstoned socket will work in CTS, so we\u0027ll have to go the roundabout way of actually spawing an app that actually crashes.",
+      "parentUuid": "205357ca_92fc2422",
+      "revId": "7c83d09679fc84fa26d1c11da47aa1b90bb1c48a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
