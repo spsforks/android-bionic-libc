@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fa48d59_9529552c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-14T02:41:11Z",
+      "side": 1,
+      "message": "The p_memsz varies depending on ELF64 or Elf32; for [your warnings](https://android-review.git.corp.google.com/c/platform/bionic/+/2954562/comment/8ecd65e1_00427d4a/) the offset asked `%lu` whereas my local build asked `%u`, casted both to paointer types to silence it.",
+      "range": {
+        "startLine": 732,
+        "startChar": 0,
+        "endLine": 733,
+        "endChar": 81
+      },
+      "revId": "32b6d8c90f2884d2dd260858114ae2230603ad01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
