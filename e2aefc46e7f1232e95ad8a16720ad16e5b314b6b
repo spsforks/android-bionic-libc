@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a755955_fec49759",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-14T18:56:27Z",
+      "side": 1,
+      "message": "the more functions we add, the more i think they should all be android_crash_detail_* rather than android_*_crash_detail...",
+      "revId": "e2aefc46e7f1232e95ad8a16720ad16e5b314b6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
