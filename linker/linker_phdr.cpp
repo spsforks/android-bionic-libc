@@ -1016,6 +1016,10 @@ static inline void _extend_gnu_relro_prot_end(const ElfW(Phdr)* relro_phdr,
         break;
       }
 
+      // if (phdr->p_align > kPageSize) {
+      //   break; // No need to extend
+      // }
+
       ElfW(Addr) p_memsz = phdr->p_memsz;
       ElfW(Addr) p_filesz = phdr->p_filesz;
 
@@ -1068,7 +1072,7 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     // by bionic, because the kernel won't map gaps so it usually contains unrelated
     // mappings which will be incorrectly protected as RO likely leading to
     // segmentation fault.
-    if (phdr->p_align > kPageSize && should_pad_segments) {
+    if (should_pad_segments) {
       _extend_gnu_relro_prot_end(phdr, phdr_table, phdr_count, load_bias, &seg_page_end);
     }
 
