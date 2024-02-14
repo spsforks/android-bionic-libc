@@ -16,6 +16,24 @@
       "message": "Is the \"ABI change\" here just the order in which `_tolower` appears in the header file?  i.e. we don\u0027t sort symbols for these checks, and instead also consider their ordering part of the ABI?",
       "revId": "d8fd938f2387c7b99dbab061e10d4b0cca1b0fdd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b7f8470_c2ac39ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-14T22:23:41Z",
+      "side": 1,
+      "message": "no, it\u0027s knock-on effects on inlining decisions in other projects. (for vndk, which is dead.)\n\ni\u0027m cleaning this up in the background: 1. dropping the dumps for libbase[1], since they\u0027re a constant minor irritation with no obvious payback (_plus_ the tools are broken every time i need to use them) but also 2. maybe `__always_inline__` these specific libbase functions anyway? i have that change locally (which would _also_ need an abi dump update without #1!) but i haven\u0027t really convinced myself that that\u0027s not over-specifying things too...\n\ndo i _really_ have an opinion on whether these are inlined or not? probably not --- if i know one thing, it\u0027s that i am not smarter than the compiler[2]!\n\n(but opinions welcome...)\n\n___\n1. https://android-review.git.corp.google.com/c/platform/system/libbase/+/2954811\n2. it\u0027s fascinating in the particular case of the libbase tests (which, obviously, use constant strings) to see the compiler optimize stuff like \"skip leading whitespace\" out completely, because it can see that there\u0027s no leading space in the string!",
+      "parentUuid": "8180fdb5_17e65134",
+      "revId": "d8fd938f2387c7b99dbab061e10d4b0cca1b0fdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
