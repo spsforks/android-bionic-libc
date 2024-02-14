@@ -22,6 +22,30 @@
       },
       "revId": "3f7be222ed6edcddce1421403ccda035db8fcc1f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b68c17f_3a36f837",
+        "filename": "tests/libs/dlopen_b.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-14T22:31:18Z",
+      "side": 1,
+      "message": "that was what i had first, but that seemed more distracting by virtue of having to explicitly say _something_? (which then made me feel like i needed _another_ comment, to explain the workaround on the workaround :-) )",
+      "parentUuid": "520a2926_2d367723",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "3f7be222ed6edcddce1421403ccda035db8fcc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
