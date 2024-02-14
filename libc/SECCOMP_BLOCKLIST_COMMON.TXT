@@ -8,3 +8,4 @@
 
 int     swapon(const char*, int) all
 int     swapoff(const char*) all
+void* __brk:brk(void*) all
