@@ -34,6 +34,24 @@
       "parentUuid": "8ecd65e1_00427d4a",
       "revId": "13fb3cfb230c05419dc158733ac69b508e1f973b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36fa7a4f_6b4380e1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2024-02-14T05:47:39Z",
+      "side": 1,
+      "message": "(This is the _useful_ instance of this warning which is not turned into an error because of the recent clang regression (b/315250603)).",
+      "parentUuid": "89cd05bd_da275233",
+      "revId": "13fb3cfb230c05419dc158733ac69b508e1f973b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
