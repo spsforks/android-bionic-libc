@@ -16,6 +16,24 @@
       "message": "this introduced more warning spam:\n```\nbionic/linker/linker_phdr.cpp:732:29: warning: format specifies type \u0027size_t\u0027 (aka \u0027unsigned long\u0027) but the argument has type \u0027Elf64_Xword\u0027 (aka \u0027unsigned long lo\nng\u0027) [-Wformat]\n  731 |       DL_ERR(\"\\\"%s\\\": PT_NOTE mmap(nullptr, %zu, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m\",\n      |                                             ~~~\n      |                                             %llu\n  732 |              name_.c_str(), phdr-\u003ep_memsz, fd_, page_start(file_offset_ + phdr-\u003ep_offset));\n      |                             ^~~~~~~~~~~~~\nbionic/linker/linker_globals.h:41:98: note: expanded from macro \u0027DL_ERR\u0027\n   41 |       async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \\\n      |                                                                                           ~~~    ^\nbionic/linker/linker_phdr.cpp:732:49: warning: format specifies type \u0027void *\u0027 but the argument has type \u0027uintptr_t\u0027 (aka \u0027unsigned long\u0027) [-Wformat]\n  731 |       DL_ERR(\"\\\"%s\\\": PT_NOTE mmap(nullptr, %zu, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m\",\n      |                                                                              ~~\n      |                                                                              %lu\n  732 |              name_.c_str(), phdr-\u003ep_memsz, fd_, page_start(file_offset_ + phdr-\u003ep_offset));\n      |                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nbionic/linker/linker_globals.h:41:98: note: expanded from macro \u0027DL_ERR\u0027\n   41 |       async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \\\n      |                                                                                           ~~~    ^\n2 warnings generated.\n```",
       "revId": "13fb3cfb230c05419dc158733ac69b508e1f973b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89cd05bd_da275233",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-14T02:42:12Z",
+      "side": 1,
+      "message": "aosp/2963403",
+      "parentUuid": "8ecd65e1_00427d4a",
+      "revId": "13fb3cfb230c05419dc158733ac69b508e1f973b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
