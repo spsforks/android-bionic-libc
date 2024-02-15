@@ -46,6 +46,30 @@
       },
       "revId": "3f7be222ed6edcddce1421403ccda035db8fcc1f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e416ef07_550b10ca",
+        "filename": "tests/libs/dlopen_b.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2024-02-15T04:47:13Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "7b68c17f_3a36f837",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "3f7be222ed6edcddce1421403ccda035db8fcc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
