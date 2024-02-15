@@ -32,17 +32,20 @@
 #include "linker_dlwarning.h"
 #include "linker_globals.h"
 
+#include <android/api-level.h>
 #include <link.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <android/api-level.h>
+#include <filesystem>
+#include <iostream>
 
 #include <bionic/pthread_internal.h>
+#include "private/ScopedPthreadMutexLocker.h"
+#include "private/android_filesystem_config.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
-#include "private/ScopedPthreadMutexLocker.h"
 
 #define __LINKER_PUBLIC__ __attribute__((visibility("default")))
 
@@ -133,10 +136,29 @@ void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
+static bool uid_within_range(__uid_t uid) {
+  int app_id = uid % AID_USER_OFFSET;
+  return (app_id >= AID_APP_START && app_id <= AID_APP_END) ||
+         (app_id >= AID_SDK_SANDBOX_PROCESS_START && app_id <= AID_SDK_SANDBOX_PROCESS_END) ||
+         (app_id >= AID_ISOLATED_START && app_id <= AID_ISOLATED_END);
+}
+
 static void* dlopen_ext(const char* filename,
                         int flags,
                         const android_dlextinfo* extinfo,
                         const void* caller_addr) {
+  __uid_t uid = getuid();
+  __uid_t userId = geteuid();
+  try {
+    auto permissions = std::filesystem::status(filename).permissions();
+    if ((permissions & std::filesystem::perms::owner_write) != std::filesystem::perms::none &&
+        android_get_application_target_sdk_version >= 35 && uid_within_range(uid)) {
+      dlerror();
+    }
+  } catch (const std::filesystem::filesystem_error& e) {
+    // cannot check permissions
+    dlerror();
+  }
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   g_linker_logger.ResetState();
   void* result = do_dlopen(filename, flags, extinfo, caller_addr);
