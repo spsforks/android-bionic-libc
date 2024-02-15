@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c3002de_04ff31e5",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-02-15T05:37:17Z",
+      "side": 1,
+      "message": "+CC @justinyun@google.com, I hope this is the right one.",
+      "range": {
+        "startLine": 47,
+        "startChar": 28,
+        "endLine": 47,
+        "endChar": 49
+      },
+      "revId": "4a536dd1acd8cafaa1466accf82f030b78fa8385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
