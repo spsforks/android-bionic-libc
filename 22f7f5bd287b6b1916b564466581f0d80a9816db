@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b06a4763_cd219038",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-15T22:30:59Z",
+      "side": 1,
+      "message": "Check diff between PS1 and newest for changes since the original version for the bugfix.",
+      "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
