@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "578873ca_81fac415",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-15T17:44:48Z",
+      "side": 1,
+      "message": "\"new vendor partitions\"?",
+      "range": {
+        "startLine": 7,
+        "startChar": 23,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "052826b584b1e10034de001e34ec53f31616961d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f23b1df4_9a970264",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-15T17:44:48Z",
+      "side": 1,
+      "message": "you don\u0027t need to explicitly initialize this (both because that\u0027s the default on Android, but also because you check the return value of __system_property_get() on the next line).",
+      "range": {
+        "startLine": 46,
+        "startChar": 39,
+        "endLine": 46,
+        "endChar": 45
+      },
+      "revId": "052826b584b1e10034de001e34ec53f31616961d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
