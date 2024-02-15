@@ -22,6 +22,30 @@
       },
       "revId": "4a536dd1acd8cafaa1466accf82f030b78fa8385",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "141bd8e4_3eb43197",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-02-15T05:47:10Z",
+      "side": 1,
+      "message": "`ro.vendor.api_level` is for the required API level for the VSR requirement. It must be `ro.board.api_level` to read the implemented vendor API level.",
+      "parentUuid": "3c3002de_04ff31e5",
+      "range": {
+        "startLine": 47,
+        "startChar": 28,
+        "endLine": 47,
+        "endChar": 49
+      },
+      "revId": "4a536dd1acd8cafaa1466accf82f030b78fa8385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
