@@ -94,6 +94,30 @@
       },
       "revId": "4a536dd1acd8cafaa1466accf82f030b78fa8385",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a56c6b2b_e86289ce",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-02-15T06:08:40Z",
+      "side": 1,
+      "message": "Done.\n\nHad a chat offline with Justin. ro.board.api_level makes more sense in this case because it\u0027s the actual version of the vendor partition.",
+      "parentUuid": "7416ca5b_96d8f3c3",
+      "range": {
+        "startLine": 47,
+        "startChar": 28,
+        "endLine": 47,
+        "endChar": 49
+      },
+      "revId": "4a536dd1acd8cafaa1466accf82f030b78fa8385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
