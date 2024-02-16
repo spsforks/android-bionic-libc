@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc206142_36340f49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-02-16T00:23:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "578873ca_81fac415",
+      "range": {
+        "startLine": 7,
+        "startChar": 23,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "052826b584b1e10034de001e34ec53f31616961d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f23b1df4_9a970264",
@@ -42,6 +66,29 @@
         "startChar": 39,
         "endLine": 46,
         "endChar": 45
+      },
+      "revId": "052826b584b1e10034de001e34ec53f31616961d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4637c3f_006abd0b",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-02-16T00:23:33Z",
+      "side": 1,
+      "message": "```suggestion\n  char vendor_api_level[PROP_VALUE_MAX];\n```",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 46
       },
       "revId": "052826b584b1e10034de001e34ec53f31616961d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
