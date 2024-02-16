@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4705dcaf_ad7aefe1",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-02-16T00:25:26Z",
+      "side": 1,
+      "message": "```suggestion\n  char vendor_api_level[PROP_VALUE_MAX];\n```",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 46
+      },
+      "revId": "a298384d9a2a5ec50fed51ca6953ebbdfb4d0f2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
