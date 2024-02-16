@@ -16,6 +16,40 @@
       "message": "Check diff between PS1 and newest for changes since the original version for the bugfix.",
       "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21dd2783_85ca6829",
+        "filename": "libc/bionic/libc_init_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-16T00:34:41Z",
+      "side": 1,
+      "message": "lose `.` to match other messages?",
+      "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a770302_97fbcbd2",
+        "filename": "tests/libs/libs_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-16T00:34:41Z",
+      "side": 1,
+      "message": "new file for this?\n\n(as penance, i\u0027ll clean up libs_utils.h: https://android-review.googlesource.com/c/platform/bionic/+/2966822)",
+      "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
