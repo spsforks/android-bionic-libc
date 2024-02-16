@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "109c74ee_0f822e0b",
+        "filename": "tests/mte_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-16T16:13:47Z",
+      "side": 1,
+      "message": "can the bionic/tests/stack_protector_test.cpp function be removed in favor of this too?\n\n(fine to do that later --- i just want to make sure you\u0027re aware that\u0027s why i was suggesting \"promoting\" this up a directory, so we don\u0027t have _multiple_ implementations.)",
+      "revId": "e65e1939a137596ee8fa4579323cea764cc1cf68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
