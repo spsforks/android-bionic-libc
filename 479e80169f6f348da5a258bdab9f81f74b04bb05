@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d2449b7_bcf80a99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-16T07:53:55Z",
+      "side": 1,
+      "message": "The diff from the reverted revision is same as from Patchset 1 to Patchset 2:\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/2966883/1..2\n\nMajor changes are:\n  1) Consolidate extend VMA check in a single place: `_extend_load_segment_vma()`,\n     as this is less error prone.\n  2) Use __mapped_file_size() to get the file backed size of mappings.\n  3) For RW segments, zero fill the entire excess segment mapping\n     corresponding to the backing file instead of just the partial\n     page at the end.",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
