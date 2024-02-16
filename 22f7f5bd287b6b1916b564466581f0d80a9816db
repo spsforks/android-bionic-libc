@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16cd8d81_ef85f071",
+        "filename": "libc/bionic/libc_init_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-16T00:39:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21dd2783_85ca6829",
+      "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8a770302_97fbcbd2",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-02-16T00:34:41Z",
       "side": 1,
       "message": "new file for this?\n\n(as penance, i\u0027ll clean up libs_utils.h: https://android-review.googlesource.com/c/platform/bionic/+/2966822)",
+      "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81fddc86_c160793a",
+        "filename": "tests/libs/libs_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-16T00:39:47Z",
+      "side": 1,
+      "message": "sure, can do. is it actually better to have two files for two functions though?",
+      "parentUuid": "8a770302_97fbcbd2",
       "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
