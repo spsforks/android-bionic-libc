@@ -86,6 +86,24 @@
       "parentUuid": "8a770302_97fbcbd2",
       "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caadfd6b_bf224a64",
+        "filename": "tests/libs/libs_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-16T00:45:55Z",
+      "side": 1,
+      "message": "it\u0027s not that i\u0027m aiming for \"one function per file\", but \"one \u0027theme\u0027 per file\" seems reasonable. \"utils\" always seems to end badly... easier to apply some discipline sooner rather than later, and the first time an unrelated function is added is as good a time as any.",
+      "parentUuid": "81fddc86_c160793a",
+      "revId": "22f7f5bd287b6b1916b564466581f0d80a9816db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
