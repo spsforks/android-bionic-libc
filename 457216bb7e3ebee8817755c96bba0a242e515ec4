@@ -22,6 +22,30 @@
       },
       "revId": "457216bb7e3ebee8817755c96bba0a242e515ec4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b33f18c1_8b4d8e0d",
+        "filename": "tests/libs/mte_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-16T01:48:08Z",
+      "side": 1,
+      "message": "I think \"mte_utils\" is more descriptive and less kitchen-sink than \"libs_utils\", which could be anything :)\n\nOK I can move it up. It can\u0027t go into the tests/utils.h because that needs android-base",
+      "parentUuid": "7137a967_dbea8d8f",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 19
+      },
+      "revId": "457216bb7e3ebee8817755c96bba0a242e515ec4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
