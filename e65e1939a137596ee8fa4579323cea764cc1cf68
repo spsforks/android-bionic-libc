@@ -16,6 +16,24 @@
       "message": "can the bionic/tests/stack_protector_test.cpp function be removed in favor of this too?\n\n(fine to do that later --- i just want to make sure you\u0027re aware that\u0027s why i was suggesting \"promoting\" this up a directory, so we don\u0027t have _multiple_ implementations.)",
       "revId": "e65e1939a137596ee8fa4579323cea764cc1cf68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87d0a430_e6a17817",
+        "filename": "tests/mte_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-02-16T18:50:15Z",
+      "side": 1,
+      "message": "Ah, maybe. But that does something slightly different. My version here says \"yes\" if the stack is PROT_MTE, but the code is not actually instrumented. AFAICT that version does not.\n\nI\u0027ll follow up and see, probably it\u0027s fine to use it there as well.",
+      "parentUuid": "109c74ee_0f822e0b",
+      "revId": "e65e1939a137596ee8fa4579323cea764cc1cf68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
