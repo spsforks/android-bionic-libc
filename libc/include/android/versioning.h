@@ -76,3 +76,14 @@
 #define __VERSIONER_FORTIFY_INLINE
 
 #endif  // defined(__BIONIC_VERSIONER)
+
+// LLNDK has its own versioning for vendor builds. The symbol is enabled when the vendor api level
+// is equal to or newer than the target vendor api level. This does not change symbols for NDK or
+// system builds.
+#ifdef __ANDROID_VENDOR__
+#define __INTRODUCED_IN_LLNDK(vendor_api_level) \
+    __attribute__((enable_if(__ANDROID_VENDOR_API__ >= vendor_api_level, \
+                             "available in vendor API level " #vendor_api_level)))
+#else // __ANDROID_VENDOR__
+#define __INTRODUCED_IN_LLNDK(vendor_api_level)
+#endif //__ANDROID_VENDOR__
