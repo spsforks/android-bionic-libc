@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d2419fc_a4728048",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1337669
+      },
+      "writtenOn": "2024-02-19T08:44:54Z",
+      "side": 1,
+      "message": "just providing more info\n\nthis doesn\u0027t change the symbol exported/provided by the library, but limits the library user of vendor variant. If a vendor module included a library header, and the header uses this macro, then the annotated method could be conditionally disabled FOR THE VENDOR VARIANT USER",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 29
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
