@@ -22,6 +22,132 @@
       },
       "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af542117_d8f2fdb0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-20T16:52:27Z",
+      "side": 1,
+      "message": "convince me that this belongs in the NDK, and not in some llndk-only header somewhere?\n\n(i think at the very least, this needs some clarification around \"what _is_ the llndk?\", since roughly no-one not on jiyong\u0027s team at google knows.)",
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f79dd4fd_a8cccca7",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-20T16:52:27Z",
+      "side": 1,
+      "message": "link to the public documentation.",
+      "range": {
+        "startLine": 80,
+        "startChar": 17,
+        "endLine": 80,
+        "endChar": 49
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "512e2bd9_435549d4",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-20T16:52:27Z",
+      "side": 1,
+      "message": "what is this?\n\n(also: \"why isn\u0027t that a terrible idea?\" --- \"doesn\u0027t that mean i have _two_ problems?\")",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 8
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a086a00_e8f30ef1",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-20T16:52:27Z",
+      "side": 1,
+      "message": "i work on android, and don\u0027t understand this. \"target\" elsewhere here means \"what the apk says\". but what\u0027s the equivalent of that for vendor code?",
+      "range": {
+        "startLine": 80,
+        "startChar": 82,
+        "endLine": 81,
+        "endChar": 56
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a863a5be_17fa02cc",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-20T16:52:27Z",
+      "side": 1,
+      "message": "`if defined`, like the rest of the file",
+      "range": {
+        "startLine": 83,
+        "startChar": 1,
+        "endLine": 83,
+        "endChar": 6
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09182751_04e846c2",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-20T16:52:27Z",
+      "side": 1,
+      "message": "this is probably a better place to have the last sentence in your comment, but with an explanation of why. (you probably need to clarify \"system builds\" since that\u0027s not common terminology, and i initially interpreted it as \"OS builds\" but realize now you mean something more like \"code that ends up on the system image\", right?)",
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
