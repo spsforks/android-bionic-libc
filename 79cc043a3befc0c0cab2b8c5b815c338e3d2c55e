@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2141664b_47602baf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T19:12:53Z",
+      "side": 1,
+      "message": "(removing auto-submit because i\u0027m about to upload ps2 with tests in bionic itself.)",
+      "revId": "79cc043a3befc0c0cab2b8c5b815c338e3d2c55e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
