@@ -34,6 +34,24 @@
       "parentUuid": "3c802678_26af46d3",
       "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9da9b589_09b31886",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-02-21T06:12:05Z",
+      "side": 1,
+      "message": "that I understand,\nif it\u0027s possible then can you please share the X86 CI boot failures issue logs with us, so that we can analyze.",
+      "parentUuid": "77a12756_a5e2f06e",
+      "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
