@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5e61fe8_fa8b1487",
+        "filename": "linker/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T00:05:34Z",
+      "side": 1,
+      "message": "lol no.\n\nlook at how grp_pwd.cpp works and do that here too instead.",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b66b0b65_62ae81bb",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T00:05:34Z",
+      "side": 1,
+      "message": "uid_t",
+      "range": {
+        "startLine": 138,
+        "startChar": 29,
+        "endLine": 138,
+        "endChar": 36
+      },
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39c91804_081001ff",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T00:05:34Z",
+      "side": 1,
+      "message": "\"what range\"?",
+      "range": {
+        "startLine": 138,
+        "startChar": 12,
+        "endLine": 138,
+        "endChar": 28
+      },
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7c9d7e8_46471879",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T00:05:34Z",
+      "side": 1,
+      "message": "uid_t",
+      "range": {
+        "startLine": 149,
+        "startChar": 2,
+        "endLine": 149,
+        "endChar": 9
+      },
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16d07a10_93ca5a95",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T00:05:34Z",
+      "side": 1,
+      "message": "linker_get_error_buffer() will have undefined contents here. you need to say _why_ you\u0027re failing this.",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
