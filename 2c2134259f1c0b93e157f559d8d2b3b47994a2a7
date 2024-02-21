@@ -59,6 +59,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4672d82_883def3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T22:32:54Z",
+      "side": 1,
+      "message": "+danalbert since he seems to have reviewed the doc at least, and might understand this better...",
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f79dd4fd_a8cccca7",
@@ -143,6 +160,30 @@
       "side": 1,
       "message": "LLNDK (https://source.android.com/docs/core/architecture/vndk/build-system#ll-ndk), as a stable c interface, is similar to NDK, but uses different versioning. So, it does not use clang version triple.\n\nThis may not require any more complexity or new features from bionic.",
       "parentUuid": "512e2bd9_435549d4",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 8
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "faa510d4_0cffa4a5",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T22:32:54Z",
+      "side": 1,
+      "message": "define \"different versioning\" ... the numbers are the same, right? it\u0027s just that any \"build\" has _two_ versions --- one for the system image and another for the vendor image? (but \"34\" means the same on both; it\u0027s just possible that your system image is 34 while your vendor image is 32?)\n\nthere\u0027s definitely cognitive complexity here, and _something_ needs to talk about things like:\n1. what this is.\n2. how it differs.\n3. when to use which.\n\nideally i think the header file should be very brief and link to a doc.\n\nthe \"ABI-frozen twice each year\" in particular seems like a massive change (that\u0027s going to be non-obvious to anyone adding these annotations).",
+      "parentUuid": "c23033c1_08c777c8",
       "range": {
         "startLine": 80,
         "startChar": 3,
@@ -254,6 +295,24 @@
       "side": 1,
       "message": "Your understanding is right. In this context, system and vendor is divided by the treble boundary.",
       "parentUuid": "09182751_04e846c2",
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9053a30f_cad9984b",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T22:32:54Z",
+      "side": 1,
+      "message": "if i\u0027ve understood the doc at all (which i\u0027m not sure about), it\u0027s unclear \"LLNDK\" is the point here? the point is that there are two freezes?\n\nisn\u0027t the fix to have an api bump for that too? (that fixes a lot of our other problems.)\n\ni still don\u0027t think i understand the problem, or how this solves it...",
+      "parentUuid": "7457d3a8_6c17749b",
       "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
