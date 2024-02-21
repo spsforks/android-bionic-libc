@@ -107,13 +107,12 @@ static long __pathconf(const struct statfs& s, int name) {
     case _PC_REC_MIN_XFER_SIZE:
       return s.f_bsize;
 
-#if 0
     case _PC_REC_INCR_XFER_SIZE:
     case _PC_REC_MAX_XFER_SIZE:
-#endif
+      return -1;  // No API to answer these: "try it and see".
 
     case _PC_SYMLINK_MAX:
-      return -1; /* no limit */
+      return -1;  // No API to answer this: "try it and see".
 
     case _PC_CHOWN_RESTRICTED:
       return _POSIX_CHOWN_RESTRICTED;
