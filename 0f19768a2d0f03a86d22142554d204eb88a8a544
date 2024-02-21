@@ -89,6 +89,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c72ed533_d1ca750c",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-21T00:45:51Z",
+      "side": 1,
+      "message": "i don\u0027t think access() is the check you want, and this isn\u0027t the place you want to check either...\n\ni think you actually want to check `(st_mode \u0026 0222) \u003d\u003d 0` here: https://source.corp.google.com/h/android/platform/superproject/main/+/main:bionic/linker/linker.cpp;l\u003d1186?q\u003dfile:bionic%2Flinker%20fstat\u0026sq\u003drepo:android%2Fplatform%2Fsuperproject%2Fmain%20b:main%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\nthat\u0027ll check all the DT_NEEDEDs too, not just the top-level library that\u0027s being opened. (and it\u0027ll check all the write bits. i don\u0027t think you intend to imply that an `o+w` file is okay :-) )",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "16d07a10_93ca5a95",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 9
