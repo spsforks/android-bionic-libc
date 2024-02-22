@@ -16,6 +16,24 @@
       "message": "nice! given that there\u0027s a /bin -\u003e /system/bin symlink, we _could_ go one step further, but then static binaries wouldn\u0027t work on versions of Android that predate that symlink, so that\u0027s probably something to clean up in 2030 instead :-)",
       "revId": "35bdfa040f87c52a8c8972a4ac2d5558669eefa6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41ec6624_63b5566d",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-02-22T01:58:00Z",
+      "side": 1,
+      "message": "The symlink was added back in 2017! Then, I think we can do it now. What do you think?",
+      "parentUuid": "a9cd1f06_70065b82",
+      "revId": "35bdfa040f87c52a8c8972a4ac2d5558669eefa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
