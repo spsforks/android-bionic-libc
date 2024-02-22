@@ -51,6 +51,24 @@
       "parentUuid": "a9cd1f06_70065b82",
       "revId": "35bdfa040f87c52a8c8972a4ac2d5558669eefa6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ac8b653_c75421a4",
+        "filename": "libc/bionic/__bionic_get_shell_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-22T15:56:10Z",
+      "side": 1,
+      "message": "i\u0027m _very_ tempted, but to keep me honest i\u0027ll ask +danalbert how much we care about static binaries being able to use system() and popen() on L/M/N...\n\n(i wish we had some statistics about static binary usage by apps. in theory _i_ support using the toybox static binary on all the ndk-supported releases, but no-one\u0027s running the tests [and i still haven\u0027t even persuaded engprod to use a hermetic toybox binary rather than \"whatever\u0027s on the device\", so i have no reason to believe there are actually any users of that!].)",
+      "parentUuid": "41ec6624_63b5566d",
+      "revId": "35bdfa040f87c52a8c8972a4ac2d5558669eefa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
