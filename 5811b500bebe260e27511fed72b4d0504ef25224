@@ -70,6 +70,24 @@
       "parentUuid": "9da9b589_09b31886",
       "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4bc2942_f872538b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-02-22T09:09:19Z",
+      "side": 1,
+      "message": "I\u0027ve updated back to the patchset with x86 changes.\nPlease trigger another run.",
+      "parentUuid": "c8b2e21f_2a933b8d",
+      "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
