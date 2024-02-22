@@ -196,6 +196,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9ca8fd6e_d7028d21",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-02-22T01:47:25Z",
+      "side": 1,
+      "message": "The numbers are different. Vendor API level follows `YYYYMM` format.\nLLNDK ABI will be finalized in 24Q2 with the version 202404. After that NDK will be finalized in 24Q3 with 35.\n\n\u003e it\u0027s just that any \"build\" has two versions --- one for the system image and another for the vendor image? (but \"34\" means the same on both; it\u0027s just possible that your system image is 34 while your vendor image is 32?)\n\nThis is almost correct, except, vendor side cannot have the versions that were finalized for NDK, but use YYYYMM format that were finalized for vFRC in Q2.\n\n\u003e the \"ABI-frozen twice each year\" in particular seems like a massive change (that\u0027s going to be non-obvious to anyone adding these annotations).\n\nWe already had frozen both NDK and LLNDK ABIs with the SDK finalization before. With this change, the LLNDK ABI finalization schedule is skewed from the SDK finalization. So it may look like freezing the ABIs twice. However, as they does not share versions with each other, NDK and LLNDK are freezing once a year as before.",
+      "parentUuid": "faa510d4_0cffa4a5",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 8
+      },
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a086a00_e8f30ef1",
         "filename": "libc/include/android/versioning.h",
         "patchSetId": 2
@@ -313,6 +337,24 @@
       "side": 1,
       "message": "if i\u0027ve understood the doc at all (which i\u0027m not sure about), it\u0027s unclear \"LLNDK\" is the point here? the point is that there are two freezes?\n\nisn\u0027t the fix to have an api bump for that too? (that fixes a lot of our other problems.)\n\ni still don\u0027t think i understand the problem, or how this solves it...",
       "parentUuid": "7457d3a8_6c17749b",
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdc2d11d_10810054",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-02-22T01:47:25Z",
+      "side": 1,
+      "message": "We already had NDK and LLNDK freezes before when finalizing SDK version. But the point is to have different schedule for the LLNDK freezing from the SDK finalization. That required new versioning and also required new symbol versioning for LLNDK.",
+      "parentUuid": "9053a30f_cad9984b",
       "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
