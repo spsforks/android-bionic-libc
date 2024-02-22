@@ -10,6 +10,9 @@
       "name": "linker-unit-tests"
     },
     {
+      "name": "CtsBionicAppTestCases"
+    },
+    {
       "name": "CtsBionicTestCases"
     },
     {
