@@ -70,6 +70,30 @@
       },
       "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9fe17c3_73f64e5a",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-02-22T20:50:48Z",
+      "side": 1,
+      "message": "You can see on b/317273798, documentation was added on DAC preview, which will automatically be released with the next Android release.",
+      "parentUuid": "cc4c2bb8_e2e353c5",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
