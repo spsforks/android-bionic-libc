@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "db7650a8_ee06ae09",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T21:47:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04aee566_5da68d19",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25695780_c93d6aa4",
@@ -49,6 +67,24 @@
       "writtenOn": "2024-02-23T17:09:00Z",
       "side": 1,
       "message": "that\u0027s not the right way to do this --- add the library instead, and you get the headers for free",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3f4288c_c2c660fc",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T21:47:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25695780_c93d6aa4",
       "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -70,6 +106,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7dd9c2b_f68c68b3",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T21:47:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14cf6a03_ccb9e4ba",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95b5d9ad_7ee4d7eb",
@@ -83,6 +137,24 @@
       "writtenOn": "2024-02-23T17:09:00Z",
       "side": 1,
       "message": "(same)",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb2c37a2_53a5d600",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T21:47:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95b5d9ad_7ee4d7eb",
       "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -104,6 +176,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d8d04f6_0d800734",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2062,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T21:47:08Z",
+      "side": 1,
+      "message": "Added the \"whys\"",
+      "parentUuid": "d1c2f6c8_81c9380b",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8e94fc1_ea7a62c0",
@@ -117,6 +207,30 @@
       "writtenOn": "2024-02-23T17:09:00Z",
       "side": 1,
       "message": "other than the linker, what else is using this?",
+      "range": {
+        "startLine": 2063,
+        "startChar": 19,
+        "endLine": 2063,
+        "endChar": 37
+      },
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a09f33b8_95039120",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2063,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T21:47:08Z",
+      "side": 1,
+      "message": "Init uses it as well, since they parse the ranges from /proc/\u003cpid\u003e/maps. aosp/2964563",
+      "parentUuid": "c8e94fc1_ea7a62c0",
       "range": {
         "startLine": 2063,
         "startChar": 19,
