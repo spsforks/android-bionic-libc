@@ -16,6 +16,115 @@
       "message": "The diff from the reverted revision is same as from Patchset 1 to Patchset 2:\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/2966883/1..2\n\nMajor changes are:\n  1) Consolidate extend VMA check in a single place: `_extend_load_segment_vma()`,\n     as this is less error prone.\n  2) Use __mapped_file_size() to get the file backed size of mappings.\n  3) For RW segments, zero fill the entire excess segment mapping\n     corresponding to the backing file instead of just the partial\n     page at the end.",
       "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04aee566_5da68d19",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:09:00Z",
+      "side": 1,
+      "message": "(since this weren\u0027t obvious to the author or reviewers the first time round, 2 and 3 are places that probably warrant code comments.)",
+      "parentUuid": "0d2449b7_bcf80a99",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25695780_c93d6aa4",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:09:00Z",
+      "side": 1,
+      "message": "that\u0027s not the right way to do this --- add the library instead, and you get the headers for free",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14cf6a03_ccb9e4ba",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:09:00Z",
+      "side": 1,
+      "message": "(same)",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95b5d9ad_7ee4d7eb",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:09:00Z",
+      "side": 1,
+      "message": "(same)",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1c2f6c8_81c9380b",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2062,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:09:00Z",
+      "side": 1,
+      "message": "don\u0027t write \"what\" comments, write \"why\" comments...",
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8e94fc1_ea7a62c0",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2063,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:09:00Z",
+      "side": 1,
+      "message": "other than the linker, what else is using this?",
+      "range": {
+        "startLine": 2063,
+        "startChar": 19,
+        "endLine": 2063,
+        "endChar": 37
+      },
+      "revId": "479e80169f6f348da5a258bdab9f81f74b04bb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
