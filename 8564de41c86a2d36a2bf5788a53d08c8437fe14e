@@ -142,6 +142,30 @@
       },
       "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16294a38_55a0f2a7",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-23T21:22:01Z",
+      "side": 1,
+      "message": "Other way around. I don\u0027t want this to land without the link to the docs. I don\u0027t want this to land without a link to the docs. iirc the goal was to include this in r27 and announce it. To do that I need to be able to point to the docs. If you don\u0027t care about announcing this in r27, we don\u0027t need it. The next android release will be after r27, so we can\u0027t wait for that if that\u0027s how you want the timeline arranged.",
+      "parentUuid": "f1dcd426_ab0b0a74",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
