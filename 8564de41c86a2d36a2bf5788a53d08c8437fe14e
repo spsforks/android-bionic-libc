@@ -118,6 +118,30 @@
       },
       "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1dcd426_ab0b0a74",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-02-23T02:36:49Z",
+      "side": 1,
+      "message": "I would like to go ahead and land the \u0027__BIONIC_DEPRECATED_PAGE_SIZE_MACRO\u0027 flag, because we\u0027ll need it to invert __BIONIC_NO_PAGE_SIZE_MACRO later.\n\nIf you would prefer to avoid the URL here for now, I can remove it and add it later. However, I would like to be able to add the URL here, so it will be there, and we won\u0027t have to mess with the comments.\n\nAbout making the DAC docs - they won\u0027t make sense until the default build mode actually. If you want, we can meet on it, but I figured you\u0027d be happy with a URL which will become correct and has decent info until then.",
+      "parentUuid": "77f7a4a5_23e5ccd2",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
