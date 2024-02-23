@@ -34,6 +34,40 @@
       "parentUuid": "c19bab6c_959ffd42",
       "revId": "6bde86d463b1c99281b68ccaf7dbd8e80bf45d90",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8980453c_325d8edd",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:10:55Z",
+      "side": 1,
+      "message": "(again, say \"why\" not \"what\".)",
+      "revId": "6bde86d463b1c99281b68ccaf7dbd8e80bf45d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d811340_190974bf",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-23T17:10:55Z",
+      "side": 1,
+      "message": "(like this :-) )",
+      "revId": "6bde86d463b1c99281b68ccaf7dbd8e80bf45d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
