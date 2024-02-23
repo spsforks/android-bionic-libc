@@ -130,6 +130,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6b1bd1f8_e3076b5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-02-23T01:45:36Z",
+      "side": 1,
+      "message": "Let me move these macros to `libvendorsupport`.",
+      "parentUuid": "b885e8fa_c0ba233c",
+      "revId": "2c2134259f1c0b93e157f559d8d2b3b47994a2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f79dd4fd_a8cccca7",
         "filename": "libc/include/android/versioning.h",
         "patchSetId": 2
