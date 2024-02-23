@@ -16,6 +16,24 @@
       "message": "The diff from the reverted revision is same as from Patchset 1 to Patchset 2:\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/2966884/1..2\n\nMajor changes are:\n1) Consolidate extend VMA check in a single place: _extend_load_segment_vma(),\nas this is less error prone.\n2) Page-align the check on p_memsz of the GNU_RELRO and corresponding LOAD segments",
       "revId": "6bde86d463b1c99281b68ccaf7dbd8e80bf45d90",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4435173_583eec83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-23T17:05:56Z",
+      "side": 1,
+      "message": "Page checking the page-aligned memsizes cause over protection. Remove now.",
+      "parentUuid": "c19bab6c_959ffd42",
+      "revId": "6bde86d463b1c99281b68ccaf7dbd8e80bf45d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
