@@ -28,11 +28,34 @@
 
 #include <cxxabi.h>
 #include <gtest/gtest.h>
+#include <string.h>
 
 TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
 #if defined(__aarch64__)
+  // Test the C++ demangler on a slightly invalid mangled string:
+  //    (1 "\006") (I (L e "eeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" E) E)
+  // There are a few issues with this mangled string:
+  //  - The IA64 C++ ABI specifies that an FP literal's hex chars are supposed
+  //    to be lowercase, but the libc++abi demangler also accepts uppercase
+  //    digits, which is confusing because 'E' also the terminating character
+  //    for <template-args> and <expr-primary>.
+  //  - libc++abi uses snprintf("%a") which puts an unspecified number of bits
+  //    in the digit before the decimal point.
+  //  - The identifier name is "\006", and the IA64 C++ ABI spec is explicit
+  //    about not specifying the encoding for characters outside of
+  //    [_A-Za-z0-9].
+  //  - The 'e' type is documented as "long double, __float80", and in practice
+  //    the length of the literal depends on the arch. For arm64, it is a
+  //    128-bit FP type encoded using 32 hex chars. The situation with x86-64
+  //    Android OTOH is messy because Clang uses 'g' for its 128-bit
+  //    long double.
   char* p = abi::__cxa_demangle("1\006ILeeeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", 0, 0, 0);
-  ASSERT_STREQ("\x6<-0x1.cecececececececececececececep+11983", p);
+  if (!strcmp(p, "\x6<-0x1.cecececececececececececececep+11983")) {
+    // TODO(b/175635923). After upgrading libc++, stop accepting this bad
+    // demangling. See https://reviews.llvm.org/D77924.
+  } else {
+    ASSERT_STREQ("\x6<-0x1.cecececececececececececececep+11983L>", p);
+  }
   free(p);
 #endif
 }
