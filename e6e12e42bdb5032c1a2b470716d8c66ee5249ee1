@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3b5bbca_0b2642c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-02-24T00:59:44Z",
+      "side": 1,
+      "message": "Actually, the `\"...cece...\"` pattern from a `\"...EEEE...\"` input suggests that things are more broken. libc++abi seems to allow [A-F] in the FP literal, but then it \"incorrectly\" converts [A-F] to numbers. I think it might be using `std::isxdigit` to check the digits, but then this code to parse them:\n```\n      for (; t !\u003d last; ++t, ++e) {\n        unsigned d1 \u003d isdigit(*t) ? static_cast\u003cunsigned\u003e(*t - \u00270\u0027)\n                                  : static_cast\u003cunsigned\u003e(*t - \u0027a\u0027 + 10);\n        ++t;\n        unsigned d0 \u003d isdigit(*t) ? static_cast\u003cunsigned\u003e(*t - \u00270\u0027)\n                                  : static_cast\u003cunsigned\u003e(*t - \u0027a\u0027 + 10);\n        *e \u003d static_cast\u003cchar\u003e((d1 \u003c\u003c 4) + d0);\n      }\n```\n\nlibc++abi probably should just reject this string. I may need to update the comments here...",
+      "revId": "e6e12e42bdb5032c1a2b470716d8c66ee5249ee1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
