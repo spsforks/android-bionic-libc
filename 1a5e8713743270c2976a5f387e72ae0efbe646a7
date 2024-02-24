@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d1a27ff_c2257937",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-02-24T04:01:24Z",
+      "side": 1,
+      "message": "I uploaded https://github.com/llvm/llvm-project/pull/82864 to reject this input in libc++abi.",
+      "revId": "1a5e8713743270c2976a5f387e72ae0efbe646a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
