@@ -16,6 +16,24 @@
       "message": "LGTM, but please make the linter happy",
       "revId": "9952e22b0fcfe3881531d9e45c846f083fcc1a31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd519169_9ef6ef94",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-26T20:56:57Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f5cd28d8_7de02bec",
+      "revId": "9952e22b0fcfe3881531d9e45c846f083fcc1a31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
