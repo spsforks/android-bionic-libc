@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1cd007a_a71a7dae",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-27T01:20:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "543a8be0_a72b9bc2",
+      "revId": "dfc4784e2f20e09ce5ac394897152c7c790c2cd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10d9b6f9_7a262747",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-02-27T00:47:28Z",
       "side": 1,
       "message": "relro_memsz is technically relro_vaddr+relro_memsz?",
+      "revId": "dfc4784e2f20e09ce5ac394897152c7c790c2cd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52b67a82_877078c2",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-02-27T01:20:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10d9b6f9_7a262747",
       "revId": "dfc4784e2f20e09ce5ac394897152c7c790c2cd2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
