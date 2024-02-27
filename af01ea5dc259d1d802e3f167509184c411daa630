@@ -22,6 +22,30 @@
       },
       "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7174db6a_9709dbc1",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-02-27T14:02:16Z",
+      "side": 1,
+      "message": "Yes, that\u0027s true.\nUsers may include this header in their code manually along with `\u003csys/cdefs.h\u003e` without adding it here.",
+      "parentUuid": "94794837_5c8cdf10",
+      "range": {
+        "startLine": 352,
+        "startChar": 0,
+        "endLine": 354,
+        "endChar": 6
+      },
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
