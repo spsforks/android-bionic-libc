@@ -190,6 +190,30 @@
       },
       "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e382b528_375ca937",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-02-27T00:22:26Z",
+      "side": 1,
+      "message": "If you don\u0027t want this announced to NDK developers in r27, I\u0027d say just drop the portion of the comment about app developers. It doesn\u0027t affect them yet, so this would just be misleading.\n\nBut I thought this CL was the result of http://b/312546062, where you wanted this to be a new feature called out in NDK r27. If you want that, there needs to be something I can point developers to that explains why we\u0027re doing this and how if affects them (which I think those not-yet-published docs do well, they just need to be public before I can point people to them).\n\nIf I\u0027ve misunderstood and you don\u0027t care about this being pushed in r27, we just wait for the first NDK release after V, no need to rush publication.",
+      "parentUuid": "93db1575_dbe4cb0e",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "8564de41c86a2d36a2bf5788a53d08c8437fe14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
