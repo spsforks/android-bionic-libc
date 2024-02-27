@@ -349,3 +349,6 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
 #if __has_include(<android/ndk-version.h>)
 #include <android/ndk-version.h>
 #endif
+#if __has_include(<android/llndk-versioning.h>)
+#include <android/llndk-versioning.h>
+#endif
