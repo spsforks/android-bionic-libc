@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10d97792_c8f378a9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-28T21:18:02Z",
+      "side": 1,
+      "message": "`__BIONIC_DEPRECATED_PAGE_SIZE_MACRO`\n\nthis comment as written is very misleading, being the opposite of anything you\u0027d be likely to be caught doing :-)",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "3fccc360e6166e3c4ad61d97f7dbc333a8b42871",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
