@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d3f7d269_0c0b3226",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-02-28T10:37:51Z",
+      "side": 1,
+      "message": "This is something new with the llndk finalization in Q2.\nWe have many new APIs added in VIC but available to llndk. (https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/libc.map.txt;l\u003d1587) They are guarded with `__INTRODUCED_IN(35)` (https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/include/android/crash_detail.h;drc\u003d63df50e101a712f728fcf7e94bcdfb898dcd7c19;l\u003d84)\nBut still they must be available to vendor libs in Q2 which is still 34.\n\nIn the vendor API surface, `__INTRODUCED_IN` must be ignored but `__INTRODUCED_IN_LLNDK` must work instead.\n\nWithout including `\u003candroid/llndk-versioning.h\u003e` to `\u003csys/cdefs.h\u003e`, all vendor available libraries using `__INTRODUCED_IN` must manually include `\u003candroid/llndk-versioning.h\u003e` to their header files along with `\u003csys/cdefs.h\u003e`.\nThat includes many header files in bionic.\n\nThis change is for libc not only as a provider of the `\u003candroid/llndk-versioning.h\u003e` but also as a user of the `\u003candroid/llndk-versioning.h\u003e`.",
+      "parentUuid": "e5286df0_8fe264db",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
