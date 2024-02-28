@@ -50,3 +50,39 @@
   <args>AT_MULTI_PAGE_SIZES</args>
 </fn>
 
+<!-- mprotect tests -->
+<fn>
+  <name>BM_syscall_mprotect_read_write_to_read_only</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mprotect_read_write_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mprotect_read_write_to_write_only</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mprotect_read_only_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mprotect_read_only_to_write_only</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mprotect_write_only_to_read_only</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mprotect_write_only_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
