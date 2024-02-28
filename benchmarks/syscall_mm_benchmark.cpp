@@ -176,7 +176,7 @@ static void BM_syscall_mmap_anon_none_fixed(benchmark::State& state) {
 BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_none_fixed, "AT_All_PAGE_SIZES");
 
 // file mmap
-static void BM_syscall_mmap_file_rd_priv(benchmark::State& state) {
+static void BM_syscall_mmap_file_r_priv(benchmark::State& state) {
   struct MmapParams params = {
       .prot = PROT_READ,
       .flags = MAP_PRIVATE,
@@ -185,7 +185,7 @@ static void BM_syscall_mmap_file_rd_priv(benchmark::State& state) {
 
   MmapFileBenchmark(state, params, params.size, 0);
 }
-BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_file_rd_priv, "AT_All_PAGE_SIZES");
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_file_r_priv, "AT_All_PAGE_SIZES");
 
 static void BM_syscall_mmap_file_rw_shared(benchmark::State& state) {
   struct MmapParams params = {
@@ -307,3 +307,113 @@ static void BM_syscall_mmap_anon_madvise_free(benchmark::State& state) {
   MadviseBenchmark(state, params, MADV_FREE);
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_madvise_free, "AT_MULTI_PAGE_SIZES");
+
+void MprotectBenchmark(benchmark::State& state, const struct MmapParams& params,
+                       int mprotect_prot) {
+  void* addr = mmap(nullptr, params.size, params.prot, params.flags, 0, 0);
+  if (addr == MAP_FAILED) {
+    state.SkipWithError(android::base::StringPrintf("mmap failed: %m"));
+    return;
+  }
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    /*
+     * Guarantee that physical memory pages are allocated for this region to prevent
+     * segmentation fault when using mprotect to change permissions.
+     */
+    if (params.prot & PROT_WRITE) {
+      MakeAllocationResident(addr, params.size, page_sz);
+    }
+    state.ResumeTiming();
+
+    if (mprotect(addr, params.size, mprotect_prot) != 0) {
+      state.SkipWithError(android::base::StringPrintf("mprotect failed: %m"));
+      break;
+    }
+
+    state.PauseTiming();
+    // Revert back to the original protection
+    int res = mprotect(addr, params.size, params.prot);
+    state.ResumeTiming();
+    if (res != 0) {
+      state.SkipWithError(
+          android::base::StringPrintf("mprotect failed to revert to original prot: %m"));
+      break;
+    }
+  }
+
+  if (munmap(addr, params.size) != 0) {
+    state.SkipWithError(android::base::StringPrintf("munmap failed: %m"));
+  }
+}
+
+static void BM_syscall_mmap_anon_mprotect_rw_to_r(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_READ);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_rw_to_r, "AT_All_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mprotect_rw_to_none(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_NONE);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_rw_to_none, "AT_All_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mprotect_rw_to_w(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_WRITE);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_rw_to_w, "AT_All_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mprotect_r_to_none(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_NONE);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_r_to_none, "AT_All_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mprotect_r_to_w(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_WRITE);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_r_to_w, "AT_All_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mprotect_w_to_r(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_READ);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_w_to_r, "AT_All_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mprotect_w_to_none(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MprotectBenchmark(state, params, PROT_NONE);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mprotect_w_to_none, "AT_All_PAGE_SIZES");
