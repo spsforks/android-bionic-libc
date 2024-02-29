@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cc755a5_3f43a3a2",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-29T00:06:07Z",
+      "side": 1,
+      "message": "move this to the only scope where it\u0027s used",
+      "revId": "2282b9ba83fd4cd7aa8239510ce43e44ace0f064",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dde7174_b8e082ce",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-29T00:06:07Z",
+      "side": 1,
+      "message": "you have a std::string, and you\u0027re calling a function that wants a std::string --- calling c_str() first is a pessimization.\n\nyou probably actually just want this:\n```\nstate.SkipWithError(android::base::StringPrintf(\"mprotect failed: %m\"));\n```",
+      "range": {
+        "startLine": 41,
+        "startChar": 78,
+        "endLine": 41,
+        "endChar": 83
+      },
+      "revId": "2282b9ba83fd4cd7aa8239510ce43e44ace0f064",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
