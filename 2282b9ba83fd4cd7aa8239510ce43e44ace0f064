@@ -83,6 +83,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "95896b8c_7cbe6012",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-02-29T19:12:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92dbea57_4e4a5b90",
+      "revId": "2282b9ba83fd4cd7aa8239510ce43e44ace0f064",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1dde7174_b8e082ce",
@@ -96,6 +114,30 @@
       "writtenOn": "2024-02-29T00:06:07Z",
       "side": 1,
       "message": "you have a std::string, and you\u0027re calling a function that wants a std::string --- calling c_str() first is a pessimization.\n\nyou probably actually just want this:\n```\nstate.SkipWithError(android::base::StringPrintf(\"mprotect failed: %m\"));\n```",
+      "range": {
+        "startLine": 41,
+        "startChar": 78,
+        "endLine": 41,
+        "endChar": 83
+      },
+      "revId": "2282b9ba83fd4cd7aa8239510ce43e44ace0f064",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6fa91da_a71122f9",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-02-29T19:12:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dde7174_b8e082ce",
       "range": {
         "startLine": 41,
         "startChar": 78,
@@ -131,6 +173,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "905d231d_fed0d67a",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-02-29T19:12:47Z",
+      "side": 1,
+      "message": "We are mapping and unmapping once per `MprotectBenchmarkImpl()` call, not per loop. \n\nIf we do not revert back to original protection, then this memory address will keep the new prot flags on the following loops.",
+      "parentUuid": "4711a365_3d6d4322",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 5
+      },
+      "revId": "2282b9ba83fd4cd7aa8239510ce43e44ace0f064",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb1459f5_41164ee7",
         "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
         "patchSetId": 1
@@ -142,6 +208,30 @@
       "writtenOn": "2024-02-29T01:42:37Z",
       "side": 1,
       "message": "Please add a comment explaining why we need to populate the region for PROT_WRITE case.",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 63,
+        "endChar": 31
+      },
+      "revId": "2282b9ba83fd4cd7aa8239510ce43e44ace0f064",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0cf8540d_137d9cde",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-02-29T19:12:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb1459f5_41164ee7",
       "range": {
         "startLine": 63,
         "startChar": 2,
