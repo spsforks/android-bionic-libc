@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90f86d5a_0fb073de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-02-29T01:45:46Z",
+      "side": 1,
+      "message": "obviously this doesn\u0027t actually fix anything yet (and i can\u0027t easily fix this until trunk stable gets out of my way, because the soft hyphen change will break the \"CTS 14 tested on main\" combination), but i thought i should have someone who actually knows what they\u0027re talking about check the choseong filler case over before i even look at making the tests pass :-)",
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
