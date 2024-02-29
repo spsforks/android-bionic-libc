@@ -16,6 +16,52 @@
       "message": "obviously this doesn\u0027t actually fix anything yet (and i can\u0027t easily fix this until trunk stable gets out of my way, because the soft hyphen change will break the \"CTS 14 tested on main\" combination), but i thought i should have someone who actually knows what they\u0027re talking about check the choseong filler case over before i even look at making the tests pass :-)",
       "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c21845d3_4177789c",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-02-29T02:14:57Z",
+      "side": 1,
+      "message": "I didn\u0027t know that 중성 and 종성 have width of 0, though it sounds right. Is this the same on other platforms like Windows? Is there an authoritative source?",
+      "range": {
+        "startLine": 1091,
+        "startChar": 0,
+        "endLine": 1101,
+        "endChar": 63
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e224791b_8e838925",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-02-29T02:14:57Z",
+      "side": 1,
+      "message": "It\u0027s usually ㅠㅠ not ㅜㅜ :)",
+      "range": {
+        "startLine": 1172,
+        "startChar": 2,
+        "endLine": 1172,
+        "endChar": 30
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
