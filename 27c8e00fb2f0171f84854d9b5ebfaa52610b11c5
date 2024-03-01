@@ -88,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1f77414_47612d41",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-03-01T07:03:32Z",
+      "side": 1,
+      "message": "I don\u0027t have a Windows PC. But https://util.unicode.org/UnicodeJsps/character.jsp?a\u003d115f\u0026B1\u003dShow from unicode.org seems authoritative. \n\nThe choseong filler is defined to be Wide, whereas the jungseong and jongseong characters are Neural (which seems to mean size 0).",
+      "parentUuid": "e276c5fb_057dcf85",
+      "range": {
+        "startLine": 1091,
+        "startChar": 0,
+        "endLine": 1101,
+        "endChar": 63
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e224791b_8e838925",
@@ -125,6 +149,30 @@
       "side": 1,
       "message": "yeah, but i thought passing a string to wcswidth() is less obvious that passing a single codepoint to wcwidth(). i\u0027ll change the comments to \"(Half a) ...\" to be strictly correct though!\n\n(if you have better examples, let me know. given what only just sank in yesterday, causing me to add the comment directly above -- that the IME uses _this_ Unicode block to represent \"i screwed up while typing\" rather than a \"degenerate\" chosong-jungseong-jongseong combination -- maybe i should just use \"here\u0027s what you get if you mistype something\" as the example here?)",
       "parentUuid": "e224791b_8e838925",
+      "range": {
+        "startLine": 1172,
+        "startChar": 2,
+        "endLine": 1172,
+        "endChar": 30
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a4f591e_b88f455f",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-03-01T07:03:32Z",
+      "side": 1,
+      "message": "yeah, I didn\u0027t mean to use a string (the two characters). I just wanted to say that ㅠㅠ is much more common than ㅜㅜ as a crying emoticon. sorry, I didn\u0027t want to take seriously.\n\nBy the way, characters in this block (Hangul Compat Jamo) don\u0027t represent mistypes. There are some uses of standalone jamo characters.",
+      "parentUuid": "da98a07f_3edd836d",
       "range": {
         "startLine": 1172,
         "startChar": 2,
