@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3be2f6cf_59ed11be",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-01T08:19:11Z",
+      "side": 1,
+      "message": "I assume I need a \u0027/\u0027... I had cribbed from sys_thread_properties_test.cpp, but it looks like that file isn\u0027t actually being compiled?",
+      "revId": "b9d5359dfcd11c64bb799f4854dad338ce364138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
