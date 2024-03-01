@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5265a8fd_0fa5081b",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1087,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-01T00:33:52Z",
+      "side": 1,
+      "message": "(if i\u0027m going to reference it, i should probably link to https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c directly.)",
+      "range": {
+        "startLine": 1087,
+        "startChar": 10,
+        "endLine": 1087,
+        "endChar": 42
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c21845d3_4177789c",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 2
@@ -31,6 +54,30 @@
       "writtenOn": "2024-02-29T02:14:57Z",
       "side": 1,
       "message": "I didn\u0027t know that 중성 and 종성 have width of 0, though it sounds right. Is this the same on other platforms like Windows? Is there an authoritative source?",
+      "range": {
+        "startLine": 1091,
+        "startChar": 0,
+        "endLine": 1101,
+        "endChar": 63
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e276c5fb_057dcf85",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-01T00:33:52Z",
+      "side": 1,
+      "message": "i\u0027ve only tested on other unixes (but i\u0027ll add a comment to that effect). as far as i can tell (from reading every part of the Unicode 15.0 standard that references \"Hangul\"[1]), the Unicode standard says nothing about widths. in part because they\u0027re a bit more sophisticated than POSIX, and realize just how complicated the problem actually is[2].\n\nthis is also why i can\u0027t just \"ask icu4c\". much of bionic\u0027s i18n stuff is like that (the \"wide\" variants of all the \u003cctype.h\u003e functions, for example), but for wcwidth() i end up asking a bunch of different questions and trying to come up with a reasonable top-level answer based on icu4c\u0027s responses to my lower-level questions: https://source.corp.google.com/h/android/platform/superproject/main/+/main:bionic/libc/bionic/wcwidth.cpp?q\u003dfile:bionic%20file:wcwidth\u0026sq\u003drepo:android%2Fplatform%2Fsuperproject%2Fmain%20b:main%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\nif you happen to be a Windows user and curious, here\u0027s all i used for testing on macOS/glibc:\n```\n#include \u003clocale.h\u003e\n#include \u003cstdio.h\u003e\n#include \u003cstdlib.h\u003e\n#include \u003cwchar.h\u003e\nint main(int argc, char* argv[]) {\n setlocale(LC_ALL, \"\");\n int cp \u003d strtol(argv[1], NULL, 0);\n printf(\"u+%04x width\u003d%d\\n\", cp, wcwidth(cp));\n return 0;\n}\n```\n\n____\n1. they\u0027re inconsistent with their romanization --- all three of the systems i\u0027ve heard of are used!\n2. https://harfbuzz.github.io/",
+      "parentUuid": "c21845d3_4177789c",
       "range": {
         "startLine": 1091,
         "startChar": 0,
@@ -54,6 +101,30 @@
       "writtenOn": "2024-02-29T02:14:57Z",
       "side": 1,
       "message": "It\u0027s usually ㅠㅠ not ㅜㅜ :)",
+      "range": {
+        "startLine": 1172,
+        "startChar": 2,
+        "endLine": 1172,
+        "endChar": 30
+      },
+      "revId": "27c8e00fb2f0171f84854d9b5ebfaa52610b11c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da98a07f_3edd836d",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-01T00:33:52Z",
+      "side": 1,
+      "message": "yeah, but i thought passing a string to wcswidth() is less obvious that passing a single codepoint to wcwidth(). i\u0027ll change the comments to \"(Half a) ...\" to be strictly correct though!\n\n(if you have better examples, let me know. given what only just sank in yesterday, causing me to add the comment directly above -- that the IME uses _this_ Unicode block to represent \"i screwed up while typing\" rather than a \"degenerate\" chosong-jungseong-jongseong combination -- maybe i should just use \"here\u0027s what you get if you mistype something\" as the example here?)",
+      "parentUuid": "e224791b_8e838925",
       "range": {
         "startLine": 1172,
         "startChar": 2,
