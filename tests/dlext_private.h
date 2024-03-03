@@ -32,7 +32,6 @@ __BEGIN_DECLS
 extern bool android_init_anonymous_namespace(const char* shared_libs_sonames,
                                              const char* library_search_path);
 
-
 enum {
   /* A regular namespace is the namespace with a custom search path that does
    * not impose any restrictions on the location of native libraries.
@@ -58,11 +57,13 @@ enum {
 
   /* This flag instructs linker to enable exempt-list workaround for the namespace.
    * See http://b/26394120 for details.
+   *
+   * Starting with api level 35 exempt-list is disable and this flag does nothing.
    */
   ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED = 0x08000000,
 
-  ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED = ANDROID_NAMESPACE_TYPE_SHARED |
-                                           ANDROID_NAMESPACE_TYPE_ISOLATED,
+  ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED =
+      ANDROID_NAMESPACE_TYPE_SHARED | ANDROID_NAMESPACE_TYPE_ISOLATED,
 };
 
 /*

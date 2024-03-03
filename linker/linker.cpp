@@ -42,7 +42,6 @@
 #include <unistd.h>
 
 #include <iterator>
-#include <new>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -175,15 +174,6 @@ CFIShadowWriter* get_cfi_shadow() {
   return &g_cfi_shadow;
 }
 
-static bool is_system_library(const std::string& realpath) {
-  for (const auto& dir : g_default_namespace.get_default_library_paths()) {
-    if (file_is_in_dir(realpath, dir)) {
-      return true;
-    }
-  }
-  return false;
-}
-
 // Checks if the file exists and not a directory.
 static bool file_exists(const char* path) {
   struct stat s;
@@ -208,65 +198,6 @@ static std::string resolve_soname(const std::string& name) {
   // in DT_NEEDED list.
   return basename(name.c_str());
 }
-
-static bool maybe_accessible_via_namespace_links(android_namespace_t* ns, const char* name) {
-  std::string soname = resolve_soname(name);
-  for (auto& ns_link : ns->linked_namespaces()) {
-    if (ns_link.is_accessible(soname.c_str())) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-// TODO(dimitry): The exempt-list is a workaround for http://b/26394120 ---
-// gradually remove libraries from this list until it is gone.
-static bool is_exempt_lib(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
-  static const char* const kLibraryExemptList[] = {
-    "libandroid_runtime.so",
-    "libbinder.so",
-    "libcrypto.so",
-    "libcutils.so",
-    "libexpat.so",
-    "libgui.so",
-    "libmedia.so",
-    "libnativehelper.so",
-    "libssl.so",
-    "libstagefright.so",
-    "libsqlite.so",
-    "libui.so",
-    "libutils.so",
-    nullptr
-  };
-
-  // If you're targeting N, you don't get the exempt-list.
-  if (get_application_target_sdk_version() >= 24) {
-    return false;
-  }
-
-  // if the library needed by a system library - implicitly assume it
-  // is exempt unless it is in the list of shared libraries for one or
-  // more linked namespaces
-  if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
-    return !maybe_accessible_via_namespace_links(ns, name);
-  }
-
-  // if this is an absolute path - make sure it points to /system/lib(64)
-  if (name[0] == '/' && dirname(name) == kSystemLibDir) {
-    // and reduce the path to basename
-    name = basename(name);
-  }
-
-  for (size_t i = 0; kLibraryExemptList[i] != nullptr; ++i) {
-    if (strcmp(name, kLibraryExemptList[i]) == 0) {
-      return true;
-    }
-  }
-
-  return false;
-}
-// END OF WORKAROUND
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -1222,45 +1153,23 @@ static bool load_library(android_namespace_t* ns,
   // do not check accessibility using realpath if fd is located on tmpfs
   // this enables use of memfd_create() for apps
   if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
-    // TODO(dimitry): workaround for http://b/26394120 - the exempt-list
+    // do not load libraries if they are not accessible for the specified namespace.
+    const char* needed_or_dlopened_by =
+        task->get_needed_by() == nullptr ? "(unknown)" : task->get_needed_by()->get_realpath();
 
-    const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
-    if (is_exempt_lib(ns, name, needed_by)) {
-      // print warning only if needed by non-system library
-      if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
-        const soinfo* needed_or_dlopened_by = task->get_needed_by();
-        const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
-                                                      needed_or_dlopened_by->get_realpath();
-        DL_WARN_documented_change(24,
-                                  "private-api-enforced-for-api-level-24",
-                                  "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
-                                  "is not accessible by namespace \"%s\"",
-                                  name, realpath.c_str(), sopath, ns->get_name());
-        add_dlwarning(sopath, "unauthorized access to",  name);
-      }
-    } else {
-      // do not load libraries if they are not accessible for the specified namespace.
-      const char* needed_or_dlopened_by = task->get_needed_by() == nullptr ?
-                                          "(unknown)" :
-                                          task->get_needed_by()->get_realpath();
+    DL_OPEN_ERR(
+        "library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
+        name, needed_or_dlopened_by, ns->get_name());
 
-      DL_OPEN_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
-             name, needed_or_dlopened_by, ns->get_name());
-
-      // do not print this if a library is in the list of shared libraries for linked namespaces
-      if (!maybe_accessible_via_namespace_links(ns, name)) {
-        PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
-              " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
-              " permitted_paths=\"%s\"]",
-              name, realpath.c_str(),
-              needed_or_dlopened_by,
-              ns->get_name(),
-              android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
-              android::base::Join(ns->get_default_library_paths(), ':').c_str(),
-              android::base::Join(ns->get_permitted_paths(), ':').c_str());
-      }
-      return false;
-    }
+    PRINT(
+        "library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
+        " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
+        " permitted_paths=\"%s\"]",
+        name, realpath.c_str(), needed_or_dlopened_by, ns->get_name(),
+        android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+        android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+        android::base::Join(ns->get_permitted_paths(), ':').c_str());
+    return false;
   }
 
   soinfo* si = soinfo_alloc(ns, realpath.c_str(), &file_stat, file_offset, rtld_flags);
@@ -1481,23 +1390,6 @@ static bool find_library_internal(android_namespace_t* ns,
                    true /* search_linked_namespaces */)) {
     return true;
   }
-
-  // TODO(dimitry): workaround for http://b/26394120 (the exempt-list)
-  if (ns->is_exempt_list_enabled() && is_exempt_lib(ns, task->get_name(), task->get_needed_by())) {
-    // For the libs in the exempt-list, switch to the default namespace and then
-    // try the load again from there. The library could be loaded from the
-    // default namespace or from another namespace (e.g. runtime) that is linked
-    // from the default namespace.
-    LD_LOG(kLogDlopen,
-           "find_library_internal(ns=%s, task=%s): Exempt system library - trying namespace %s",
-           ns->get_name(), task->get_name(), g_default_namespace.get_name());
-    ns = &g_default_namespace;
-    if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
-                     true /* search_linked_namespaces */)) {
-      return true;
-    }
-  }
-  // END OF WORKAROUND
 
   // if a library was not found - look into linked namespaces
   // preserve current dlerror in the case it fails.
@@ -2493,7 +2385,6 @@ android_namespace_t* create_namespace(const void* caller_addr,
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
-  ns->set_exempt_list_enabled((type & ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED) != 0);
   ns->set_also_used_as_anonymous((type & ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
