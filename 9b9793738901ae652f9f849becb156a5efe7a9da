@@ -69,6 +69,24 @@
       "parentUuid": "35dc9d28_e3ef1cde",
       "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b48532f_1c86a352",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-04T16:23:06Z",
+      "side": 1,
+      "message": "(you have to look for the \"feature bug\" in the right-hand column, and look at that: http://b/297603927 [i only learned this recently, and will likely have forgotten it again by next year!])",
+      "parentUuid": "f84084f4_d564aafc",
+      "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
