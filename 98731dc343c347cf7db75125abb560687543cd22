@@ -87,6 +87,24 @@
       "parentUuid": "0906f665_6edf589e",
       "revId": "98731dc343c347cf7db75125abb560687543cd22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d058a89d_7a5dc40a",
+        "filename": "tests/libs/elftls_dtv_resize_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-04T23:49:07Z",
+      "side": 1,
+      "message": "\u003e Maybe submit this CL as-is, but follow it up by implementing the TODO in async_safe/CHECK.h, then removing tests/libs/CHECK.h, and switching this test to using CHECK*?\n\nWhile the dtv_resize test is Bionic-only, I suppose tests/libs/CHECK.h should work with other libcs.",
+      "parentUuid": "0cba5c53_0a7e5cc8",
+      "revId": "98731dc343c347cf7db75125abb560687543cd22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
