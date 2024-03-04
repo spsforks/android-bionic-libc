@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0906f665_6edf589e",
+        "filename": "tests/libs/elftls_dtv_resize_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-04T17:11:43Z",
+      "side": 1,
+      "message": "should all this stuff go in (/replace) CHECK.h?",
+      "revId": "98731dc343c347cf7db75125abb560687543cd22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
