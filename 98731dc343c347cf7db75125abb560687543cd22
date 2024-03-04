@@ -123,6 +123,24 @@
       "parentUuid": "d058a89d_7a5dc40a",
       "revId": "98731dc343c347cf7db75125abb560687543cd22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0947e202_1f743e1c",
+        "filename": "tests/libs/elftls_dtv_resize_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-04T23:53:29Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "b7a3f3bc_0af6d0c0",
+      "revId": "98731dc343c347cf7db75125abb560687543cd22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
