@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cae55546_2d6bdc92",
+        "filename": "tests/sys_thread_properties_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-04T21:49:26Z",
+      "side": 1,
+      "message": "AFAIK this needs to be:\n```suggestion\n  std::string helper \u003d GetTestlibRoot() + \"/tls_properties_helper\";\n```\n\nIc4257cb4104ff558326df2363730acd20464b051 moved the helper binaries into the same directory, making it unnecessary to repeat `/tls_properties_helper`. AFAICT, though, the initial `\u0027/\u0027` was always necessary.",
+      "revId": "b9b87e1521ce9b53f56f5ede02bb43df358aae55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0b702bf_a4dc6f80",
+        "filename": "tests/sys_thread_properties_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-04T21:49:26Z",
+      "side": 1,
+      "message": "```suggestion\n  std::string helper \u003d GetTestlibRoot() + \"/thread_exit_cb_helper\";\n```",
+      "revId": "b9b87e1521ce9b53f56f5ede02bb43df358aae55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
