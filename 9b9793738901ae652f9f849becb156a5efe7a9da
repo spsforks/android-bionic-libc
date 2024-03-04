@@ -16,6 +16,23 @@
       "message": "news to me ... the ndk still supports 21, no?",
       "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1130b620_a9b9a9dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2024-03-04T15:40:56Z",
+      "side": 1,
+      "message": "C-0-8 says so.. but I guess this is for installing new apps. It may still be the case that apps targeting previous api levels have been installed before android upgrade can still target prior api levels.",
+      "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
