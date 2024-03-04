@@ -16,6 +16,24 @@
       "message": "I assume I need a \u0027/\u0027... I had cribbed from sys_thread_properties_test.cpp, but it looks like that file isn\u0027t actually being compiled?",
       "revId": "b9d5359dfcd11c64bb799f4854dad338ce364138",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1e3e9d7_ca312ced",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-04T18:23:35Z",
+      "side": 1,
+      "message": "not only that, but GetTestlibRoot() [with its weird orthography] is wrong in that file, so it\u0027s never even been compiled :-(",
+      "parentUuid": "3be2f6cf_59ed11be",
+      "revId": "b9d5359dfcd11c64bb799f4854dad338ce364138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
