@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "200e8f37_2c40758a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-04T15:30:33Z",
+      "side": 1,
+      "message": "news to me ... the ndk still supports 21, no?",
+      "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
