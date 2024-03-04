@@ -69,6 +69,24 @@
       "message": "should all this stuff go in (/replace) CHECK.h?",
       "revId": "98731dc343c347cf7db75125abb560687543cd22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cba5c53_0a7e5cc8",
+        "filename": "tests/libs/elftls_dtv_resize_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-04T23:43:33Z",
+      "side": 1,
+      "message": "Probably? It seems there are a bunch of these macros around? googletest has a family of `EXPECT*`/`ASSERT*` macros, android-base/logging.h defines `CHECK*`, and Bionic defines just `CHECK`, but in two places (tests/libs/CHECK.h and libc/async_safe/include/async_safe/CHECK.h).\n\nThe one in libc/async_safe/include/async_safe/CHECK.h has a TODO comment about expanding the syntax to be more like android-base/logging.h.\n\nI was on the fence about whether I should use the STL for these new ASSERT macros -- I wanted to avoid it but it was convenient for converting an arbitrary argument to a string. It\u0027s not *that* hard to implement a ToString class for a small set of types, though.\n\nMaybe submit this CL as-is, but follow it up by implementing the TODO in async_safe/CHECK.h, then removing tests/libs/CHECK.h, and switching this test to using `CHECK*`?",
+      "parentUuid": "0906f665_6edf589e",
+      "revId": "98731dc343c347cf7db75125abb560687543cd22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
