@@ -51,6 +51,24 @@
       "parentUuid": "1130b620_a9b9a9dd",
       "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f84084f4_d564aafc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2024-03-04T15:58:38Z",
+      "side": 1,
+      "message": "I found this bug https://b.corp.google.com/issues/304348702 do not know which CTS enforces it.\n\nBut yes seems like this change will have to wait 3-5 more years because the requirement only affects new installs.",
+      "parentUuid": "35dc9d28_e3ef1cde",
+      "revId": "9b9793738901ae652f9f849becb156a5efe7a9da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
