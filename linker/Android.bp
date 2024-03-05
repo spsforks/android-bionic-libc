@@ -123,7 +123,11 @@ cc_defaults {
     ],
 
     // We need to access Bionic private headers in the linker.
-    include_dirs: ["bionic/libc"],
+    include_dirs: [
+         "bionic/libc",
+         // For android_filesystem_config.h
+         "system/core/libcutils/include",
+    ],
 }
 
 // ========================================================
