@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f8863408_4c78f9ee",
+        "filename": "linker/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-05T18:23:21Z",
+      "side": 1,
+      "message": "actually, since you\u0027re in linker/Android.bp here you probably don\u0027t want to get this from libc_defaults like grp_pwd.cpp does. so just copy \u0026 paste the comment from there instead.",
+      "parentUuid": "f5e61fe8_fa8b1487",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b66b0b65_62ae81bb",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 9
