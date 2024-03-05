@@ -1184,6 +1184,12 @@ static bool load_library(android_namespace_t* ns,
   }
 
   struct stat file_stat;
+  if ((file_stat.st_mode & 0222) == 0 && get_application_target_sdk_version() >= 35) {
+    __uid_t uid = getuid();
+    if (uid_originates_from_app(uid)) {
+      DL_OPEN_ERR("executable or writable files are not loadable");
+    }
+  }
   if (TEMP_FAILURE_RETRY(fstat(task->get_fd(), &file_stat)) != 0) {
     DL_OPEN_ERR("unable to stat file for the library \"%s\": %s", name, strerror(errno));
     return false;
@@ -2390,6 +2396,13 @@ static bool set_anonymous_namespace(android_namespace_t* ns) {
     return true;
   }
   return false;
+}
+
+static bool uid_originates_from_app(__uid_t uid) {
+  __uid_t app_id = uid % AID_USER_OFFSET;
+  return (app_id >= AID_APP_START && app_id <= AID_APP_END) ||
+         (app_id >= AID_SDK_SANDBOX_PROCESS_START && app_id <= AID_SDK_SANDBOX_PROCESS_END) ||
+         (app_id >= AID_ISOLATED_START && app_id <= AID_ISOLATED_END);
 }
 
 // TODO(b/130388701) remove this. Currently, this is used only for testing
