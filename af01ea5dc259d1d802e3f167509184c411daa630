@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "436e1c30_c1c70f8e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-06T01:43:46Z",
+      "side": 1,
+      "message": "Gentle ping to the owners and inviting @danalbert@google.com for comment.\nBy separating the NDK and LLNDK versioning, libc as an LLNDK also requires the new definitions for `__INTRODUCED_IN` and `__INTRODUCED_IN_LLNDK`.",
+      "parentUuid": "d3f7d269_0c0b3226",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
