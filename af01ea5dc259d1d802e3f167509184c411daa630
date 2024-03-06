@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8843a92d_e8e4c7d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-06T23:18:22Z",
+      "side": 1,
+      "message": "That was the original design to use minor version of clang triple for the quarterly updates since the APIs are anyway backward compatible and we don\u0027t need to split two APIs in this NDK world.\nBut unfortunately that was not agreed.",
+      "parentUuid": "a097d642_28f5a4b2",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
