@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a097d642_28f5a4b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-06T16:15:16Z",
+      "side": 1,
+      "message": "\u003e That includes many header files in bionic.\n\ni think we\u0027ll just _not_ separate the versioning for bionic like this. that\u0027s not really a regression, because vendor code is always \"behind\" anyway.\n\nadding all this extra cruft actively makes Android worse --- life is already too complicated as an app developer having to understand min sdk version and target sdk version and how to write code that works on all the different versions of Android that are out there _especially_ if you want to use anything recent if you happen to be on a recent device. (just that _sentence_ is hard to understand!)\n\nadding _another_ api level that _isn\u0027t relevant to 99.999% of developers_ -- and that the much smaller number of vendors can live without anyway -- just seems like a terrible idea. plenty of downside, and no upside.\n\nwe _really_ need to just switch to the sensible scheme of \"one api level per quarter\", which makes this and many other problems go away, so it seems useful to avoid making another complicated mess (just as we\u0027re getting rid of vndk!) that should be short-lived (just _this_ year, where this hadn\u0027t been thought through) anyway.\n\ni think to the extent this hack _is_ useful, it\u0027s useful for one year (until we do the right thing, with an api level for every shipping set of api changes, like we\u0027ve always had in the past), to a small number of people, for a vanishingly small number of apis (just those that were added _for_ a vendor, really --- because by definition they were already doing okay without the _new_ api!).",
+      "parentUuid": "436e1c30_c1c70f8e",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
