@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e2d738d_2e4c5d08",
+        "filename": "benchmarks/suites/syscall.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T23:38:53Z",
+      "side": 1,
+      "message": "You still need to add all the new `BM_syscall_mmap_anon_mprotect_*` tests here.",
+      "revId": "559ff40bf8fcfd983b93f94d7fef417af36a99e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eca2287f_b59fedb5",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T23:38:53Z",
+      "side": 1,
+      "message": "What\u0027s the reason for this change? Seems unnecessary, not to mention that syscall.xml would have to be updated as well.",
+      "range": {
+        "startLine": 179,
+        "startChar": 12,
+        "endLine": 179,
+        "endChar": 39
+      },
+      "revId": "559ff40bf8fcfd983b93f94d7fef417af36a99e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09da0bc1_32a19cbb",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T23:38:53Z",
+      "side": 1,
+      "message": "I would still prefer to have separate MprotectParams like this:\n```\nstruct MprotectParams {\n  int from_prot;\n  int to_prot;\n  int flags;\n  int64_t size;\n};\n```\nInstead of using a combo of `MmapParams` + `mprotect_prot`.",
+      "range": {
+        "startLine": 311,
+        "startChar": 61,
+        "endLine": 312,
+        "endChar": 40
+      },
+      "revId": "559ff40bf8fcfd983b93f94d7fef417af36a99e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9678b57_512c52ed",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T23:38:53Z",
+      "side": 1,
+      "message": "So, all these mappings are anonymous and none is file-backed. Is that because the time mprotect() takes to do its job does not depend on the type of mapping or we do not use mprotect() with file-backed mappings?",
+      "range": {
+        "startLine": 313,
+        "startChar": 68,
+        "endLine": 313,
+        "endChar": 70
+      },
+      "revId": "559ff40bf8fcfd983b93f94d7fef417af36a99e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
