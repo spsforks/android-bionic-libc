@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0b55025_ecd1740b",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T00:57:49Z",
+      "side": 1,
+      "message": "Why aren\u0027t you encoding this inside MprotectParams? Smth like this:\n\n```\nstruct MprotectParams {\n  int from_prot;\n  int to_prot;\n  int64_t size;\n};\n```\n\nI think it would be much easier to understand when checking all the individual tests.",
+      "range": {
+        "startLine": 34,
+        "startChar": 50,
+        "endLine": 34,
+        "endChar": 63
+      },
+      "revId": "917b7138ed59f6df28384e48a5a662dfe25e212d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64506360_745a3f57",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T00:57:49Z",
+      "side": 1,
+      "message": "The order it Pause/Resume seems to be wrong here. I think you want this instead:\n   \n```\n    if (mprotect(addr, params.size, params.prot) !\u003d 0) {\n      state.SkipWithError(android::base::StringPrintf(\"mprotect failed: %m\"));\n      break;\n    }\n\n    state.PauseTiming();\n    // Revert back to the original protection\n    res \u003d mprotect(addr, params.size, original_prot);\n    state.ResumeTiming();\n    if (res !\u003d 0) {\n      state.SkipWithError(\n          android::base::StringPrintf(\"mprotect failed to revert to original prot: %m\"));\n      break;\n    }\n```",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 5
+      },
+      "revId": "917b7138ed59f6df28384e48a5a662dfe25e212d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e33a734_ffa3311a",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-06T00:57:49Z",
+      "side": 1,
+      "message": "Do you plan on doing this also with file-backed memory as well (MprotectBenchmarkWithFileMmap())?",
+      "range": {
+        "startLine": 52,
+        "startChar": 12,
+        "endLine": 52,
+        "endChar": 41
+      },
+      "revId": "917b7138ed59f6df28384e48a5a662dfe25e212d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
