@@ -890,6 +890,27 @@ bool ElfReader::LoadSegments() {
       memset(reinterpret_cast<void*>(_seg_file_end), 0, zero_fill_len);
     }
 
+    // The zeroing above may zero entire COW pages backing the private mapping.
+    // These are not expected to be used at all, so remove them from the
+    // working set.
+    //
+    //                  |------------- zero_fill_len -----------------|
+    // ---------------------------------------------------------------------
+    //      |           |             |           MADV_PAGEOUT        |
+    // ---------------------------------------------------------------------
+    //      |           |             |                               |
+    //      |     _seg_file_end       |-------Whole COWed Pages ------|
+    //      |                         |
+    //  seg_page_start       page_end(_seg_file_end)
+
+    uint64_t cowed_len = zero_fill_len - (page_size() - page_offset(_seg_file_end));
+
+    if (cowed_len > 0 &&
+        madvise(reinterpret_cast<void*>(_seg_file_end), cowed_len, MADV_PAGEOUT) == -1) {
+      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_PAGEOUT) failed: %m",
+              name_.c_str(), _seg_file_end, cowed_len);
+    }
+
     seg_file_end = page_end(seg_file_end);
 
     // seg_file_end is now the first page address after the file
