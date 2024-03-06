@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b301b1ef_4166d3d6",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-03-06T08:25:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0b55025_ecd1740b",
+      "range": {
+        "startLine": 34,
+        "startChar": 50,
+        "endLine": 34,
+        "endChar": 63
+      },
+      "revId": "917b7138ed59f6df28384e48a5a662dfe25e212d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "64506360_745a3f57",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef8169f3_4f669055",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-03-06T08:25:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64506360_745a3f57",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 5
+      },
+      "revId": "917b7138ed59f6df28384e48a5a662dfe25e212d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e33a734_ffa3311a",
@@ -60,6 +108,30 @@
       "writtenOn": "2024-03-06T00:57:49Z",
       "side": 1,
       "message": "Do you plan on doing this also with file-backed memory as well (MprotectBenchmarkWithFileMmap())?",
+      "range": {
+        "startLine": 52,
+        "startChar": 12,
+        "endLine": 52,
+        "endChar": 41
+      },
+      "revId": "917b7138ed59f6df28384e48a5a662dfe25e212d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fd18cd5_1099d52b",
+        "filename": "benchmarks/syscall_mprotect_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-03-06T08:25:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e33a734_ffa3311a",
       "range": {
         "startLine": 52,
         "startChar": 12,
