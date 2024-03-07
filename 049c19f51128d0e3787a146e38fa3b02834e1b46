@@ -87,6 +87,24 @@
       "parentUuid": "e1c3d54b_0c7b249c",
       "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e7b2eb2_deaced60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-03-07T22:08:03Z",
+      "side": 1,
+      "message": "I don\u0027t think memtag_stack is particularly security sensitive, as it is (at least currently) a debug feature, not meant for production use.",
+      "parentUuid": "17434368_003b1a8c",
+      "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
