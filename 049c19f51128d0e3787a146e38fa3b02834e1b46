@@ -16,6 +16,23 @@
       "message": "I think we might still need a more complete solution to this. But this seems like a good idea regardless of follow-on cls.",
       "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cac8771_27103d6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-03-07T19:13:08Z",
+      "side": 1,
+      "message": "I don\u0027t disapprove of this, but I don\u0027t think it\u0027s an actual fix. We need some actual synchronization to fully resolve this. I can take a look at doing that.",
+      "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
