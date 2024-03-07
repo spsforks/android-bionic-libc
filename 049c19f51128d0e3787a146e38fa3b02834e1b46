@@ -33,6 +33,24 @@
       "message": "I don\u0027t disapprove of this, but I don\u0027t think it\u0027s an actual fix. We need some actual synchronization to fully resolve this. I can take a look at doing that.",
       "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dec2926_353849d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-07T21:28:47Z",
+      "side": 1,
+      "message": "Agreed, my plan was to file a follow-up bug to handle the more generic problem.",
+      "parentUuid": "1cac8771_27103d6d",
+      "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
