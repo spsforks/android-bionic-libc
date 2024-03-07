@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0f74de0b_020bf28d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-03-07T12:57:14Z",
+      "side": 1,
+      "message": "Justin, I think this CL can be abandoned according to our discussion today. API authors having to annotated all NDK APIs added in 24Q3 with INTRODUCED_IN_LLNDK(202504) will be very annoying and looks just wrong. I think NDK and LLNDK should be completely separated starting from 24Q2, which actually reflects the reality; if an NDK API has to be available to the vendor side, it has to be explicitly annotated as such. (there no longer will be automatic inclusion of NDK APIs in LLNDK)\n\nElliott,\n\nI am +100 on \"one api level per quarter\", but wonder whether we (Android) are heading towards there. So, I think the most viable and the least intrusive approach at least at the moment for LLNDK is to have its own API level scheme. The goal here is to make it possible for engineers working on NDK to ignore LLNDK most of the time. They will have to care LLNDK only when they want export an NDK API also to the vendor side. Does it sound right?",
+      "parentUuid": "8843a92d_e8e4c7d5",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
