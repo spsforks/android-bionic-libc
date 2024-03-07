@@ -110,6 +110,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bdc745f5_84e65458",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-07T13:24:42Z",
+      "side": 1,
+      "message": "Let me try the LLNDK API explicit annotation approach.\nBut I am still worried if we can provide all possible LLNDK APIs for the vendor side. I will collect the APIs for aosp and internals.",
+      "parentUuid": "0f74de0b_020bf28d",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
