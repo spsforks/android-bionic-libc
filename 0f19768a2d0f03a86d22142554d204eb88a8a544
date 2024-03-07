@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40e76ab4_0b3c0be2",
+        "filename": "linker/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1944168
+      },
+      "writtenOn": "2024-03-07T14:02:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8863408_4c78f9ee",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b66b0b65_62ae81bb",
@@ -82,6 +100,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c32846a4_012feca9",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1944168
+      },
+      "writtenOn": "2024-03-07T14:02:56Z",
+      "side": 1,
+      "message": "I changed the method name, if you have other suggestions I\u0027m happy to consider them though",
+      "parentUuid": "39c91804_081001ff",
+      "range": {
+        "startLine": 138,
+        "startChar": 12,
+        "endLine": 138,
+        "endChar": 28
+      },
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73200c5e_fa91f7a3",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1944168
+      },
+      "writtenOn": "2024-03-07T14:02:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b66b0b65_62ae81bb",
+      "range": {
+        "startLine": 138,
+        "startChar": 29,
+        "endLine": 138,
+        "endChar": 36
+      },
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d7c9d7e8_46471879",
@@ -95,6 +161,30 @@
       "writtenOn": "2024-02-21T00:05:34Z",
       "side": 1,
       "message": "uid_t",
+      "range": {
+        "startLine": 149,
+        "startChar": 2,
+        "endLine": 149,
+        "endChar": 9
+      },
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d18ccc23_886c7a41",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1944168
+      },
+      "writtenOn": "2024-03-07T14:02:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7c9d7e8_46471879",
       "range": {
         "startLine": 149,
         "startChar": 2,
@@ -122,6 +212,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a557f454_64ecd22a",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1944168
+      },
+      "writtenOn": "2024-03-07T14:02:56Z",
+      "side": 1,
+      "message": "Thanks, done!",
+      "parentUuid": "c72ed533_d1ca750c",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16d07a10_93ca5a95",
@@ -135,6 +243,24 @@
       "writtenOn": "2024-02-21T00:05:34Z",
       "side": 1,
       "message": "linker_get_error_buffer() will have undefined contents here. you need to say _why_ you\u0027re failing this.",
+      "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e631f0ab_dbc9d369",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1944168
+      },
+      "writtenOn": "2024-03-07T14:02:56Z",
+      "side": 1,
+      "message": "The code was changed so this doesn\u0027t apply anymore",
+      "parentUuid": "16d07a10_93ca5a95",
       "revId": "0f19768a2d0f03a86d22142554d204eb88a8a544",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
