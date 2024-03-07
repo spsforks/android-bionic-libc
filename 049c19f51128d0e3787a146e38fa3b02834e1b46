@@ -69,6 +69,24 @@
       "parentUuid": "0dec2926_353849d9",
       "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17434368_003b1a8c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-07T22:06:57Z",
+      "side": 1,
+      "message": "Do you mean move the variable being used here out of the globals and put it somewhere else?\n\nI do think that would make it easier to handle, but it would, theoretically, be less secure. My understanding that this was done to make it much harder to overwrite these variables and cause problems. However, changing this variable doesn\u0027t seem really attackable, so if we just put the variable somewhere else (that is always rw), that would probably be fine too.",
+      "parentUuid": "e1c3d54b_0c7b249c",
+      "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
