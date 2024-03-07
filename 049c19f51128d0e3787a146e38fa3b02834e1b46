@@ -51,6 +51,24 @@
       "parentUuid": "1cac8771_27103d6d",
       "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1c3d54b_0c7b249c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-03-07T21:31:26Z",
+      "side": 1,
+      "message": "I think the easiest solution would be to pull this out of the WriteProtected, WDYT?",
+      "parentUuid": "0dec2926_353849d9",
+      "revId": "049c19f51128d0e3787a146e38fa3b02834e1b46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
