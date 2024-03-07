@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d6fb4c2_13a244f9",
+        "filename": "benchmarks/ctype_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2024-03-07T02:35:01Z",
+      "side": 1,
+      "message": "nit: I think in theory we could declare these:\n\n```\nconst volatile int A \u003d \u0027A\u0027;\n```\n\nand such to make sure the value never gets changed, but I _think_ it still wouldn\u0027t get optimized away.\n\nBut mostly because I think it would be amusing to mess with future readers with the \"const volatile\" declarations.",
+      "revId": "457dee1a3339aac5812f61cac82794703164afb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
