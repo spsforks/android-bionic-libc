@@ -180,7 +180,10 @@ void __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
   // If process doesn't have MTE enabled, we don't need to do anything.
   if (!__libc_globals->memtag) return;
-  bool prev = true;
+  // In order to limit the number of times mutate is called, do a load
+  // first then the mutate if necessary.
+  bool prev = atomic_load(&__libc_globals->memtag_stack);
+  if (prev) return;
   __libc_globals.mutate(
       [&prev](libc_globals* globals) { prev = atomic_exchange(&globals->memtag_stack, true); });
   if (prev) return;
