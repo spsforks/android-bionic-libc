@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b43d3505_160c67c5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-07T02:34:15Z",
+      "side": 1,
+      "message": "so about that... doing some more testing i noticed that if anything the benchmark \"results\" were suspiciously indicative of \"how hot is the phone\"? see https://android-review.git.corp.google.com/c/platform/bionic/+/2993650 for a fix to the benchmarks.\n\nusing _those_ benchmarks, there\u0027s really no difference between the two implementations, despite the smaller code sequences emitted with this change.\n\ni haven\u0027t tried mokey yet (i got a replacement, but it\u0027s still in the box), so i\u0027ll give it a go in case its cores are helped, but at this point it\u0027s looking like the answer to your original \"aren\u0027t branches more expensive than conditional instructions?\" is \"no, apparently not, at least not for recent cores\".",
+      "range": {
+        "startLine": 39,
+        "startChar": 48,
+        "endLine": 40,
+        "endChar": 30
+      },
+      "revId": "aca8bca8ab91e7d2fec89d4d6b05bba28d493504",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
