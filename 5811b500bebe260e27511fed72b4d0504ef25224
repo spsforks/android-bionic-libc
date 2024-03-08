@@ -88,6 +88,24 @@
       "parentUuid": "c8b2e21f_2a933b8d",
       "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "634712ad_d72da94e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2024-03-08T11:06:58Z",
+      "side": 1,
+      "message": "@enh@google.com\nAs we don\u0027t have access to logs so we can\u0027t analyze it further, we\u0027ve discussed with ChromeOS team at Intel and they also don\u0027t have any support for only X86.\n\nyou said that the failures may unrelated to our change. So can we proceed with only 64 bit patch ?",
+      "parentUuid": "f4bc2942_f872538b",
+      "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
