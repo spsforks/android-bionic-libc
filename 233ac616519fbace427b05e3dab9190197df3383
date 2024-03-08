@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bd749a0_9ee701d5",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-03-08T21:51:16Z",
+      "side": 1,
+      "message": "Removing the `*_to_wr` test. From findings we don\u0027t see protection being set to `write-only`. `PROC_WRITE` is always accompanied by a `PROC_READ`.",
+      "range": {
+        "startLine": 380,
+        "startChar": 12,
+        "endLine": 380,
+        "endChar": 50
+      },
+      "revId": "233ac616519fbace427b05e3dab9190197df3383",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
