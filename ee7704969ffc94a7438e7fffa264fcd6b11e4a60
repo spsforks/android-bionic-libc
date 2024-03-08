@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23ca5693_bc133f62",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-08T16:57:51Z",
+      "side": 1,
+      "message": "Does Android heavily use all these configurations? If not then we should not benchmark all possible combinations, only the ones which are typical. Otherwise we will be wasting test time.",
+      "revId": "ee7704969ffc94a7438e7fffa264fcd6b11e4a60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19cc96d5_3f78eb99",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-08T16:57:51Z",
+      "side": 1,
+      "message": "You keep carrying this error. rw/rd/wr are widely used, so let\u0027s keep them that way",
+      "range": {
+        "startLine": 185,
+        "startChar": 12,
+        "endLine": 185,
+        "endChar": 39
+      },
+      "revId": "ee7704969ffc94a7438e7fffa264fcd6b11e4a60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4e3e4a7_10a6d456",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-08T16:57:51Z",
+      "side": 1,
+      "message": "BM_syscall_mmap_anon_mprotect_rw_to_rd",
+      "range": {
+        "startLine": 360,
+        "startChar": 48,
+        "endLine": 360,
+        "endChar": 49
+      },
+      "revId": "ee7704969ffc94a7438e7fffa264fcd6b11e4a60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84f9e959_1907ddf7",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-08T16:57:51Z",
+      "side": 1,
+      "message": "BM_syscall_mmap_anon_mprotect_rw_to_wr",
+      "range": {
+        "startLine": 380,
+        "startChar": 12,
+        "endLine": 380,
+        "endChar": 49
+      },
+      "revId": "ee7704969ffc94a7438e7fffa264fcd6b11e4a60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "479a166d_23efb7ee",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2024-03-08T16:57:51Z",
+      "side": 1,
+      "message": "BM_syscall_mmap_anon_mprotect_rd_to_none\n\nsimilar naming in all other cases",
+      "range": {
+        "startLine": 390,
+        "startChar": 12,
+        "endLine": 390,
+        "endChar": 51
+      },
+      "revId": "ee7704969ffc94a7438e7fffa264fcd6b11e4a60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
