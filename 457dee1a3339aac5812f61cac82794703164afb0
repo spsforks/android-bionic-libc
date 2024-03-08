@@ -16,6 +16,24 @@
       "message": "nit: I think in theory we could declare these:\n\n```\nconst volatile int A \u003d \u0027A\u0027;\n```\n\nand such to make sure the value never gets changed, but I _think_ it still wouldn\u0027t get optimized away.\n\nBut mostly because I think it would be amusing to mess with future readers with the \"const volatile\" declarations.",
       "revId": "457dee1a3339aac5812f61cac82794703164afb0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c390fd11_068a7ffa",
+        "filename": "benchmarks/ctype_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-08T01:04:17Z",
+      "side": 1,
+      "message": "funnily enough, i\u0027m not trying to confuse people --- especially in a file where i\u0027ve already confused myself into uselessness :-)",
+      "parentUuid": "1d6fb4c2_13a244f9",
+      "revId": "457dee1a3339aac5812f61cac82794703164afb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
