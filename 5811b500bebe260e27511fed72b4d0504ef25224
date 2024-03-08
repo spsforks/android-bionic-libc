@@ -106,6 +106,24 @@
       "parentUuid": "f4bc2942_f872538b",
       "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "759c33e2_da054512",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-08T16:12:36Z",
+      "side": 1,
+      "message": "no, they\u0027re clearly related to this change (because they only cause boot failures on intel hardware, and only with the 32-bit parts of the change), and since we\u0027ve had a lot of trouble with intel optimizations in the past, i\u0027m not comfortable taking a patch when we don\u0027t understand why it causes boot failures (given that the 64-bit variant is basically the same change).",
+      "parentUuid": "634712ad_d72da94e",
+      "revId": "5811b500bebe260e27511fed72b4d0504ef25224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
