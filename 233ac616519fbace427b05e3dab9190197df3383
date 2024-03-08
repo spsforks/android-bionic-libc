@@ -22,6 +22,30 @@
       },
       "revId": "233ac616519fbace427b05e3dab9190197df3383",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f476482_6153b780",
+        "filename": "benchmarks/syscall_mm_benchmark.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1956645
+      },
+      "writtenOn": "2024-03-08T22:03:25Z",
+      "side": 1,
+      "message": "Removed the `PROT_WRITE` only benchmarks to align with findings.",
+      "parentUuid": "8bd749a0_9ee701d5",
+      "range": {
+        "startLine": 380,
+        "startChar": 12,
+        "endLine": 380,
+        "endChar": 50
+      },
+      "revId": "233ac616519fbace427b05e3dab9190197df3383",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
