@@ -2866,10 +2866,10 @@ bool soinfo::prelink_image() {
 
   TlsSegment tls_segment;
   if (__bionic_get_tls_segment(phdr, phnum, load_bias, &tls_segment)) {
-    if (!__bionic_check_tls_alignment(&tls_segment.alignment)) {
+    if (!__bionic_check_tls_align(tls_segment.aligned_size.align.value)) {
       if (!relocating_linker) {
-        DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu",
-               get_realpath(), tls_segment.alignment);
+        DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu", get_realpath(),
+               tls_segment.aligned_size.align.value);
       }
       return false;
     }
