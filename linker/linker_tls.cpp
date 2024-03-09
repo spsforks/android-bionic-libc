@@ -31,14 +31,15 @@
 #include <vector>
 
 #include "async_safe/CHECK.h"
+#include "linker_globals.h"
+#include "linker_main.h"
+#include "linker_soinfo.h"
 #include "private/ScopedRWLock.h"
 #include "private/ScopedSignalBlocker.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/linker_native_bridge.h"
-#include "linker_main.h"
-#include "linker_soinfo.h"
 
 static bool g_static_tls_finished;
 static std::vector<TlsModule> g_tls_modules;
@@ -109,10 +110,25 @@ extern "C" void __linker_reserve_bionic_tls_in_static_tls() {
 void linker_setup_exe_static_tls(const char* progname) {
   soinfo* somain = solist_get_somain();
   StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
-  if (somain->get_tls() == nullptr) {
+
+  const TlsSegment* main_segment =
+      (somain->get_tls() != nullptr) ? &somain->get_tls()->segment : nullptr;
+  size_t static_offset = SIZE_MAX;
+  if (g_is_ldd) {
+    // The ldd argument might be an executable or a shared library. To avoid the
+    // arm32/arm64 TLS underalignment diagnostic, treat the argument as a shared
+    // library for static TLS layout purposes. This layout could be incorrect
+    // for an executable's "Local Exec" accesses, but that's OK because we're
+    // not running any code that's loaded.
     layout.reserve_exe_segment_and_tcb(nullptr, progname);
+    if (main_segment != nullptr) {
+      static_offset = layout.reserve_solib_segment(*main_segment);
+    }
   } else {
-    register_tls_module(somain, layout.reserve_exe_segment_and_tcb(&somain->get_tls()->segment, progname));
+    static_offset = layout.reserve_exe_segment_and_tcb(main_segment, progname);
+  }
+  if (main_segment != nullptr) {
+    register_tls_module(somain, static_offset);
   }
 
   // The pthread key data is located at the very front of bionic_tls. As a
