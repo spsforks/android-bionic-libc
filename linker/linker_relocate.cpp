@@ -586,6 +586,11 @@ static bool packed_relocate(Relocator& relocator, Args ...args) {
 }
 
 bool soinfo::relocate(const SymbolLookupList& lookup_list) {
+  // For ldd, don't apply relocations because we don't want to diagnose
+  // unresolved symbols, and because TLS segments are not registered.
+  if (g_is_ldd) {
+    return true;
+  }
 
   VersionTracker version_tracker;
 
