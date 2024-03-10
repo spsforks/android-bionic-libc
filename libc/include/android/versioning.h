@@ -76,3 +76,22 @@
 #define __VERSIONER_FORTIFY_INLINE
 
 #endif  // defined(__BIONIC_VERSIONER)
+
+#if defined(__ANDROID_VENDOR__)
+
+// Vendor modules do not follow SDK versioning. Ignore NDK guards for vendor modules.
+#undef __BIONIC_AVAILABILITY
+#define __BIONIC_AVAILABILITY(x)
+
+// Only for vendor modules, define LLNDK versioning by including llndk-versioning.h.
+#include <android/llndk-versioning.h>
+
+#else // defined(__ANDROID_VENDOR__)
+
+// Ignore LLNDK versioning for non-vendor modules.
+#if !defined(__INTRODUCED_IN_LLNDK)
+#define __INTRODUCED_IN_LLNDK(vendor_api_level) \
+    __attribute__((annotate("introduced_in_llndk=" #vendor_api_level)))
+#endif
+
+#endif // defined(__ANDROID_VENDOR__)

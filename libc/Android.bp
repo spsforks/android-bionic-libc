@@ -69,6 +69,7 @@ cc_defaults {
     header_libs: [
         "libc_headers",
         "liblog_headers", // needed by bionic/libc/async_safe/include
+        "libvendorsupport_llndk_headers",
     ],
     export_header_lib_headers: [
         "libc_headers",
@@ -1695,7 +1696,10 @@ cc_library {
         symbol_file: "libc.map.txt",
         export_headers_as_system: true,
         export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_llndk_headers"],
+        export_llndk_headers: [
+            "libc_llndk_headers",
+            "libvendorsupport_llndk_headers",
+        ],
     },
 }
 
@@ -1901,8 +1905,14 @@ cc_library_headers {
     target: {
         android: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: [
+                "libc_llndk_headers",
+                "libvendorsupport_llndk_headers",
+            ],
+            export_header_lib_headers: [
+                "libc_llndk_headers",
+                "libvendorsupport_llndk_headers",
+            ],
         },
         linux_bionic: {
             export_system_include_dirs: ["include"],
@@ -2081,6 +2091,7 @@ cc_object {
 cc_object {
     name: "crtbegin_so",
     local_include_dirs: ["include"],
+    header_libs: ["libvendorsupport_llndk_headers"],
     srcs: ["arch-common/bionic/crtbegin_so.c"],
 
     defaults: ["crt_so_defaults"],
@@ -2107,6 +2118,7 @@ cc_object {
         "include",
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
     ],
+    header_libs: ["libvendorsupport_llndk_headers"],
 
     cflags: ["-DCRTBEGIN_STATIC"],
 
@@ -2126,6 +2138,7 @@ cc_object {
         "include",
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
     ],
+    header_libs: ["libvendorsupport_llndk_headers"],
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
         "crtbrand",
