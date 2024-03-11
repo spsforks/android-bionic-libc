@@ -22,6 +22,30 @@
       },
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2a39cdb_541e6d2b",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-11T09:24:33Z",
+      "side": 1,
+      "message": "I tested it here: https://cplayground.com/?p\u003dguanaco-aardvark-mouse\nI think the macros in a macro also expanded when used.",
+      "parentUuid": "5ba028ed_acc95fde",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 32
+      },
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
