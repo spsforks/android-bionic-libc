@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ba028ed_acc95fde",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-03-11T09:11:45Z",
+      "side": 1,
+      "message": "Does this work? __BIONIC_AVAILABILITY was already expanded above. Would re-defining it here affect the definitions above?",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 32
+      },
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
