@@ -104,6 +104,40 @@
       },
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c42b7abc_961ac810",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-11T23:25:45Z",
+      "side": 1,
+      "message": "can\u0027t you just `-include` where you\u0027re doing the `-D__ANDROID_VENDOR__`? that would let us avoid having a dependency _from_ libc on anything.",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50b4f0fd_a0239039",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-11T23:25:45Z",
+      "side": 1,
+      "message": "do you have a concrete example _other_ than binder that needs this?\n\ni\u0027m still tempted to keep this out of the NDK and just have as the `else` in whatever\u0027s doing your other `__ANDROID_VENDOR__` stuff. and if binder is the only user, that seems right ... binder is a weird special case. (and it\u0027s unclear to me whether it\u0027s just a coincidence that you picked binder, or very much _not_ a coincidence, and it\u0027s that same \"special case\"-ness that makes binder weird from an ndk perspective that makes it the most interesting [or _only_ interesting?] case of overlap for you?)\n\non the other hand, if these annotations are needed for more typical api, is it all going to be as awful as the binder example looks? how are you planning to clean that up each year? just throw humans at it?",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
