@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c90ca8b1_401efa60",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-11T22:48:02Z",
+      "side": 1,
+      "message": "Noticed this before, but should this be an atomic_load rather than using the raw variable like this? I don\u0027t think it generates different code though, but it might.",
+      "range": {
+        "startLine": 182,
+        "startChar": 23,
+        "endLine": 182,
+        "endChar": 29
+      },
+      "revId": "49c866e55987b2e116c844dea933976fb8747292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "610fc232_12d14ec5",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-11T22:48:02Z",
+      "side": 1,
+      "message": "Should this be made a normal global too? It doesn\u0027t require as many mutates, but changing this would remove the mutate in the SetHeapTaggingLevel.",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 23
+      },
+      "revId": "49c866e55987b2e116c844dea933976fb8747292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
