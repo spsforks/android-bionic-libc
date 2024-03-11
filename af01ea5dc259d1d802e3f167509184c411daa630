@@ -128,6 +128,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9e4895e7_19afc7a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-11T23:13:01Z",
+      "side": 1,
+      "message": "\u003e but wonder whether we (Android) are heading towards there\n\nyes, i think we are, but that\u0027s why i keep asking you to pass this up the chain on your side too --- you and i aren\u0027t likely to be in the meetings where those decisions are made, but someone like malchev will be, and he\u0027ll be more likely to say what we want him to say if he\u0027s heard jiyong\u0027s opinion.\n\nfwiw, i\u0027ve yet to find anyone who actually writes code who doesn\u0027t agree with us on this. even on teams that i\u0027d assumed were the ones who\u0027re supposed to benefit from this. but if we don\u0027t give the \"this is painful\" feedback...",
+      "parentUuid": "bdc745f5_84e65458",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
