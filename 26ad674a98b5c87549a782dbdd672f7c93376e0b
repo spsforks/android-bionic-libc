@@ -192,6 +192,24 @@
       "parentUuid": "20d6bfaa_6d7e61b2",
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57d1db00_82150d6b",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-03-12T05:33:38Z",
+      "side": 1,
+      "message": "Elliott, as Justin mentioned, NDK symbols won\u0027t be automatically LLNDK since V. So, V symbols in bionic libc are not available to vendor native modules. Can you check [the list of libc V symbols](https://cs.android.com/android/platform/superproject/+/master:bionic/libc/libc.map.txt;l\u003d1587-1603) and confirm that it\u0027s okay not to expose them to vendor modules.",
+      "parentUuid": "b2f8cf4a_b16c2e01",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
