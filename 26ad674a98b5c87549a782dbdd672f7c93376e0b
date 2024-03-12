@@ -125,6 +125,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "acc754ea_f3f4a589",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-12T04:03:40Z",
+      "side": 1,
+      "message": "Let me try adding `-include` for vendor builds.",
+      "parentUuid": "c42b7abc_961ac810",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "50b4f0fd_a0239039",
         "filename": "libc/include/android/versioning.h",
         "patchSetId": 1
@@ -154,6 +172,24 @@
       "side": 1,
       "message": "(i\u0027m still interested in the answers to those questions, but this #define doesn\u0027t help you much anyway, right, because you\u0027ll still need to #define the no-op version in every header that uses it? in which case you might just want some other header file with all that boilerplate?\n\ni think cleaning up the _existing_ mess has been on the ndk api council\u0027s wish list for a long time, but i\u0027m not sure anyone\u0027s had a good suggestion of what/where this magic header should be...)",
       "parentUuid": "50b4f0fd_a0239039",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2f8cf4a_b16c2e01",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-12T04:03:40Z",
+      "side": 1,
+      "message": "In the current tree, the binder is the only user of new LLNDK APIs. Working on this change, I assumed the new LLNDK APIs will be required from any vendors as that was what LLNDK was providing.\nHowever, with @jooyung@google.com\u0027s work on new LLNDK map definition for 202404 (aosp/2997316), we can limit the new LLNDK APIs from 202404.\n\nThis \u0027#define no-op\u0027 added here to cover NDK headers without defining a new NDK header of \u003candroid/llndk-versioning.h\u003e to include. For non-NDK headers, simply including \u003candroid/llndk-versioning.h\u003e clears all, but that\u0027s not allowed for NDK headers.",
+      "parentUuid": "20d6bfaa_6d7e61b2",
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
