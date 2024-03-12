@@ -200,6 +200,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e1088d77_21d6ed18",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-12T21:35:48Z",
+      "side": 1,
+      "message": "\u003e Started the discussion within NextGen.\n\nthanks!\n\n\u003e ... so let\u0027s not tie our pending changes with the future decision.\n\nyeah, i\u0027m mostly interested in having a clear distinction between \"what\u0027s a nasty short-term hack to route around the damage?\" and \"where do we _want_ to be in 5 years time?\". (and \"how do we keep those two things separate?\"!)",
+      "parentUuid": "ef371a64_74bd7f37",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
