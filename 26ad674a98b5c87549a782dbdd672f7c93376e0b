@@ -210,6 +210,24 @@
       "parentUuid": "b2f8cf4a_b16c2e01",
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f51ca06_2de0d033",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-12T21:38:56Z",
+      "side": 1,
+      "message": "\u003e In the current tree, the binder is the only user of new LLNDK APIs.\n\nso should we just keep all this stuff in there for now? and worry about something more permanent if we still haven\u0027t got the real problem (missing api bumps) fixed next year?\n\n\u003e Can you check the list of libc V symbols and confirm that it\u0027s okay not to expose them to vendor modules.\n\nyeah, that seems fine.\n\nor, more flippantly: \"they didn\u0027t have them last year, so i don\u0027t see why they\u0027d _have_ to have them this year\" :-)",
+      "parentUuid": "57d1db00_82150d6b",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
