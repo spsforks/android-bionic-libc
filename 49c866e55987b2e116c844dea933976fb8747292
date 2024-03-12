@@ -93,6 +93,30 @@
       },
       "revId": "49c866e55987b2e116c844dea933976fb8747292",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3288a8a_376ce49a",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-12T21:15:06Z",
+      "side": 1,
+      "message": "That seems reasonable.",
+      "parentUuid": "3b6ea3ed_8617a45f",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 23
+      },
+      "revId": "49c866e55987b2e116c844dea933976fb8747292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
