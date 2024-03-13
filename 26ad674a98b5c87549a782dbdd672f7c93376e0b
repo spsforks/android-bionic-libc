@@ -141,6 +141,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bed076e_12e598fc",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-13T12:05:29Z",
+      "side": 1,
+      "message": "\u003candroid/llndk-versioning.h\u003e and additional dependencies are removed.",
+      "parentUuid": "acc754ea_f3f4a589",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50b4f0fd_a0239039",
@@ -244,6 +262,24 @@
       "side": 1,
       "message": "Fair enough. I thought the other way ;-) \"why preventing them from using new symbols\". Thanks Elliott for checking and confirming.",
       "parentUuid": "0f51ca06_2de0d033",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "469ebf84_1a5422d0",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2024-03-13T12:05:29Z",
+      "side": 1,
+      "message": "\u003candroid/llndk-versioning.h\u003e and additional dependencies are removed.",
+      "parentUuid": "4d2c92a2_7ebd814a",
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
