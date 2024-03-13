@@ -227,6 +227,30 @@
       },
       "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e3638e2_8819b6e3",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T23:50:44Z",
+      "side": 1,
+      "message": "i have no strong opinion, and was really just thinking \"will future rprichard be better off if we explicitly log something admitting that we\u0027re ignoring non-zero skew here?\" :-)",
+      "parentUuid": "0a7a127d_cd0a470b",
+      "range": {
+        "startLine": 375,
+        "startChar": 7,
+        "endLine": 375,
+        "endChar": 11
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
