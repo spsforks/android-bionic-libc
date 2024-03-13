@@ -282,6 +282,24 @@
       "parentUuid": "4d2c92a2_7ebd814a",
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8fe4bc4_96a5deea",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T21:44:45Z",
+      "side": 1,
+      "message": "\u003e Fair enough. I thought the other way ;-) \"why preventing them from using new symbols\". Thanks Elliott for checking and confirming.\n\nyeah, when there was zero cost to that, that was fine too. but making the headers less readable for such a niche use doesn\u0027t seem worth the tradeoff.\n\nif/when we get the missing api bump, we can go back to that without any cost.",
+      "parentUuid": "469ebf84_1a5422d0",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
