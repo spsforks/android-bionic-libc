@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "b9100b42_d32288bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-13T23:43:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fc30711_41e54241",
+      "range": {
+        "startLine": 29,
+        "startChar": 36,
+        "endLine": 29,
+        "endChar": 39
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "95280dc9_64f591a0",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -37,6 +61,29 @@
       "writtenOn": "2024-03-13T15:50:55Z",
       "side": 1,
       "message": "(wow, that was a lot more involved than i\u0027d hoped from your initial bug report!)",
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "820fdff9_4ad93251",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-13T23:43:14Z",
+      "side": 1,
+      "message": "FWIW, this is a workaround for powerof using `__typeof__` and failing when the argument is a const variable. The `__typeof__(x) _x2` temporary also has a const type, so it can\u0027t be modified by `__builtin_add_overflow`.\n\nI do wish we used C++ functions for these computations somehow.",
+      "range": {
+        "startLine": 97,
+        "startChar": 22,
+        "endLine": 97,
+        "endChar": 42
+      },
       "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -54,6 +101,30 @@
       "writtenOn": "2024-03-13T15:50:55Z",
       "side": 1,
       "message": "(\"Note:\" --- remember the \"no latin\" documentation rule :-) )",
+      "range": {
+        "startLine": 118,
+        "startChar": 3,
+        "endLine": 118,
+        "endChar": 7
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6a928dd_9ff63644",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-13T23:43:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5954c1ca_75eb64b7",
       "range": {
         "startLine": 118,
         "startChar": 3,
@@ -87,6 +158,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9307003_aabfab70",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-13T23:43:14Z",
+      "side": 1,
+      "message": "Oops, this should be crtbegin.c.",
+      "parentUuid": "b86c35b0_a99482d8",
+      "range": {
+        "startLine": 138,
+        "startChar": 5,
+        "endLine": 138,
+        "endChar": 15
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "547e07eb_64c735c9",
@@ -100,6 +195,30 @@
       "writtenOn": "2024-03-13T15:50:55Z",
       "side": 1,
       "message": "\"That is:\" :-)\n\nshould we log/abort if skew is non-zero?",
+      "range": {
+        "startLine": 375,
+        "startChar": 7,
+        "endLine": 375,
+        "endChar": 11
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a7a127d_cd0a470b",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-13T23:43:14Z",
+      "side": 1,
+      "message": "AFAIK, other dynamic loaders also just ignore skew for dynamic TLS. In practice, things tend to work anyway, because things are still sufficiently-aligned. The executable\u0027s static TLS is the biggest issue, because the static linker\u0027s offset calculation must agree with the loader\u0027s allocation.\n\nFWIW: LLD currently calculates that in the getTlsTpOffset() function:\n\nhttps://github.com/llvm/llvm-project/blob/d80d5b923c6f611590a12543bdb33e0c16044d44/lld/ELF/InputSection.cpp#L622\n\nBut maybe we should log something for dynamic TLS skew? Not sure.",
+      "parentUuid": "547e07eb_64c735c9",
       "range": {
         "startLine": 375,
         "startChar": 7,
