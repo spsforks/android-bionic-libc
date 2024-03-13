@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f9dcbcf_9ea7feef",
+        "filename": "libc/platform/bionic/macros.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T15:01:10Z",
+      "side": 1,
+      "message": "i see all but one of the callers does the isPowerOf2() check first ... should we move that inside here instead? (i\u0027m not sure whether we\u0027re documenting a feature or a bug here!)",
+      "revId": "1f21b97d8b9e935161aca3eda7780da1b295c4de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
