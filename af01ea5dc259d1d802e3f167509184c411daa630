@@ -218,6 +218,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d566fcd_e562113d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-03-13T08:09:18Z",
+      "side": 1,
+      "message": "*my* vision is as follows:\n\n1. we change API version scheme to YYYYMM\n2. for a given platform release, all API surfaces (NDK, SDK, VINTF, ...) share the same API version number.\n3. Each API surface may have different release cadences. For example, SDK can still bump yearly, whereas NDK can bump quarterly.\n\n1. is required otherwise users of an API surface will see non-continuous jumps in version numbers (35, and then suddenly 40, for example). With the YYYYMM scheme, such a jump wouldn\u0027t look odd.",
+      "parentUuid": "e1088d77_21d6ed18",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
