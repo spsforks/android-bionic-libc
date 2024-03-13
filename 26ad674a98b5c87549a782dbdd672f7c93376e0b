@@ -228,6 +228,24 @@
       "parentUuid": "57d1db00_82150d6b",
       "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d2c92a2_7ebd814a",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2024-03-13T01:25:31Z",
+      "side": 1,
+      "message": "Fair enough. I thought the other way ;-) \"why preventing them from using new symbols\". Thanks Elliott for checking and confirming.",
+      "parentUuid": "0f51ca06_2de0d033",
+      "revId": "26ad674a98b5c87549a782dbdd672f7c93376e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
