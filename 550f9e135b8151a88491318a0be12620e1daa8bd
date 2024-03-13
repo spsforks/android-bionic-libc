@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fc30711_41e54241",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T15:50:55Z",
+      "side": 1,
+      "message": "(if that\u0027s not something you plan on doing in ps2, explain why not \"yet\"?)",
+      "range": {
+        "startLine": 29,
+        "startChar": 36,
+        "endLine": 29,
+        "endChar": 39
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95280dc9_64f591a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T15:50:55Z",
+      "side": 1,
+      "message": "(wow, that was a lot more involved than i\u0027d hoped from your initial bug report!)",
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5954c1ca_75eb64b7",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T15:50:55Z",
+      "side": 1,
+      "message": "(\"Note:\" --- remember the \"no latin\" documentation rule :-) )",
+      "range": {
+        "startLine": 118,
+        "startChar": 3,
+        "endLine": 118,
+        "endChar": 7
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b86c35b0_a99482d8",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T15:50:55Z",
+      "side": 1,
+      "message": ".S?\n\n(but did you even mean crtbrand? that\u0027s just an ELF note, no?)",
+      "range": {
+        "startLine": 138,
+        "startChar": 5,
+        "endLine": 138,
+        "endChar": 15
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "547e07eb_64c735c9",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-13T15:50:55Z",
+      "side": 1,
+      "message": "\"That is:\" :-)\n\nshould we log/abort if skew is non-zero?",
+      "range": {
+        "startLine": 375,
+        "startChar": 7,
+        "endLine": 375,
+        "endChar": 11
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
