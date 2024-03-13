@@ -26,6 +26,8 @@
   TypeName() = delete;                                  \
   BIONIC_DISALLOW_COPY_AND_ASSIGN(TypeName)
 
+// Round up to the next power-of-two. If the given value is already a
+// power-of-two, the result is twice the input.
 #define BIONIC_ROUND_UP_POWER_OF_2(value) \
   ((sizeof(value) == 8) \
     ? (1UL << (64 - __builtin_clzl(static_cast<unsigned long>(value)))) \
