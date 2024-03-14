@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b485bfe3_f17d8afe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T06:39:07Z",
+      "side": 1,
+      "message": "FWIW, this came up during the libc++ upgrade. The new libc++.a prebuilt used ELF TLS for the EH globals variable. The x86 loader worked fine and would only have crashed if something had tried to throw an exception. The arm64 loader crashed on startup trying to process TLSDESC.",
+      "revId": "89a919a286fe52702481915b81cdffcd886bc7f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
