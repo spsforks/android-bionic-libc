@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01f8d888_1a5460a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T20:10:06Z",
+      "side": 1,
+      "message": "(this is better than what\u0027s checked in, so although i think one of us should try the \"can\u0027t we just exit earlier?\" path, i\u0027m fine with that (a) being later and (b) being me instead of you. just as long as you say what your plan is so we don\u0027t just both assume the other\u0027s doing it.)",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e97e547b_0ffaa8a9",
@@ -36,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff78fccd_46601544",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T20:10:06Z",
+      "side": 1,
+      "message": "yeah, i think the \"early _exit()\" option is the thing i\u0027m still struggling to explain \"why didn\u0027t we just do that already?\" :-)\n\n(and i agree that stuff like the \"LINKER TIME\" stuff makes no sense for ldd, not least because we know full well from that rprichard guy\u0027s systrace stuff that \"all the time went to the constructors\" :-) but also because \"this is currently compiled out anyway\". i might fix that if/when i ever get round to http://b/309528372 \"accept glibc LD_DEBUG options\", but even then i don\u0027t think it makes sense.)",
+      "parentUuid": "30c45c3e_3274c054",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f51d149_240d98ec",
@@ -67,6 +102,24 @@
       "side": 1,
       "message": "Those are skipped in the call_constructors and call_pre_init_constructors functions themselves.",
       "parentUuid": "4f51d149_240d98ec",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a66f34f_00f8a5e9",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T20:10:06Z",
+      "side": 1,
+      "message": "yeah, but i feel like -- even though that was my fault! -- that\u0027s a mistake? (or at very least \"if i did that on purpose, i really should have left a comment!\"...)",
+      "parentUuid": "998f344e_fb69c26d",
       "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -131,6 +184,30 @@
       "side": 1,
       "message": "Should I mention the `linker_setup_exe_static_tls` function in this comment? I tend not to mention other function names because they tend not to be updated when functions are renamed. I\u0027m not sure that\u0027s a good practice, though.\n\nI don\u0027t think it\u0027s actually hard to find what this comment is referring to?",
       "parentUuid": "4e8a6427_49fb0993",
+      "range": {
+        "startLine": 141,
+        "startChar": 46,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d194102b_6bc28a66",
+        "filename": "linker/linker_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T20:10:06Z",
+      "side": 1,
+      "message": "despite having just read this change in isolation, i didn\u0027t realize that\u0027s what you were saying,. i actually thought you knew something about L146 or L150 that i didn\u0027t that meant that they will catch the executable.\n\n(i know what you mean about not copy \u0026 pasting function names, because they do tend to go stale[1], so in this case i\u0027d be tempted to just rely on the comment that\u0027s already in the other function being enough for anyone who cares? if there _is_ something subtle you\u0027re trying to tell me here that i\u0027m too dense to have got so far, my follow up will be \"in that case shouldn\u0027t the other function\u0027s comment also be telling me about _this_ function\u0027s half of the deal?\" :-) )",
+      "parentUuid": "d699cf61_3520dade",
       "range": {
         "startLine": 141,
         "startChar": 46,
