@@ -281,6 +281,24 @@
       "message": "not needed any more?",
       "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b898c52b_7a4cbe14",
+        "filename": "linker/linker_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T21:32:21Z",
+      "side": 1,
+      "message": "I went back and decided to add back a comment. The bail-out in register_soinfo_tls is for consistency with executables, so not strictly needed.\n\nThis CL produces a valid StaticTlsLayout containing `bionic_tls` and `bionic_tcb` objects, and nothing from the loaded ELF modules. I believe this StaticTlsLayout isn\u0027t actually used, because ldd exits early.",
+      "parentUuid": "1a095687_eae772c8",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
