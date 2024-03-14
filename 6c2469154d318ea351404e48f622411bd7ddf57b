@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30c45c3e_3274c054",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T19:26:50Z",
+      "side": 1,
+      "message": "It\u0027s an attempt to avoid changing the linker/libc behavior more than necessary. AFAIK the TLS setup isn\u0027t necessary, but disabling it would mean a bunch of code running with the temporary TLS configuration when it normally runs with the finalized one.\n\nMaybe an alternative is:\n * Call _exit immediately after find_libraries, before MTE.\n * Add a comment to that _exit call listing the important things that are skipped by calling _exit -- constructor calls, the __cfi_init call.\n * Then clean up by removing the g_is_ldd check from call_*_constructors.\n\nI suppose the \"LINKER TIME\" measurement below *could* be useful for ldd, but probably not. I think TIMING has to be defined manually anyway.",
+      "parentUuid": "e97e547b_0ffaa8a9",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f51d149_240d98ec",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-03-14T16:08:17Z",
       "side": 1,
       "message": "do we want to skip the constructors too?",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "998f344e_fb69c26d",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T19:26:50Z",
+      "side": 1,
+      "message": "Those are skipped in the call_constructors and call_pre_init_constructors functions themselves.",
+      "parentUuid": "4f51d149_240d98ec",
       "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -71,6 +107,30 @@
       "writtenOn": "2024-03-14T16:08:17Z",
       "side": 1,
       "message": "where?",
+      "range": {
+        "startLine": 141,
+        "startChar": 46,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d699cf61_3520dade",
+        "filename": "linker/linker_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T19:26:50Z",
+      "side": 1,
+      "message": "Should I mention the `linker_setup_exe_static_tls` function in this comment? I tend not to mention other function names because they tend not to be updated when functions are renamed. I\u0027m not sure that\u0027s a good practice, though.\n\nI don\u0027t think it\u0027s actually hard to find what this comment is referring to?",
+      "parentUuid": "4e8a6427_49fb0993",
       "range": {
         "startLine": 141,
         "startChar": 46,
