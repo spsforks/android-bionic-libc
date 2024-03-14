@@ -116,6 +116,24 @@
       "parentUuid": "c74acd1d_f6e9105a",
       "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f27d130_01f74c31",
+        "filename": "tests/libs/CHECK.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T15:24:00Z",
+      "side": 1,
+      "message": "for test purposes, if you\u0027re going to flush, it might actually be a better idea to `fflush(NULL)` so you get to see _all_ attempted debug output? whereas if you\u0027re just flushing stderr _in your own tests_, i think you can just assume you didn\u0027t go out of your way to screw things up for yourself and kept the stdio stderr __SNBF default :-)",
+      "parentUuid": "8a1a9c26_e3c11716",
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
