@@ -21,6 +21,19 @@
 // trying to test.
 
 #include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+static inline void check_failure(const char* file, int line, const char* function,
+                                 const char* failed_expression) {
+#if defined(__BIONIC__)
+  __assert2(file, line, function, failed_expression);
+#else
+  fprintf(stderr, "%s:%d: %s: assertion \"%s\" failed\n", file, line, function, failed_expression);
+  fflush(stderr);
+  abort();
+#endif
+}
 
 #define CHECK(e) \
-  ((e) ? static_cast<void>(0) : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
+  ((e) ? static_cast<void>(0) : check_failure(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
