@@ -254,6 +254,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "723d7220_2d72864b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2024-03-14T01:57:52Z",
+      "side": 1,
+      "message": "I think discontinuity will matter. Actually that was the first response from malchev when I introduced this idea without mentioning #1.\n\n\n\u003e \"let\u0027s also change the numbering system\" is a harder fight\n\nYes... but I think it\u0027s a critical part for #2 and #3. With the current numbering system, you can\u0027t really know what version number you should tag your next API with, because it could be N+1, N+3, N+? depending on which API surface you are working on. With the calendar based numbering system, everything is much more predictable.",
+      "parentUuid": "11f84fc6_d5944970",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
