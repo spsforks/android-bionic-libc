@@ -16,6 +16,24 @@
       "message": "(the non-power-of-two sizes seem weird, but maybe that\u0027s preferable since none of these numbers actually means anything?)",
       "revId": "b2bb21da8dc58478e41961b00074fb1b99666a96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd66578c_b0245ba6",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-14T00:45:22Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s more important to be a page size increment since they are used for mmap/munmap/mprotect/madvise operations.",
+      "parentUuid": "80aef141_8ab93144",
+      "revId": "b2bb21da8dc58478e41961b00074fb1b99666a96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
