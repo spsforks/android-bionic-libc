@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d54274e_3b3a7ad0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T00:27:57Z",
+      "side": 1,
+      "message": "\"the host\"? (my knee-jerk reaction seeing this was \"why do we care?\" before i realized what you meant :-) )",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 37
+      },
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb89d6ee_a075b75b",
+        "filename": "tests/libs/CHECK.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T00:27:57Z",
+      "side": 1,
+      "message": "is it actually worth having both paths, or should we just use the host-compatible one all the time?",
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c74acd1d_f6e9105a",
+        "filename": "tests/libs/CHECK.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T00:27:57Z",
+      "side": 1,
+      "message": "(you shouldn\u0027t need this, right?)",
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
