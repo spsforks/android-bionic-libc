@@ -236,6 +236,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "11f84fc6_d5944970",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T00:21:35Z",
+      "side": 1,
+      "message": "yeah, i don\u0027t much care about point 1/4 (because i don\u0027t think discontinuities matter, and i assume that \"let\u0027s also change the numbering system\" is a _harder_ fight, but i\u0027d be fine with it), but 2 and 3 are the things i think everyone who actually writes code agrees with.\n\n(in practice, app developers have already had to deal with discontinuities --- both \"deliberate\" where we\u0027ve had an MR or whatever with an api bump, and \"accidental\" where there\u0027s just no interesting change in a release. but by definition there\u0027s nothing to \"deal\" with for an api level you _don\u0027t_ care about. it\u0027s the ones that have something you need that matter, and i imagine they\u0027ll be using `\u003e\u003d` style checks forever :-) )",
+      "parentUuid": "6d566fcd_e562113d",
+      "revId": "af01ea5dc259d1d802e3f167509184c411daa630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94794837_5c8cdf10",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
