@@ -299,6 +299,24 @@
       "parentUuid": "1a095687_eae772c8",
       "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7bb07e7_45c196f3",
+        "filename": "linker/linker_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T23:04:54Z",
+      "side": 1,
+      "message": "(yeah, i think the bit i was missing was that this is called from find_library(), so definitely still called even with the early exit.)",
+      "parentUuid": "b898c52b_7a4cbe14",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
