@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e97e547b_0ffaa8a9",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T16:08:17Z",
+      "side": 1,
+      "message": "probably worth a comment explaining why you\u0027re _not_ skipping the tls/main thread initialization above?",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f51d149_240d98ec",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T16:08:17Z",
+      "side": 1,
+      "message": "do we want to skip the constructors too?",
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75d37a6e_566effc5",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T16:08:17Z",
+      "side": 1,
+      "message": "\"care about\"? (since i don\u0027t think we\u0027re stating a strong opinion here, right? we\u0027re just saying \"we have no reason to believe this is useful\" rather than \"we explicitly don\u0027t want to do this\"?)",
+      "range": {
+        "startLine": 589,
+        "startChar": 55,
+        "endLine": 589,
+        "endChar": 62
+      },
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e8a6427_49fb0993",
+        "filename": "linker/linker_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-14T16:08:17Z",
+      "side": 1,
+      "message": "where?",
+      "range": {
+        "startLine": 141,
+        "startChar": 46,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
