@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ffc735a_a13250f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T01:32:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d54274e_3b3a7ad0",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 37
+      },
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb89d6ee_a075b75b",
@@ -41,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fc52dc9_c29c6f57",
+        "filename": "tests/libs/CHECK.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T01:32:29Z",
+      "side": 1,
+      "message": "The Bionic code path would also write to logcat, but that\u0027s not important for these test libraries. I think I\u0027ll remove the `__assert` code path.",
+      "parentUuid": "fb89d6ee_a075b75b",
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c74acd1d_f6e9105a",
@@ -54,6 +96,24 @@
       "writtenOn": "2024-03-14T00:27:57Z",
       "side": 1,
       "message": "(you shouldn\u0027t need this, right?)",
+      "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a1a9c26_e3c11716",
+        "filename": "tests/libs/CHECK.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T01:32:29Z",
+      "side": 1,
+      "message": "I think stderr is unbuffered by default, so the fflush is only needed if some code turns on buffering. That could happen, I suppose?",
+      "parentUuid": "c74acd1d_f6e9105a",
       "revId": "06626dac87469cf64b121ed6a9fe413bb4faba20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
