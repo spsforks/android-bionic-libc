@@ -147,6 +147,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a22adda4_2e23fddc",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T21:04:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75d37a6e_566effc5",
+      "range": {
+        "startLine": 589,
+        "startChar": 55,
+        "endLine": 589,
+        "endChar": 62
+      },
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e8a6427_49fb0993",
@@ -208,6 +232,30 @@
       "side": 1,
       "message": "despite having just read this change in isolation, i didn\u0027t realize that\u0027s what you were saying,. i actually thought you knew something about L146 or L150 that i didn\u0027t that meant that they will catch the executable.\n\n(i know what you mean about not copy \u0026 pasting function names, because they do tend to go stale[1], so in this case i\u0027d be tempted to just rely on the comment that\u0027s already in the other function being enough for anyone who cares? if there _is_ something subtle you\u0027re trying to tell me here that i\u0027m too dense to have got so far, my follow up will be \"in that case shouldn\u0027t the other function\u0027s comment also be telling me about _this_ function\u0027s half of the deal?\" :-) )",
       "parentUuid": "d699cf61_3520dade",
+      "range": {
+        "startLine": 141,
+        "startChar": 46,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "6c2469154d318ea351404e48f622411bd7ddf57b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa5302f4_32e768fb",
+        "filename": "linker/linker_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-14T21:04:05Z",
+      "side": 1,
+      "message": "I considered changing the comment to:\n```\n// For ldd, don\u0027t register TLS modules for any shared objects.\n```\n... but then that raises the question of \"well, why not?\". The answer is that the function is being consistent with the executable. That way, all of the soinfo objects lack a module ID, rather than making the first one special.\n\nI also considered removing the whole comment, but then it\u0027s unclear why g_is_ldd is disabling this function.\n\nMaybe a rewording is OK?",
+      "parentUuid": "d194102b_6bc28a66",
       "range": {
         "startLine": 141,
         "startChar": 46,
