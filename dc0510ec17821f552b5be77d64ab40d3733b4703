@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6ef779c_72f7ac55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-15T21:04:06Z",
+      "side": 1,
+      "message": "Yeah, this seems reasonable for the CHECK() in the testing libraries. I\u0027m guessing we only really care about stdout and stderr, but flushing all the FILEs isn\u0027t likely to cause trouble.",
+      "revId": "dc0510ec17821f552b5be77d64ab40d3733b4703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
