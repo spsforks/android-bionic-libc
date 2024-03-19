@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "5fa38b8e_f0395691",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-19T16:07:05Z",
+      "side": 1,
+      "message": "the first line of the commit message needs to say _what_ the change does, not where it comes from.",
+      "revId": "fcaa759b51a8ab5d5843739a3722aa4607070c47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5c10326e_f0267281",
@@ -14,6 +31,57 @@
       "writtenOn": "2024-03-18T09:08:40Z",
       "side": 1,
       "message": "Custom memcpy implementation for Qualcomm Oryon CPU.",
+      "revId": "fcaa759b51a8ab5d5843739a3722aa4607070c47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81e575fc_fefb23dc",
+        "filename": "libc/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 4985,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-19T16:07:05Z",
+      "side": 1,
+      "message": "oops, that\u0027s not very helpful. can you try again after https://android-review.googlesource.com/c/platform/bionic/+/3006954 is in? that should at least ensure we get the SPDX identifier in here to make it clear what the license was. (i look forward to the day when _all_ we have is SPDX identifiers!)",
+      "revId": "fcaa759b51a8ab5d5843739a3722aa4607070c47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d7bfdbe_94ec85b3",
+        "filename": "libc/arch-arm64/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-19T16:07:05Z",
+      "side": 1,
+      "message": "shouldn\u0027t be needed?",
+      "revId": "fcaa759b51a8ab5d5843739a3722aa4607070c47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "838466c2_bd300768",
+        "filename": "libc/arch-arm64/oryon/memcpy-nt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-19T16:07:05Z",
+      "side": 1,
+      "message": "it\u0027s unfortunate we effectively have to hard-code 48KiB here, but since i don\u0027t know of any way to query the cache size from userspace, i don\u0027t have a better suggestion :-(",
       "revId": "fcaa759b51a8ab5d5843739a3722aa4607070c47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
