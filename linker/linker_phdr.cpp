@@ -924,6 +924,20 @@ bool ElfReader::LoadSegments() {
       memset(reinterpret_cast<void*>(_seg_file_end), 0, kPageSize - page_offset(_seg_file_end));
     }
 
+    // Pages maybe brought in due to readahead()
+    // Drop the padding (zero) pages, to avoid reclaim work later
+    //
+    // NOTE: The madvise() here is special, as it also serves to hint to the
+    // kernel the  portion of the LOAD segment that is padding.
+    uint64_t pad_start = page_end(_seg_file_end);
+    uint64_t pad_end = page_end(seg_file_end);
+    CHECK(pad_start <= pad_end);
+    uint64_t pad_len = pad_end - pad_start;
+    if (pad_len > 0 && madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
+      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
+              name_.c_str(), pad_start, pad_len);
+    }
+
     seg_file_end = page_end(seg_file_end);
 
     // seg_file_end is now the first page address after the file
