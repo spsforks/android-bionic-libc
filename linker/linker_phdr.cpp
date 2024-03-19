@@ -46,6 +46,8 @@
 #include "private/CFIShadow.h" // For kLibraryAlignment
 #include "private/elf_note.h"
 
+#include <procinfo/process_map.h>
+
 static int GetTargetElfMachine() {
 #if defined(__arm__)
   return EM_ARM;
@@ -891,6 +893,21 @@ bool ElfReader::LoadSegments() {
     uint64_t _seg_file_end = seg_start + phdr->p_filesz;
     if ((phdr->p_flags & PF_W) != 0 && page_offset(_seg_file_end) > 0) {
       memset(reinterpret_cast<void*>(_seg_file_end), 0, kPageSize - page_offset(_seg_file_end));
+    }
+
+    // Pages maybe brought in due to readahead()
+    // Drop the padding (zero) pages, to avoid reclaim work later
+    uint64_t pad_start = page_end(_seg_file_end);
+    uint64_t pad_end = page_end(seg_file_end);
+    CHECK(pad_start <= pad_end);
+    uint64_t pad_len = pad_end - pad_start;
+    uint64_t mapped_filesz = android::procinfo::MappedFileSize(seg_page_start,
+                                            page_end(seg_page_start + file_length),
+                                            file_offset_ + file_page_start, file_size_);
+    if (page_end(mapped_filesz) == page_end(file_length) && pad_len > 0
+        && madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
+      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
+              name_.c_str(), pad_start, pad_len);
     }
 
     seg_file_end = page_end(seg_file_end);
