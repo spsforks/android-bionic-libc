@@ -251,6 +251,30 @@
       },
       "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4718254_72fe0b49",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T22:18:51Z",
+      "side": 1,
+      "message": "Maybe? The logging is unlikely to happen because LLD usually prevents (p_vaddr % p_align) from being nonzero. LLD is unlikely to stop doing that until various libcs are fixed.\n\nI\u0027m not aware of any other dynamic loader guaranteeing (\u0026block % p_align) \u003d\u003d (p_vaddr % p_align) for dynamic TLS (i.e. for files loaded with dlopen). It has been several years since I looked though.",
+      "parentUuid": "8e3638e2_8819b6e3",
+      "range": {
+        "startLine": 375,
+        "startChar": 7,
+        "endLine": 375,
+        "endChar": 11
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

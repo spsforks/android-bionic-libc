@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "995ea3e6_298a4364",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T22:18:51Z",
+      "side": 1,
+      "message": "Is it causing confusion? I added the note because:\n - The function was a bit tricky, so I thought it\u0027d be helpful to call out the unit tests for it.\n - Usually bionic-unit-tests is a superset of bionic-unit-test-static, but that\u0027s not the case for these tests that access Bionic internals directly. The same is true for the bionic_allocator_test.cpp test:\n   ```\n   // Test internal parts of Bionic that aren\u0027t exposed via libc.so.\n   \"bionic_allocator_test.cpp\",\n   \"static_tls_layout_test.cpp\",\n   ```\n\nBut I do see that `:elf_note_sources` also being tested in linker-unit-tests, so maybe that\u0027s the right place for testing Bionic\u0027s internals directly? There is a complication: bionic-unit-test-static can easily access Bionic\u0027s internals because it\u0027s linked against libc.a, whereas linker-unit-tests must include the parts of Bionic it wants to test. It\u0027s dubious to include all of bionic_elf_tls.cpp in linker-unit-tests because parts of it would interfere with the actual ELF TLS implementation in linker[64] and libc.so (e.g. `__libc_tls_generation_copy`, `TLS_GET_ADDR/__tls_get_addr`). It\u0027s easy to fix by splitting StaticTlsLayout out into its own file, and that\u0027s actually what I did initially before realizing I didn\u0027t have to.\n\nI think I can clarify the comment (or just remove it), and if we want to move this internal testing into linker-unit-tests, that can be a separate commit, which would involve splitting out StaticTlsLayout into a separate file.",
+      "parentUuid": "702ed441_e65aa8e1",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1875ad30_c5dfcb6c",
         "filename": "libc/bionic/bionic_elf_tls.cpp",
         "patchSetId": 8
@@ -31,6 +49,24 @@
       "writtenOn": "2024-03-20T15:13:22Z",
       "side": 1,
       "message": "still don\u0027t want to log that we\u0027re ignoring this?",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97e6ed87_29a13554",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T22:18:51Z",
+      "side": 1,
+      "message": "It didn\u0027t really seem necessary to me, but I think I can add it.\n\nMaybe log when the ELF file is loaded? That is, log in `register_soinfo_tls` when `g_static_tls_finished` is true.\n\nI\u0027m wondering whether it\u0027s safe to log from `__tls_get_addr`, but I don\u0027t know that it wouldn\u0027t be. Maybe we wouldn\u0027t want to log while signals are blocked and `modules.rwlock` is held? I don\u0027t know that for sure, though.\n\nPractically, a log message should include the name of the ELF file, which is technically available via `TlsModule::soinfo_ptr` but it\u0027s inconvenient because this is libc and not the loader, so `soinfo_ptr` has type `void*`. We also don\u0027t want to log every time a thread allocates the memory. It might be better to omit the log if no thread ever accesses the TLS memory, but I don\u0027t think we need to ensure that.\n\nI\u0027ll look at adding a log message in `register_soinfo_tls`.",
+      "parentUuid": "1875ad30_c5dfcb6c",
       "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
