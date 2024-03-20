@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3de08a1b_5d589836",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T23:43:46Z",
+      "side": 1,
+      "message": "\u003e if we\u0027re claiming that nothing uses non-0 atm, should we abort()?\n\nLLD generally does ensure that (p_vaddr % p_align) is zero, but it\u0027s described as a workaround for broken dynamic loaders:\n\nhttps://github.com/llvm/llvm-project/blob/1918d4bcb21af6a7e4de32073455ac51f2f9673f/lld/ELF/Writer.cpp#L2616-L2634\n\n(FWIW: The freebsd link in the commit message is a patch fixing static TLS layout for FreeBSD x86/x86_64.)\n\nIt would be nice to have a better way to test this, like an LLD flag to disable the workaround, but we also don\u0027t expect ordinary LLD users to request the behavior. LLD happens to generate a non-zero skew amount for greater-than-page alignment, but that\u0027s not really intentional, it seems. My other way of testing non-zero skew is with a C program using elf.h and mmap to modify an ELF file\u0027s PT_TLS segment.",
+      "parentUuid": "14b9eca6_a19bc612",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7b54334b_c24da9b5",
         "filename": "tests/elftls_test.cpp",
         "patchSetId": 8
@@ -137,6 +155,24 @@
       "writtenOn": "2024-03-20T15:13:22Z",
       "side": 1,
       "message": "not needed any more",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6893865d_25988d32",
+        "filename": "tests/elftls_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T23:43:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b54334b_c24da9b5",
       "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -158,6 +194,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e45afa9_ec315ab3",
+        "filename": "tests/elftls_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T23:43:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcc8ee46_cd913e7f",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70eb54e9_29036fd7",
@@ -171,6 +225,24 @@
       "writtenOn": "2024-03-20T15:13:22Z",
       "side": 1,
       "message": "call it _words instead then?",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c4c2076_d6d88d5b",
+        "filename": "tests/static_tls_layout_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-20T23:43:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70eb54e9_29036fd7",
       "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
