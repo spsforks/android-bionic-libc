@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "702ed441_e65aa8e1",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T15:13:22Z",
+      "side": 1,
+      "message": "should we move them into the linker tests if this is causing confusion?",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1875ad30_c5dfcb6c",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T15:13:22Z",
+      "side": 1,
+      "message": "still don\u0027t want to log that we\u0027re ignoring this?",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b54334b_c24da9b5",
+        "filename": "tests/elftls_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T15:13:22Z",
+      "side": 1,
+      "message": "not needed any more",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcc8ee46_cd913e7f",
+        "filename": "tests/elftls_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T15:13:22Z",
+      "side": 1,
+      "message": "not needed any more",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70eb54e9_29036fd7",
+        "filename": "tests/static_tls_layout_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T15:13:22Z",
+      "side": 1,
+      "message": "call it _words instead then?",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
