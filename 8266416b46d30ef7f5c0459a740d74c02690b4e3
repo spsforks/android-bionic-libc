@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6bd4d82_b1e4a6d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T22:42:14Z",
+      "side": 1,
+      "message": "(even if you do want to do more, i think what you have here is fine to go in as-is...)",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "702ed441_e65aa8e1",
@@ -38,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7940443a_346f0ddb",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T22:42:14Z",
+      "side": 1,
+      "message": "oh, yeah, i definitely didn\u0027t mean to do that in this already large and complicated cl. i just thought \"if the linker guy didn\u0027t think the location of these tests was obvious, are we better off moving them to match his expectations rather than commenting the mismatch?\" :-)\n\n(and, yeah, fully agree that this is a weird corner case where neither option seems 100% right.)\n\n((thanks to mainline, i only ever run the static tests anyway, unless i _have_ to run the dynamic ones!))",
+      "parentUuid": "995ea3e6_298a4364",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1875ad30_c5dfcb6c",
         "filename": "libc/bionic/bionic_elf_tls.cpp",
         "patchSetId": 8
@@ -67,6 +102,24 @@
       "side": 1,
       "message": "It didn\u0027t really seem necessary to me, but I think I can add it.\n\nMaybe log when the ELF file is loaded? That is, log in `register_soinfo_tls` when `g_static_tls_finished` is true.\n\nI\u0027m wondering whether it\u0027s safe to log from `__tls_get_addr`, but I don\u0027t know that it wouldn\u0027t be. Maybe we wouldn\u0027t want to log while signals are blocked and `modules.rwlock` is held? I don\u0027t know that for sure, though.\n\nPractically, a log message should include the name of the ELF file, which is technically available via `TlsModule::soinfo_ptr` but it\u0027s inconvenient because this is libc and not the loader, so `soinfo_ptr` has type `void*`. We also don\u0027t want to log every time a thread allocates the memory. It might be better to omit the log if no thread ever accesses the TLS memory, but I don\u0027t think we need to ensure that.\n\nI\u0027ll look at adding a log message in `register_soinfo_tls`.",
       "parentUuid": "1875ad30_c5dfcb6c",
+      "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14b9eca6_a19bc612",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-20T22:42:14Z",
+      "side": 1,
+      "message": "ah, again, i hadn\u0027t really thought about the \"we\u0027re actually in libc for this bit\" side of things. yeah, although i do fear that future rprichard will be scratching his head at weird behavior, maybe it\u0027s not worth the trouble.\n\nif we\u0027re claiming that nothing uses non-0 atm, should we abort()?",
+      "parentUuid": "97e6ed87_29a13554",
       "revId": "8266416b46d30ef7f5c0459a740d74c02690b4e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
