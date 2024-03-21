@@ -275,6 +275,30 @@
       },
       "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9652918_477e81bc",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-21T21:38:49Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f4718254_72fe0b49",
+      "range": {
+        "startLine": 375,
+        "startChar": 7,
+        "endLine": 375,
+        "endChar": 11
+      },
+      "revId": "550f9e135b8151a88491318a0be12620e1daa8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
