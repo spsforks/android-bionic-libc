@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6dbb647_8b1b6910",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-21T22:29:28Z",
+      "side": 1,
+      "message": "I couldn\u0027t find any version of this structure any place? Is this supposed to be somewhere?",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 124,
+        "endChar": 21
+      },
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d64bb6ab_a38b35d0",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-21T22:29:28Z",
+      "side": 1,
+      "message": "Aren\u0027t these auxval items? It\u0027s not clear why they would be in the elf file.",
+      "range": {
+        "startLine": 957,
+        "startChar": 0,
+        "endLine": 957,
+        "endChar": 24
+      },
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
