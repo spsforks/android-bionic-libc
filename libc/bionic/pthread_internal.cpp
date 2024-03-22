@@ -37,6 +37,7 @@
 #include <async_safe/log.h>
 #include <bionic/reserved_signals.h>
 
+#include "bionic/tls_defines.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedRWLock.h"
 #include "private/bionic_futex.h"
@@ -176,6 +177,40 @@ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
   async_safe_fatal("stack not found in /proc/self/maps");
 }
 
+__LIBC_HIDDEN__ void* __allocate_stack_mte_ringbuffer(size_t n) {
+  if (n > 7) return nullptr;
+  // Allocation needs to be aligned to 2*size to make the fancy code-gen work.
+  // So we allocate 3*size - pagesz bytes, which will always contain size bytes
+  // aligned to 2*size, and unmap the unneeded part.
+  //
+  // In the worst case, we get an allocation that is one page past the properly
+  // aligned address, in which case we have to unmap the previous
+  // 2*size - pagesz bytes. In that case, we still have size properly aligned
+  // bytes left.
+  size_t size = (1 << n) * 4096;
+
+  // If we use a bigger page size, we just overallocate, but the code still works.
+  size_t pgsize = page_size();
+  size_t alloc_size = __BIONIC_ALIGN(3 * size - pgsize, pgsize);
+  void* allocation_ptr =
+      mmap(nullptr, alloc_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (allocation_ptr == MAP_FAILED) async_safe_fatal("error: failed to allocate mte ring buffer");
+  uintptr_t allocation = reinterpret_cast<uintptr_t>(allocation_ptr);
+
+  size_t alignment = 2 * size;
+  uintptr_t aligned_allocation = __BIONIC_ALIGN(allocation, alignment);
+  if (allocation != aligned_allocation) {
+    munmap(reinterpret_cast<void*>(allocation), aligned_allocation - allocation);
+  }
+  if (aligned_allocation + size != allocation + alloc_size) {
+    munmap(reinterpret_cast<void*>(aligned_allocation + size),
+           (allocation + alloc_size) - (aligned_allocation + size));
+  }
+
+  // We store the size in the top byte of the pointer (which is ignored)
+  return reinterpret_cast<void*>(aligned_allocation | (n << 56));
+}
+
 void __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
   // If process doesn't have MTE enabled, we don't need to do anything.
@@ -192,7 +227,9 @@ void __pthread_internal_remap_stack_with_mte() {
   ScopedWriteLock creation_locker(&g_thread_creation_lock);
   ScopedReadLock list_locker(&g_thread_list_lock);
   for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
-    if (t->terminating || t->is_main()) continue;
+    if (t->terminating) continue;
+    t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
+    if (t->is_main()) continue;  // done above
     if (mprotect(t->mmap_base_unguarded, t->mmap_size_unguarded,
                  PROT_READ | PROT_WRITE | PROT_MTE)) {
       async_safe_fatal("error: failed to set PROT_MTE on thread: %d", t->tid);

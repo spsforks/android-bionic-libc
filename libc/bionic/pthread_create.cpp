@@ -36,6 +36,7 @@
 #include <sys/random.h>
 #include <unistd.h>
 
+#include "bionic/tls_defines.h"
 #include "pthread_internal.h"
 
 #include <async_safe/log.h>
@@ -320,7 +321,12 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   thread->mmap_base_unguarded = mapping.mmap_base_unguarded;
   thread->mmap_size_unguarded = mapping.mmap_size_unguarded;
   thread->stack_top = reinterpret_cast<uintptr_t>(stack_top);
-
+  thread->bionic_tcb = tcb;
+#ifdef __aarch64__
+  if (atomic_load(&__libc_memtag_stack)) {
+    tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
+  }
+#endif
   *tcbp = tcb;
   *child_stack = stack_top;
   return 0;

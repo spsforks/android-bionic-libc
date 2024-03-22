@@ -36,6 +36,7 @@
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
+#include "private/bionic_tls.h"
 #include "pthread_internal.h"
 
 extern "C" pid_t __getpid();
@@ -82,6 +83,7 @@ extern "C" void __libc_init_main_thread_early(const KernelArgumentBlock& args,
   main_thread.tid = __getpid();
   main_thread.set_cached_pid(main_thread.tid);
   main_thread.stack_top = reinterpret_cast<uintptr_t>(args.argv);
+  main_thread.bionic_tcb = temp_tcb;
 }
 
 // This code is used both by each new pthread and the code that initializes the main thread.
@@ -167,9 +169,16 @@ extern "C" void __libc_init_main_thread_final() {
   main_thread.mmap_size = mapping.mmap_size;
   main_thread.mmap_base_unguarded = mapping.mmap_base_unguarded;
   main_thread.mmap_size_unguarded = mapping.mmap_size_unguarded;
+  main_thread.bionic_tcb = new_tcb;
 
   __set_tls(&new_tcb->tls_slot(0));
 
   __set_stack_and_tls_vma_name(true);
   __free_temp_bionic_tls(temp_tls);
+
+#ifdef __aarch64__
+  if (__libc_shared_globals()->initial_memtag_stack) {
+    new_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
+  }
+#endif
 }
