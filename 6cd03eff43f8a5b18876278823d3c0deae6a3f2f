@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0f5f9903_abb27cc0",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-22T00:55:42Z",
+      "side": 1,
+      "message": "both of these newly-added structs are fine --- they accurately represent reality. i disabled them because (a) they\u0027re not in any other libc [and this one is a gnu thing that _glibc_ doesn\u0027t expose, and the type names and the `gh_` prefixes here in particular seem to have just been made up] and (b) the note struct is done better in the uapi headers already [and this one should probably be done the same, albeit mostly uselessly, just so the usual ElfW() trick works?] and (c) i\u0027d have to dick about a bit to make the `u_int32_t` types work.\n\nbut, yeah, there\u0027s one place in the dynamic linker where we could use this struct.\n\ni\u0027ve mailed the libc-coord list to see if anyone else is thinking of this, but app developers targeting iOS in addition to Android are unlikely to care about ELF files, and as long as this type isn\u0027t in glibc/musl, the folks who do care about gnu hashes in ELF files won\u0027t be able to rely on it anyway, so...",
+      "parentUuid": "c6dbb647_8b1b6910",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 124,
+        "endChar": 21
+      },
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d64bb6ab_a38b35d0",
         "filename": "libc/include/bits/elf_common.h",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2024-03-21T22:29:28Z",
       "side": 1,
       "message": "Aren\u0027t these auxval items? It\u0027s not clear why they would be in the elf file.",
+      "range": {
+        "startLine": 957,
+        "startChar": 0,
+        "endLine": 957,
+        "endChar": 24
+      },
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "221da433_27f86d07",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-22T00:55:42Z",
+      "side": 1,
+      "message": "i think it\u0027s for core dumps. (though it is the _ELF_ auxiliary vector :-) )",
+      "parentUuid": "d64bb6ab_a38b35d0",
       "range": {
         "startLine": 957,
         "startChar": 0,
