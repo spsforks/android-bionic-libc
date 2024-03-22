@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3c0eee7_142fb6f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-22T20:10:02Z",
+      "side": 1,
+      "message": "I resolved the comments and +2\u0027d the change since I don\u0027t think you are waiting for the other work to submit this cl. If I\u0027m wrong, let me know.",
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6dbb647_8b1b6910",
@@ -48,6 +65,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9968551f_3c4685d3",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-22T20:10:02Z",
+      "side": 1,
+      "message": "Seems reasonable to me.",
+      "parentUuid": "0f5f9903_abb27cc0",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 124,
+        "endChar": 21
+      },
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d64bb6ab_a38b35d0",
@@ -85,6 +126,30 @@
       "side": 1,
       "message": "i think it\u0027s for core dumps. (though it is the _ELF_ auxiliary vector :-) )",
       "parentUuid": "d64bb6ab_a38b35d0",
+      "range": {
+        "startLine": 957,
+        "startChar": 0,
+        "endLine": 957,
+        "endChar": 24
+      },
+      "revId": "6cd03eff43f8a5b18876278823d3c0deae6a3f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc85943c_ab282943",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-03-22T20:10:02Z",
+      "side": 1,
+      "message": "Ah, then that makes sense.",
+      "parentUuid": "221da433_27f86d07",
       "range": {
         "startLine": 957,
         "startChar": 0,
