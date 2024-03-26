@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24d07d0c_b40b292e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2024-03-26T22:58:20Z",
+      "side": 1,
+      "message": "LGTM. This matches glibc and musl:)",
+      "revId": "192daa712f3240bd200f9f403e1fa622472f5525",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
