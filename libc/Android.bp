@@ -194,6 +194,9 @@ cc_library_static {
         "-fno-stack-protector",
         "-ffreestanding",
     ],
+    sanitize: {
+      memtag_stack: false,
+    },
     name: "libc_bootstrap",
 }
 
@@ -220,6 +223,9 @@ cc_library_static {
         // from the linker before ifunc resolvers have made string.h functions available.
         "-ffreestanding",
     ],
+    sanitize: {
+      memtag_stack: false,
+    },
 }
 
 cc_library_static {
@@ -227,6 +233,9 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_dynamic.cpp"],
     cflags: ["-fno-stack-protector"],
+    sanitize: {
+      memtag_stack: false,
+    },
 }
 
 // ========================================================
@@ -1405,6 +1414,9 @@ cc_library_static {
         "-fno-stack-protector",
         "-fno-jump-tables",
     ],
+    sanitize: {
+      memtag_stack: false,
+    },
     arch: {
         x86_64: {
             srcs: ["arch-x86_64/dynamic_function_dispatch.cpp"],
@@ -1463,6 +1475,9 @@ cc_library_static {
         arm: {
             srcs: ["arch-arm/bionic/exidx_static.c"],
         },
+    },
+    sanitize: {
+      memtag_stack: false,
     },
 }
 

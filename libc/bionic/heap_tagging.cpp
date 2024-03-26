@@ -58,7 +58,6 @@ void SetDefaultHeapTaggingLevel() {
       case M_HEAP_TAGGING_LEVEL_SYNC:
       case M_HEAP_TAGGING_LEVEL_ASYNC:
         atomic_store(&globals->memtag, true);
-        atomic_store(&__libc_memtag_stack, __libc_shared_globals()->initial_memtag_stack);
         break;
       default:
         break;

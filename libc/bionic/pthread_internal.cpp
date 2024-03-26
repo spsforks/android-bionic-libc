@@ -188,9 +188,8 @@ __LIBC_HIDDEN__ void* __allocate_stack_mte_ringbuffer(size_t n) {
   // 2*size - pagesz bytes. In that case, we still have size properly aligned
   // bytes left.
   size_t size = (1 << n) * 4096;
-
-  // If we use a bigger page size, we just overallocate, but the code still works.
   size_t pgsize = page_size();
+
   size_t alloc_size = __BIONIC_ALIGN(3 * size - pgsize, pgsize);
   void* allocation_ptr =
       mmap(nullptr, alloc_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -208,15 +207,21 @@ __LIBC_HIDDEN__ void* __allocate_stack_mte_ringbuffer(size_t n) {
   }
 
   // We store the size in the top byte of the pointer (which is ignored)
-  return reinterpret_cast<void*>(aligned_allocation | (n << 56));
+  return reinterpret_cast<void*>(aligned_allocation | ((1 << n) << 56));
 }
 
 void __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
   // If process doesn't have MTE enabled, we don't need to do anything.
-  if (!atomic_load(&__libc_globals->memtag)) return;
   bool prev = atomic_exchange(&__libc_memtag_stack, true);
   if (prev) return;
+  ScopedWriteLock creation_locker(&g_thread_creation_lock);
+  ScopedReadLock list_locker(&g_thread_list_lock);
+  for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
+    if (t->terminating) continue;
+    t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
+  }
+  if (!atomic_load(&__libc_globals->memtag)) return;
   uintptr_t lo, hi;
   __find_main_stack_limits(&lo, &hi);
 
@@ -224,12 +229,8 @@ void __pthread_internal_remap_stack_with_mte() {
                PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
     async_safe_fatal("error: failed to set PROT_MTE on main thread");
   }
-  ScopedWriteLock creation_locker(&g_thread_creation_lock);
-  ScopedReadLock list_locker(&g_thread_list_lock);
   for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
-    if (t->terminating) continue;
-    t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
-    if (t->is_main()) continue;  // done above
+    if (t->terminating || t->is_main()) continue;
     if (mprotect(t->mmap_base_unguarded, t->mmap_size_unguarded,
                  PROT_READ | PROT_WRITE | PROT_MTE)) {
       async_safe_fatal("error: failed to set PROT_MTE on thread: %d", t->tid);

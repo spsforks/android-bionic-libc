@@ -51,7 +51,7 @@ extern "C" __LIBC_HIDDEN__ uintptr_t __get_thread_stack_top() {
  * take stack traces efficiently. Normal applications should use APIs such as libunwindstack or
  * _Unwind_Backtrace.
  */
-__attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame_pointer_chase(
+__attribute__((no_sanitize("address", "hwaddress", "memtag"))) size_t android_unsafe_frame_pointer_chase(
     uintptr_t* buf, size_t num_entries) {
   // Disable MTE checks for the duration of this function, since we can't be sure that following
   // next_frame pointers won't cause us to read from tagged memory. ASAN/HWASAN are disabled here

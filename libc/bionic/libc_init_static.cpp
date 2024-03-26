@@ -313,6 +313,8 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
     }
     memtag_stack = true;
   }
+  __libc_shared_globals()->initial_memtag_stack = memtag_stack;
+  __libc_memtag_stack = memtag_stack;
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
   static const char kAppProcessName[] = "app_process64";
   const char* progname = __libc_shared_globals()->init_progname;
@@ -360,7 +362,6 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
     if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
         prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
       __libc_shared_globals()->initial_heap_tagging_level = level;
-      __libc_shared_globals()->initial_memtag_stack = memtag_stack;
 
       if (memtag_stack) {
         void* pg_start =
@@ -381,8 +382,6 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   }
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
-  // We also didn't enable memtag_stack.
-  __libc_shared_globals()->initial_memtag_stack = false;
 }
 #else   // __aarch64__
 void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}
@@ -415,6 +414,7 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   __libc_init_mte(/*memtag_dynamic_entries=*/nullptr,
                   reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
                   /*load_bias = */ 0, /*stack_top = */ raw_args);
+
   __libc_init_scudo();
   __libc_init_profiling_handlers();
   __libc_init_fork_handler();
@@ -459,6 +459,9 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
   // things.
   __hwasan_init_static();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...
+#endif
+#ifdef __aarch64__
+  temp_tcb.tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
 #endif
   __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);
 }

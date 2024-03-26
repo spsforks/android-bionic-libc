@@ -92,7 +92,7 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
   int prot = PROT_READ | PROT_WRITE;
 #ifdef __aarch64__
-  if (atomic_load(&__libc_memtag_stack)) {
+  if (atomic_load(&__libc_memtag_stack) && __libc_globals->memtag) {
     prot |= PROT_MTE;
   }
 #endif
@@ -238,7 +238,7 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   int prot = PROT_READ | PROT_WRITE;
   const char* prot_str = "R+W";
 #ifdef __aarch64__
-  if (atomic_load(&__libc_memtag_stack)) {
+  if (atomic_load(&__libc_memtag_stack)  && __libc_globals->memtag) {
     prot |= PROT_MTE;
     prot_str = "R+W+MTE";
   }
@@ -353,7 +353,7 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
-__attribute__((no_sanitize("hwaddress")))
+__attribute__((no_sanitize("hwaddress", "memtag")))
 #ifdef __aarch64__
 // This function doesn't return, but it does appear in stack traces. Avoid using return PAC in this
 // function because we may end up resetting IA, which may confuse unwinders due to mismatching keys.
