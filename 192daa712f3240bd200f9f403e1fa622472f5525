@@ -16,6 +16,23 @@
       "message": "LGTM. This matches glibc and musl:)",
       "revId": "192daa712f3240bd200f9f403e1fa622472f5525",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06ca6b71_2b38643d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-26T23:06:38Z",
+      "side": 1,
+      "message": "is this something we should note in https://android.googlesource.com/platform/bionic/+/main/android-changes-for-ndk-developers.md ?\n\nwe still need a workaround in lld, no, because all existing linkers process the relocations in the opposite order?",
+      "revId": "192daa712f3240bd200f9f403e1fa622472f5525",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
