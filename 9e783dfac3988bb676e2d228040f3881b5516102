@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6af38a7_f5d4a169",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2024-03-26T23:57:13Z",
+      "side": 1,
+      "message": "I am reading the sentence \n\n\u003e  This meant that resolvers referenced ...\n\nDo you mean \"could not read globals with RELR relocations\"?",
+      "revId": "9e783dfac3988bb676e2d228040f3881b5516102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
