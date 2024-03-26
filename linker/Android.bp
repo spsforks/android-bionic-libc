@@ -334,6 +334,7 @@ cc_defaults {
         "-Wl,-Bsymbolic",
         "-Wl,--exclude-libs,ALL",
         "-Wl,-soname,ld-android.so",
+        "-Wl,--pack-dyn-relocs=relr",
     ],
 
     // we are going to link libc++_static manually because
