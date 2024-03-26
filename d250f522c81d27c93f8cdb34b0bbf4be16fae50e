@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "338390b4_bcf61bce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-26T21:39:28Z",
+      "side": 1,
+      "message": "if we fix these, is there some kind of \"assertion\" we can give on the lld command-line that there shouldn\u0027t be any?\n\ni see the kernel builds zstd with\n```\n\t\t-DZSTD_HAVE_WEAK_SYMBOLS\u003d0 \\\n\t\t-DZSTD_TRACE\u003d0 \\\n```\nshould we?",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 51
+      },
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ca490cea_be7b5667",
@@ -31,6 +54,23 @@
       "writtenOn": "2024-03-26T21:06:15Z",
       "side": 1,
       "message": "Thanks!",
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11266595_b79402f7",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-26T21:39:28Z",
+      "side": 1,
+      "message": "worth having a comment here? (especially since i just last week removed most of the manual packing options in the platform build, so we defer to the toolchain in most cases now!)",
       "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
