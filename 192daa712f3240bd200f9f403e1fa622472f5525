@@ -33,6 +33,24 @@
       "message": "is this something we should note in https://android.googlesource.com/platform/bionic/+/main/android-changes-for-ndk-developers.md ?\n\nwe still need a workaround in lld, no, because all existing linkers process the relocations in the opposite order?",
       "revId": "192daa712f3240bd200f9f403e1fa622472f5525",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38336e0e_d25b91b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-26T23:39:02Z",
+      "side": 1,
+      "message": "\u003e is this something we should note in https://android.googlesource.com/platform/bionic/+/main/android-changes-for-ndk-developers.md ?\n\nMakes sense, done.\n\n\u003e we still need a workaround in lld, no, because all existing linkers process the relocations in the opposite order?\n\nCorrect.",
+      "parentUuid": "06ca6b71_2b38643d",
+      "revId": "192daa712f3240bd200f9f403e1fa622472f5525",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
