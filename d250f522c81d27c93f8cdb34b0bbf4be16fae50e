@@ -16,6 +16,23 @@
       "message": "(+maskray for whether the relocation move was intentional)",
       "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4786ea06_3320c264",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2024-03-26T21:06:15Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
