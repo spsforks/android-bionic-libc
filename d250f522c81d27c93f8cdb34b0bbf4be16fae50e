@@ -73,6 +73,24 @@
       "message": "worth having a comment here? (especially since i just last week removed most of the manual packing options in the platform build, so we defer to the toolchain in most cases now!)",
       "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a4baed7_2a0d13e1",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-26T21:52:17Z",
+      "side": 1,
+      "message": "Maybe we could also add an assertion in the linker -- currently call_ifunc_resolvers is quietly ignoring the Android packed relocations, but it\u0027d be easy to reject them I think:\n\n```\n--- a/linker/linker_main.cpp\n+++ b/linker/linker_main.cpp\n@@ -647,6 +647,7 @@ static void call_ifunc_resolvers() {\n     auto *dyn \u003d reinterpret_cast\u003cElfW(Dyn)*\u003e(ehdr + phdr[i].p_vaddr);\n     ElfW(Addr) pltrel \u003d 0, pltrelsz \u003d 0, rel \u003d 0, relsz \u003d 0;\n     for (size_t j \u003d 0, size \u003d phdr[i].p_filesz / sizeof(ElfW(Dyn)); j !\u003d size; ++j) {\n+      CHECK(dyn[j].d_tag !\u003d DT_ANDROID_REL \u0026\u0026 dyn[j].d_tag !\u003d DT_ANDROID_RELA);\n       if (dyn[j].d_tag \u003d\u003d DT_JMPREL) {\n         pltrel \u003d dyn[j].d_un.d_ptr;\n       } else if (dyn[j].d_tag \u003d\u003d DT_PLTRELSZ) {\n```",
+      "parentUuid": "11266595_b79402f7",
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
