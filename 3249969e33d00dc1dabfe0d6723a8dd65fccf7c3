@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52d4c8e3_93c3e0db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T02:23:57Z",
+      "side": 1,
+      "message": "(you\u0027ll need the qcom review+1 on this...)",
+      "revId": "3249969e33d00dc1dabfe0d6723a8dd65fccf7c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
