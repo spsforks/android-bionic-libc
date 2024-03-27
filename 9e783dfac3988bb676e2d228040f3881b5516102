@@ -16,6 +16,24 @@
       "message": "I am reading the sentence \n\n\u003e  This meant that resolvers referenced ...\n\nDo you mean \"could not read globals with RELR relocations\"?",
       "revId": "9e783dfac3988bb676e2d228040f3881b5516102",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56ae57e6_4eb1bd56",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-27T00:00:53Z",
+      "side": 1,
+      "message": "Well, they could read them, but they\u0027d read the wrong value. That\u0027s what that\u0027s trying to say.",
+      "parentUuid": "e6af38a7_f5d4a169",
+      "revId": "9e783dfac3988bb676e2d228040f3881b5516102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
