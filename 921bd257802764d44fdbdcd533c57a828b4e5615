@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "62b074ba_23c2690e",
+        "filename": "libc/include/bits/sysconf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T21:23:49Z",
+      "side": 1,
+      "message": "yeah, i added all these so you can go straight to the source, but it\u0027s unclear to me where to explicitly say that. i guess i can add some text to sysconf() itself...",
+      "parentUuid": "15a6c0ff_ee34f8eb",
+      "range": {
+        "startLine": 115,
+        "startChar": 20,
+        "endLine": 115,
+        "endChar": 34
+      },
+      "revId": "921bd257802764d44fdbdcd533c57a828b4e5615",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "babba44b_d8cc8334",
         "filename": "libc/include/unistd.h",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2024-03-27T21:14:42Z",
       "side": 1,
       "message": "Is it work mentioning if that\u0027s the case?",
+      "range": {
+        "startLine": 341,
+        "startChar": 74,
+        "endLine": 344,
+        "endChar": 12
+      },
+      "revId": "921bd257802764d44fdbdcd533c57a828b4e5615",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86f7d842_79fddb48",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T21:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "babba44b_d8cc8334",
       "range": {
         "startLine": 341,
         "startChar": 74,
