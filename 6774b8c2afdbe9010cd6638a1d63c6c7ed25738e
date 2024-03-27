@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77b94f71_d1df0f95",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-27T01:54:23Z",
+      "side": 1,
+      "message": "Done; should we also fix the references to \"U\" and \"V\" in the \"No more sentinels in .preinit_array/.init_array/.fini_array sections of executables (in All API levels)\" section below?",
+      "parentUuid": "b5b8db1b_9b3ce074",
+      "range": {
+        "startLine": 481,
+        "startChar": 9,
+        "endLine": 481,
+        "endChar": 18
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f5d3e82_3a9aae04",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c87d1466_9310d679",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-27T01:54:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f5d3e82_3a9aae04",
+      "range": {
+        "startLine": 482,
+        "startChar": 50,
+        "endLine": 482,
+        "endChar": 59
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "accccf76_65f550d0",
@@ -77,6 +125,30 @@
       "writtenOn": "2024-03-27T01:16:33Z",
       "side": 1,
       "message": "(\"API level\" again)",
+      "range": {
+        "startLine": 488,
+        "startChar": 40,
+        "endLine": 488,
+        "endChar": 52
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dce38611_0269ea35",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-27T01:54:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "accccf76_65f550d0",
       "range": {
         "startLine": 488,
         "startChar": 40,
