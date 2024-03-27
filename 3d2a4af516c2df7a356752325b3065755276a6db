@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "02dd0c86_06cb78fe",
+        "filename": "libc/arch-arm64/oryon/memset-nt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3329763
+      },
+      "writtenOn": "2024-03-27T05:13:56Z",
+      "side": 1,
+      "message": "arm-optimized-routines uses Q register for the memset implementation, whereas for Oryon CPUs, as of today we want to use X registers (more optimal) instead of Q registers (SIMD).",
+      "parentUuid": "950852ea_4a84adf1",
+      "revId": "3d2a4af516c2df7a356752325b3065755276a6db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8337a0e3_3d911a93",
         "filename": "libc/arch-arm64/oryon/memset-nt.S",
         "patchSetId": 1
