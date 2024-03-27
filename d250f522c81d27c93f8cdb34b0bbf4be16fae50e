@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4cdbff29_e12b2d3f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T22:04:59Z",
+      "side": 1,
+      "message": "weirdly i\u0027m still seeing the relocations even after building with those macros: https://android-review.git.corp.google.com/c/platform/external/zstd/+/3018263\n\nwhy is there a GLOB_DAT for a function anyway?",
+      "parentUuid": "338390b4_bcf61bce",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 51
+      },
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ca490cea_be7b5667",
