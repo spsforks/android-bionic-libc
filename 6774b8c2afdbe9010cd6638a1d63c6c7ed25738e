@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af7eea1c_ba8c9e5b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T01:16:33Z",
+      "side": 1,
+      "message": "(otherwise lgtm. thanks!)",
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5b8db1b_9b3ce074",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T01:16:33Z",
+      "side": 1,
+      "message": "(use \"API level $X\" in this doc, since it\u0027s for app developers.)",
+      "range": {
+        "startLine": 481,
+        "startChar": 9,
+        "endLine": 481,
+        "endChar": 18
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f5d3e82_3a9aae04",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T01:16:33Z",
+      "side": 1,
+      "message": "\"ifunc resolvers\" for searchability (i doubt anyone who hasn\u0027t been involved in implementing a linker/loader knows \"IRELATIVE\" :-) )",
+      "range": {
+        "startLine": 482,
+        "startChar": 50,
+        "endLine": 482,
+        "endChar": 59
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "accccf76_65f550d0",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T01:16:33Z",
+      "side": 1,
+      "message": "(\"API level\" again)",
+      "range": {
+        "startLine": 488,
+        "startChar": 40,
+        "endLine": 488,
+        "endChar": 52
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
