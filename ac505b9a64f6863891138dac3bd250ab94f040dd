@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a36cd45b_6cf94a88",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-03-27T00:01:40Z",
+      "side": 1,
+      "message": "have been able?",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 484,
+        "endChar": 12
+      },
+      "revId": "ac505b9a64f6863891138dac3bd250ab94f040dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
