@@ -65,6 +65,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "762f7fa4_d3b92cf1",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T02:18:33Z",
+      "side": 1,
+      "message": "yes, but \"not a regression\", so i\u0027ll come back and do that. (actually, now you\u0027ve made me look, this file is in a much worse state than i thought. i was sure we\u0027d been through and fixed all this at some point, but there are still JB-MR2 references in here! if i\u0027d known that, i wouldn\u0027t have wasted your time polishing the turd :-) )",
+      "parentUuid": "77b94f71_d1df0f95",
+      "range": {
+        "startLine": 481,
+        "startChar": 9,
+        "endLine": 481,
+        "endChar": 18
+      },
+      "revId": "6774b8c2afdbe9010cd6638a1d63c6c7ed25738e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f5d3e82_3a9aae04",
