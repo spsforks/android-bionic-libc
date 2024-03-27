@@ -168,6 +168,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc0d3ab7_bd81ca98",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T22:44:34Z",
+      "side": 1,
+      "message": "yeah, i\u0027ll cherrypick to a real machine and then file a cider bug if it looks right there...",
+      "parentUuid": "201b3180_f5787d67",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 51
+      },
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ca490cea_be7b5667",
