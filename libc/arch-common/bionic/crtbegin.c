@@ -63,7 +63,7 @@ static fini_func_t* fini_array_with_sentinels[] = {
 };
 #endif  // !defined(CRTBEGIN_STATIC)
 
-__used static void _start_main(void* raw_args) {
+__used static void _start_main(void* raw_args) __attribute__((no_sanitize("hwaddress", "memtag"))) {
   structors_array_t array = {};
 #if defined(CRTBEGIN_STATIC)
   array.preinit_array = __preinit_array_start;

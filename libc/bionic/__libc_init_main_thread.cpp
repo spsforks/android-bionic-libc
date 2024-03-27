@@ -177,8 +177,8 @@ extern "C" void __libc_init_main_thread_final() {
   __free_temp_bionic_tls(temp_tls);
 
 #ifdef __aarch64__
-  if (__libc_shared_globals()->initial_memtag_stack) {
+ // if (__libc_shared_globals()->initial_memtag_stack) {
     new_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
-  }
+ // }
 #endif
 }

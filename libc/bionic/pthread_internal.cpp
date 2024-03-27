@@ -219,7 +219,7 @@ void __pthread_internal_remap_stack_with_mte() {
   ScopedReadLock list_locker(&g_thread_list_lock);
   for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
     if (t->terminating) continue;
-    t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
+    // t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(2);
   }
   if (!atomic_load(&__libc_globals->memtag)) return;
   uintptr_t lo, hi;
