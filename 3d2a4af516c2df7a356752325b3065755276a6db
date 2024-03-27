@@ -87,6 +87,24 @@
       "parentUuid": "8337a0e3_3d911a93",
       "revId": "3d2a4af516c2df7a356752325b3065755276a6db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f193ee25_de8953b3",
+        "filename": "libc/arch-arm64/oryon/memset-nt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T17:58:18Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f817c0f5_4927b107",
+      "revId": "3d2a4af516c2df7a356752325b3065755276a6db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
