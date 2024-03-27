@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "65bb0668_1b5f5507",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-27T22:29:40Z",
+      "side": 1,
+      "message": "Yes, I did\n```\nreadelf -aW out.cfa64l5/target/product/vsoc_arm64_only/system/bin/bootstrap/linker64 | grep GLOB_DAT\n```\nand got no output.",
+      "parentUuid": "149cd36e_a7a5dd83",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 51
+      },
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ca490cea_be7b5667",
