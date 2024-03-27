@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6918b89d_72425867",
+        "filename": "libc/arch-arm64/oryon/memset-nt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T15:02:32Z",
+      "side": 1,
+      "message": "ah, okay. i assumed that was a _regression_ from using the linaro code...",
+      "parentUuid": "02dd0c86_06cb78fe",
+      "revId": "3d2a4af516c2df7a356752325b3065755276a6db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8337a0e3_3d911a93",
