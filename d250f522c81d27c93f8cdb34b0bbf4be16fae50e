@@ -120,6 +120,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e447f6c_489a3e24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-27T22:37:22Z",
+      "side": 1,
+      "message": "definitely still there for me:\n```\n/google/cog/cloud/enh/CS-Android-2024-03-27_142848/android/external/zstd$ llvm-readelf-16 -aW ../../out/target/product/vsoc_arm64/system/bi\nn/bootstrap/linker64 | grep GLOB_DAT\n0000000000179150  0000000100000401 R_AARCH64_GLOB_DAT     0000000000000000 ZSTD_trace_decompress_begin + 0\n0000000000179158  0000000200000401 R_AARCH64_GLOB_DAT     0000000000000000 ZSTD_trace_decompress_end + 0\n/google/cog/cloud/enh/CS-Android-2024-03-27_142848/android/external/zstd$ \n```\noh, you just used binutils readelf --- are you sure you\u0027re using an aarch64 readelf?",
+      "parentUuid": "65bb0668_1b5f5507",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 51
+      },
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ca490cea_be7b5667",
