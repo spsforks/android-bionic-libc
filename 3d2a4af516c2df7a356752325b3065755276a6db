@@ -69,6 +69,24 @@
       "message": "if you\u0027re going to use the linaro code (where this seems to be the main difference from the arm code) as a base, remove the unused #if stuff, hard-code the zva availability for your SoC?\n\nor does the linaro code have the stnp stuff too? (if so, yeah, let\u0027s keep it as close to upstream as possible.)",
       "revId": "3d2a4af516c2df7a356752325b3065755276a6db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f817c0f5_4927b107",
+        "filename": "libc/arch-arm64/oryon/memset-nt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 3329763
+      },
+      "writtenOn": "2024-03-27T17:45:38Z",
+      "side": 1,
+      "message": "Removed #if check for DC ZVA from the code",
+      "parentUuid": "8337a0e3_3d911a93",
+      "revId": "3d2a4af516c2df7a356752325b3065755276a6db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
