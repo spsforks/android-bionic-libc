@@ -144,6 +144,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "201b3180_f5787d67",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-27T22:42:45Z",
+      "side": 1,
+      "message": "Yes, I\u0027m using multiarch readelf. Same result with a recently built llvm-readelf:\n```\n~/l5/ra/bin/llvm-readelf -aW out.cfa64l5/target/product/vsoc_arm64_only/system/bin/bootstrap/linker64 | grep\n GLOB_DAT\n```\nMaybe something weird going on with cider? Or could it be a prebuilt?",
+      "parentUuid": "8e447f6c_489a3e24",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 51
+      },
+      "revId": "d250f522c81d27c93f8cdb34b0bbf4be16fae50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ca490cea_be7b5667",
