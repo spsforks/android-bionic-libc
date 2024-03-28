@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87b00871_cbbf8227",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-28T00:47:05Z",
+      "side": 1,
+      "message": "```suggestion\nStarting with API level 29, libc uses\n```",
+      "revId": "325933bdefc4022e0b3f266947754440a9e6b498",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
