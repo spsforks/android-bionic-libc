@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc17d184_621a95dd",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-28T14:57:12Z",
+      "side": 1,
+      "message": "(the regular expressions were probably my doing in the first place, but i\u0027ve tried to stop doing that (a) for ease of searching and (b) so readers don\u0027t have to think as much. i was confused by the kRelTag below, and my own comment didn\u0027t help me as much as i\u0027d hoped!)",
+      "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bde8103_84da95f3",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-28T14:57:12Z",
+      "side": 1,
+      "message": "alternatively, if this is an inherent limitation and we really _can\u0027t_ support them, please give me an explanation i can add here :-)",
+      "range": {
+        "startLine": 650,
+        "startChar": 12,
+        "endLine": 650,
+        "endChar": 17
+      },
+      "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
