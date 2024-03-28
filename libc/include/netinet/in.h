@@ -42,6 +42,9 @@ __BEGIN_DECLS
 
 #define INET_ADDRSTRLEN 16
 
+/** An integral type representing an IPv4 address. */
+typedef uint32_t in_addr_t;
+
 typedef uint16_t in_port_t;
 
 int bindresvport(int __fd, struct sockaddr_in* _Nullable __sin);
