@@ -87,6 +87,30 @@
       },
       "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "593d8f82_a4b80a40",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-28T20:35:04Z",
+      "side": 1,
+      "message": "it doesn\u0027t work out of the box, but now i know where/when the _linker_ runs the ifunc resolvers, i can move the libc call earlier too, and that works.\n\nof course, this also means we\u0027ll run _all_ ifunc resolvers in _all_ static binaries a lot earlier. and we don\u0027t know what people are doing in their own ifuncs. do we care? is it worth adding limitations on what you can call in a static binary\u0027s ifuncs to get the libc ifuncs in static binaries? (arm64 memcpy in particular is a _lot_ faster.)",
+      "parentUuid": "978308c7_d6b7bd8b",
+      "range": {
+        "startLine": 650,
+        "startChar": 12,
+        "endLine": 650,
+        "endChar": 17
+      },
+      "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
