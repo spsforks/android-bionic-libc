@@ -39,6 +39,30 @@
       },
       "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9e47a08_da9c2e39",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-03-28T20:07:09Z",
+      "side": 1,
+      "message": "No, \"don\u0027t currently\" is accurate. I\u0027m not aware of any reason why we *can\u0027t* run the DT_ANDROID_REL[A] unpacker here, but the more code we have running before relocating IRELATIVE, the higher chance the compiler will add a call to an ifunc (the compiler is allowed to add calls to memset even in freestanding mode).",
+      "parentUuid": "4bde8103_84da95f3",
+      "range": {
+        "startLine": 650,
+        "startChar": 12,
+        "endLine": 650,
+        "endChar": 17
+      },
+      "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
