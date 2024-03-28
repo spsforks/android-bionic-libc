@@ -63,6 +63,30 @@
       },
       "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "978308c7_d6b7bd8b",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-28T20:14:39Z",
+      "side": 1,
+      "message": "weirdly, despite having a call_ifunc_resolvers() in the generic static libc initialization code, we have stuff like bionic/libc/arch-arm/static_function_dispatch.S rather than actually using the ifunc resolvers --- does anyone remember why? or was that just something we forgot to clean up when we added call_ifunc_resolvers() to these two places?\n\nlooks like it was pcc who implemented ifuncs in static binaries for hwasan performance [https://b.corp.google.com/issues/112482891]? so maybe just something that never occurred to anyone?",
+      "parentUuid": "b9e47a08_da9c2e39",
+      "range": {
+        "startLine": 650,
+        "startChar": 12,
+        "endLine": 650,
+        "endChar": 17
+      },
+      "revId": "f67f27b040c129da3bb9b88bcde2931fddd6e64e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
