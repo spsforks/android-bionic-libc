@@ -1,5 +1,29 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b39a0c62_2cb161e7",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-28T14:57:40Z",
+      "side": 1,
+      "message": "i think this is a \"don\u0027t\" rather than a \"can\u0027t\"? https://android-review.git.corp.google.com/c/platform/bionic/+/3019223",
+      "range": {
+        "startLine": 650,
+        "startChar": 12,
+        "endLine": 650,
+        "endChar": 17
+      },
+      "revId": "c630da59280dfe24ba5c72d78ad6f3ea72d0ee33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
