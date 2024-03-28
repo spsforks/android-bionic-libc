@@ -34,6 +34,24 @@
       "parentUuid": "87b00871_cbbf8227",
       "revId": "325933bdefc4022e0b3f266947754440a9e6b498",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "722e6299_576950d3",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-28T00:52:40Z",
+      "side": 1,
+      "message": "(i\u0027d chickened out because of the slightly complicated \"but it doesn\u0027t matter what api level _your_ code is\", but, yeah, that wasn\u0027t helpful. updated to be more explicit about this. hopefully clearer now...)",
+      "parentUuid": "9c3c4aca_caaa315e",
+      "revId": "325933bdefc4022e0b3f266947754440a9e6b498",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
