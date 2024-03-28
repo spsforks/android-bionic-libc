@@ -64,6 +64,9 @@ struct ipv6_destopt_hao {
   __u8 length;
   struct in6_addr addr;
 } __attribute__((packed));
+#ifndef __struct_group
+#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct TAG { MEMBERS } ATTRS NAME; } ATTRS
+#endif
 struct ipv6hdr {
 #ifdef __LITTLE_ENDIAN_BITFIELD
   __u8 priority : 4, version : 4;
