@@ -75,7 +75,7 @@ android_net_res_stats_aggregate(struct __res_stats* stats, int* successes, int* 
         // as well as unknown codes as errors.
         switch (stats->samples[i].rcode) {
         case NOERROR:
-        case NOTAUTH:
+        case NONAUTH:
         case NXDOMAIN:
             ++s;
             rtt_sum += stats->samples[i].rtt;
@@ -87,7 +87,7 @@ android_net_res_stats_aggregate(struct __res_stats* stats, int* successes, int* 
         case RCODE_INTERNAL_ERROR:
             ++ie;
             break;
-        case SERVFAIL:
+        case FORMERR:
         case NOTIMP:
         case REFUSED:
         default:
