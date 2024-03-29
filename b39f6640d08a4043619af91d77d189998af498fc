@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "663363cb_dd2984db",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T22:58:14Z",
+      "side": 1,
+      "message": "interesting... that looks like it was an Android contribution to upstream. tkjos: any idea whether those ioctls() are just broken now, and the callers should be removed? or will this live on in ACK? https://source.corp.google.com/search?q\u003dinclude.*f_accessory.h%20-file:f_accessory.h\u0026sq\u003drepo:android%2Fplatform%2Fsuperproject%2Fmain%20b:main%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 66
+      },
+      "revId": "b39f6640d08a4043619af91d77d189998af498fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3cfcd06b_b856282a",
