@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "95eb226a_f2828d06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T19:24:56Z",
+      "side": 1,
+      "message": "comments addressed in https://android-review.git.corp.google.com/c/platform/bionic/+/3020383...",
+      "parentUuid": "9737a921_844bf0d5",
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ceb81b3b_f4fe023d",
@@ -55,6 +73,30 @@
       "side": 1,
       "message": "Acknowledged",
       "parentUuid": "ceb81b3b_f4fe023d",
+      "range": {
+        "startLine": 279,
+        "startChar": 72,
+        "endLine": 279,
+        "endChar": 78
+      },
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "839126a0_87463b59",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T19:24:56Z",
+      "side": 1,
+      "message": "(done)",
+      "parentUuid": "723a275a_7b75298b",
       "range": {
         "startLine": 279,
         "startChar": 72,
@@ -112,6 +154,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "348c78ee_9a55294b",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T19:24:56Z",
+      "side": 1,
+      "message": "(done. this was also the only \"target\" that looked suspicious.)",
+      "parentUuid": "7657bbff_f5406e0c",
+      "range": {
+        "startLine": 358,
+        "startChar": 13,
+        "endLine": 358,
+        "endChar": 29
+      },
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3e2d055_49d10b74",
@@ -149,6 +215,30 @@
       "side": 1,
       "message": "Acknowledged",
       "parentUuid": "c3e2d055_49d10b74",
+      "range": {
+        "startLine": 458,
+        "startChar": 0,
+        "endLine": 459,
+        "endChar": 7
+      },
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63eb69da_e4a7716c",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T19:24:56Z",
+      "side": 1,
+      "message": "(done, and audited.)",
+      "parentUuid": "96130624_51b87f24",
       "range": {
         "startLine": 458,
         "startChar": 0,
