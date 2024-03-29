@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "723a275a_7b75298b",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T18:50:31Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ceb81b3b_f4fe023d",
+      "range": {
+        "startLine": 279,
+        "startChar": 72,
+        "endLine": 279,
+        "endChar": 78
+      },
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "012d2384_6a8bb0c7",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7657bbff_f5406e0c",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T18:50:31Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "012d2384_6a8bb0c7",
+      "range": {
+        "startLine": 358,
+        "startChar": 13,
+        "endLine": 358,
+        "endChar": 29
+      },
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3e2d055_49d10b74",
@@ -77,6 +125,30 @@
       "writtenOn": "2024-03-28T20:49:50Z",
       "side": 1,
       "message": "When I need to make it clear that it\u0027s the OS version that matters and not anything to do with the app, I phrase it as \"For all devices running API level ...\", or \"For all devices with OS API level...\"\n\nThe word target should never be used unless you mean `targetSdkVersion` (well, or \"targeting arm\" or something like that, but never conflate targetSdkVersion and minSdkVersion). As I mentioned above, auditing all those uses might be better left to a second CL.",
+      "range": {
+        "startLine": 458,
+        "startChar": 0,
+        "endLine": 459,
+        "endChar": 7
+      },
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96130624_51b87f24",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T18:50:31Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "c3e2d055_49d10b74",
       "range": {
         "startLine": 458,
         "startChar": 0,
