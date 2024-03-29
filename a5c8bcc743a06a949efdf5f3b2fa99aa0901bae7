@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9737a921_844bf0d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-03-29T18:49:53Z",
+      "side": 1,
+      "message": "the \"open in cider\" button isn\u0027t working for me (it\u0027s taking me to an unedited version of this file), so i\u0027ll merge this and address the comments in a followup...",
+      "revId": "a5c8bcc743a06a949efdf5f3b2fa99aa0901bae7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ceb81b3b_f4fe023d",
