@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "59dce80d_e8e23ef4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1069543
+      },
+      "writtenOn": "2024-03-29T23:42:10Z",
+      "side": 1,
+      "message": "This was an android-specific patch we had been carrying since ~2011. Since then, upstream has evolved to support equivalent functionality in userspace. There have been plans to migrate to that since at least 2019 by various USB teams in Android, but that never happened. This became urgent when the old kernel implementation became unsupportable with upstream changes (v6.7 and our android15-6.6 branch). See aosp/2874036.\n\nThere is now a commitment to switch to the proper userspace implementation for Android 16. b/120441124#comment30 has a pointer to this new plan.\n\nFor android15-6.6, we have a new implementation (aosp/2995439) that is consistent with most of the old one as a temporary solution for Android 15. This is not planned to be propagated to any android16 kernel or android-mainline since it will be replaced by the userspace implementation.\n\nAll inclusions of `bionic/libc/kernel/uapi/linux/usb/f_accessory.h` should be removed from the Android tree. @anothermark@google.com, please add this to your list for the userspace work.",
+      "parentUuid": "663363cb_dd2984db",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 66
+      },
+      "revId": "b39f6640d08a4043619af91d77d189998af498fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3cfcd06b_b856282a",
