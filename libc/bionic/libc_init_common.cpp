@@ -96,7 +96,7 @@ void __libc_init_scudo() {
   SetDefaultHeapTaggingLevel();
 
 // TODO(b/158870657) make this unconditional when all devices support SCUDO.
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
 #if defined(SCUDO_PATTERN_FILL_CONTENTS)
   scudo_malloc_set_pattern_fill_contents(1);
 #elif defined(SCUDO_ZERO_CONTENTS)
