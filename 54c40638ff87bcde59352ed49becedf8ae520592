@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d77ef4ff_c2357f87",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-01T20:22:24Z",
+      "side": 1,
+      "message": "rprichard: i thought we had more general rejection of bad headers already? is that only for _program_ headers?\n\n(separately to this, i don\u0027t think it would be unreasonable for us to change this `continue` to a target api level check, and actually reject dodgy ELF files from an app that\u0027s _targeting_ V...)",
+      "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
