@@ -16,6 +16,24 @@
       "message": "rprichard: i thought we had more general rejection of bad headers already? is that only for _program_ headers?\n\n(separately to this, i don\u0027t think it would be unreasonable for us to change this `continue` to a target api level check, and actually reject dodgy ELF files from an app that\u0027s _targeting_ V...)",
       "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3221ed11_b97661a7",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-04-01T20:38:49Z",
+      "side": 1,
+      "message": "It looks like we check that a PT_LOAD segment doesn\u0027t extend past the end of its file, later on, in ElfReader::LoadSegments. This code runs earlier and checks a PT_NOTE instead.\n\nI\u0027m guessing we aren\u0027t generally checking whether program headers extend past the end of the file.\n\nThe new error check seems fine to me. I suspect the value could overflow but I don\u0027t think the loader generally guards against that.",
+      "parentUuid": "d77ef4ff_c2357f87",
+      "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
