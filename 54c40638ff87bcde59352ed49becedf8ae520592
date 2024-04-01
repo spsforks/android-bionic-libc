@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b909017_86395ef8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2024-04-01T21:01:45Z",
+      "side": 1,
+      "message": "For other libc implementations, I believe we would call invalid PT_NOTE user problem and might not consider supporting them even if older versions did not report an error. Perhaps Android bionic has a larger tolerance of such user problems. If that\u0027s the case, this looks fine with me.",
+      "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d77ef4ff_c2357f87",
