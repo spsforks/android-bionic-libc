@@ -51,6 +51,24 @@
       "parentUuid": "d77ef4ff_c2357f87",
       "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14c6c9cd_143ea9e5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-01T21:16:29Z",
+      "side": 1,
+      "message": "you have to have a strong reason to break apps users might have paid for, and that might not be being updated. (that\u0027s why i talked about _targeting_ V --- that proves the app has been updated, in which case they can stop doing naughty things. meanwhile non-updated apps would keep working.)",
+      "parentUuid": "3221ed11_b97661a7",
+      "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
