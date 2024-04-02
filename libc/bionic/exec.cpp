@@ -100,6 +100,7 @@ int execlp(const char* name, const char* arg, ...) {
 }
 
 int execv(const char* name, char* const* argv) {
+  LOG(INFO) << __FILE__ << ":" << __LINE__ << " asdf";
   return execve(name, argv, environ);
 }
 
@@ -186,5 +187,6 @@ int fexecve(int fd, char* const* argv, char* const* envp) {
 
 __attribute__((no_sanitize("memtag"))) int execve(const char* pathname, char* const* argv,
                                                   char* const* envp) {
+  LOG(INFO) << __FILE__ << ":" << __LINE__ << " asdf";
   return __execve(pathname, argv, envp);
 }
