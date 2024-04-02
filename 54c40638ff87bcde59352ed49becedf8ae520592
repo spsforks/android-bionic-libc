@@ -69,6 +69,24 @@
       "parentUuid": "3221ed11_b97661a7",
       "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0825cd47_bffdc7ba",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-02T00:54:28Z",
+      "side": 1,
+      "message": "Thanks for the discussion. I will send a follow up for the this check.",
+      "parentUuid": "14c6c9cd_143ea9e5",
+      "revId": "54c40638ff87bcde59352ed49becedf8ae520592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
