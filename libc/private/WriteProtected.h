@@ -30,11 +30,11 @@
 template <typename T>
 union WriteProtectedContents {
   T value;
-  char padding[max_page_size()];
+  char padding[4096];
 
   WriteProtectedContents() = default;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtectedContents);
-} __attribute__((aligned(max_page_size())));
+} __attribute__((aligned(4096)));
 
 // Write protected wrapper class that aligns its contents to a page boundary,
 // and sets the memory protection to be non-writable, except when being modified
@@ -42,7 +42,7 @@ union WriteProtectedContents {
 template <typename T>
 class WriteProtected {
  public:
-  static_assert(sizeof(T) < max_page_size(),
+  static_assert(sizeof(T) < 4096,
                 "WriteProtected only supports contents up to max_page_size()");
 
   WriteProtected() = default;
@@ -80,7 +80,7 @@ class WriteProtected {
     // ourselves.
     addr = untag_address(addr);
 #endif
-    if (mprotect(reinterpret_cast<void*>(addr), max_page_size(), prot) == -1) {
+    if (mprotect(reinterpret_cast<void*>(addr), 4096, prot) == -1) {
       async_safe_fatal("WriteProtected mprotect %x failed: %s", prot, strerror(errno));
     }
   }
