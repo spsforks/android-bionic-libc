@@ -98,7 +98,7 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
   void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, prot, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
     // Create a guard to catch stack overflows in signal handlers.
-    if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
+    if (mprotect(untag_address(stack_base), PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
       munmap(stack_base, SIGNAL_STACK_SIZE);
       return;
     }
@@ -242,7 +242,7 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
     prot_str = "R+W+MTE";
   }
 #endif
-  if (mprotect(space + stack_guard_size, writable_size, prot) != 0) {
+  if (mprotect(untag_address(space) + stack_guard_size, writable_size, prot) != 0) {
     async_safe_format_log(
         ANDROID_LOG_WARN, "libc",
         "pthread_create failed: couldn't mprotect %s %zu-byte thread mapping region: %m", prot_str,
