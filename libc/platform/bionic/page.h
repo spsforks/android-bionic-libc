@@ -35,6 +35,9 @@ inline size_t page_size() {
 constexpr size_t max_page_size() {
 #if defined(PAGE_SIZE)
   return PAGE_SIZE;
+#elif __has_feature(hwaddress_sanitizer)
+  // TODO(b/332534664): Fix this once the failing test is fixed.
+  return 4096;
 #else
   return 65536;
 #endif
