@@ -22,6 +22,30 @@
       },
       "revId": "bb01839791f5c72a7544340f424d50768dce2662",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1281ce58_447acb09",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-04-03T18:01:38Z",
+      "side": 1,
+      "message": "Also - FYI Elliott, Vilas also found the user of this function which is breaking HWASAN is http://r.android.com/3023844. Though, if this can merge, and we can fix HWASAN independently, that would be our preference, thank you!",
+      "parentUuid": "bfb1ea24_8851a48c",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 14
+      },
+      "revId": "bb01839791f5c72a7544340f424d50768dce2662",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
