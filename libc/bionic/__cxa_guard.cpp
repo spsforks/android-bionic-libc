@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+
+#pragma GCC push_options
+#pragma GCC optimize("O0")
+
 #include <endian.h>
 #include <limits.h>
 #include <stdatomic.h>
@@ -124,3 +128,6 @@ extern "C" void __cxa_guard_abort(_guard_t* gv) {
     __futex_wake_ex(&gv->state, false, INT_MAX);
   }
 }
+
+
+#pragma GCC pop_options
