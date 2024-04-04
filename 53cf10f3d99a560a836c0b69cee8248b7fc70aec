@@ -16,6 +16,29 @@
       "message": "(ps2 just removes the \\n\\t from the __asm__.)",
       "revId": "53cf10f3d99a560a836c0b69cee8248b7fc70aec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56b27254_363c269f",
+        "filename": "libc/arch-arm64/dynamic_function_dispatch.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-04-04T18:28:08Z",
+      "side": 1,
+      "message": "Is there a reason to have this? It\u0027s a little confusing to see this since it doesn\u0027t do anything.",
+      "range": {
+        "startLine": 43,
+        "startChar": 45,
+        "endLine": 43,
+        "endChar": 49
+      },
+      "revId": "53cf10f3d99a560a836c0b69cee8248b7fc70aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
