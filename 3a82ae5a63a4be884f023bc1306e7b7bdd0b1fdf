@@ -33,6 +33,24 @@
       "message": "Can we have more details about what\u0027s the problem here and why it didn\u0027t have any issue before?",
       "revId": "3a82ae5a63a4be884f023bc1306e7b7bdd0b1fdf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "348987d3_71fa0c65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2024-04-04T00:44:57Z",
+      "side": 1,
+      "message": "Essentially: it was always wrong (or at least pointless) to call these scudo functions when using the HWASan allocator. Eventually we should do the build system changes to stop linking scudo when using HWASan.\n\nI thought the cause of a crash was https://r.android.com/3020085, but turns out in fact it was https://r.android.com/3020085, but I still sent this CL.\n\nFine for me to submit this CL, or not, because it should not make a difference.",
+      "parentUuid": "3394f212_4847ae6c",
+      "revId": "3a82ae5a63a4be884f023bc1306e7b7bdd0b1fdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
