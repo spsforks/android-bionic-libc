@@ -39,6 +39,30 @@
       },
       "revId": "53cf10f3d99a560a836c0b69cee8248b7fc70aec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55e860a9_418b1a4b",
+        "filename": "libc/arch-arm64/dynamic_function_dispatch.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T18:42:24Z",
+      "side": 1,
+      "message": "not really ... i was trying to make it look less wrong to anyone who\u0027s read the docs (since the constants should be 24 and 20 if you _don\u0027t_ have the \u003e\u003e on L40). i\u0027ll remove it...",
+      "parentUuid": "56b27254_363c269f",
+      "range": {
+        "startLine": 43,
+        "startChar": 45,
+        "endLine": 43,
+        "endChar": 49
+      },
+      "revId": "53cf10f3d99a560a836c0b69cee8248b7fc70aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
