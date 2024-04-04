@@ -69,6 +69,24 @@
       "parentUuid": "348987d3_71fa0c65",
       "revId": "3a82ae5a63a4be884f023bc1306e7b7bdd0b1fdf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd794f55_4fc4c334",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2024-04-04T18:01:32Z",
+      "side": 1,
+      "message": "\u003e Essentially: it was always wrong (or at least pointless) to call these scudo functions when using the HWASan allocator.\n\nThanks for the explanation. I think this is a good reason to exclude calling those functions (given that HWASan hooks the allocate()/deallocate() of Scudo).\n\nI was thinking if we could do it in a different variable like USE_MTE or something except USE_SCUDO but it\u0027s fine to do it like this now.",
+      "parentUuid": "4dba7f91_bdd9e8b4",
+      "revId": "3a82ae5a63a4be884f023bc1306e7b7bdd0b1fdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
