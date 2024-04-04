@@ -39,6 +39,30 @@
       },
       "revId": "691e48d458b524f451c6d459a1876e301533291c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3529872d_19a631ce",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2024-04-04T23:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04e2f2dd_9cd96076",
+      "range": {
+        "startLine": 76,
+        "startChar": 2,
+        "endLine": 76,
+        "endChar": 29
+      },
+      "revId": "691e48d458b524f451c6d459a1876e301533291c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
