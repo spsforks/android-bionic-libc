@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37a972ec_3894d50a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978766
+      },
+      "writtenOn": "2024-04-04T15:02:32Z",
+      "side": 1,
+      "message": "LGTM but i\u0027ll let code owners make the final call.",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71beefee_65115c43",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1978766
+      },
+      "writtenOn": "2024-04-04T15:02:32Z",
+      "side": 1,
+      "message": "nit: if hoisting these is not necessary for the fix then maybe we can split this into a separate one?",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
