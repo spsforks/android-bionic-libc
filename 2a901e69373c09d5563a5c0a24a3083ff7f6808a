@@ -78,6 +78,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "95e2444f_2df379b3",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-04-04T22:14:20Z",
+      "side": 1,
+      "message": "True, though it seems to still matter for arm32 correctness, at least in principle.",
+      "parentUuid": "192d8cc9_99703888",
+      "range": {
+        "startLine": 754,
+        "startChar": 45,
+        "endLine": 755,
+        "endChar": 49
+      },
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "39b477c8_6cb471c7",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -89,6 +113,30 @@
       "writtenOn": "2024-04-04T16:34:09Z",
       "side": 1,
       "message": "(you still haven\u0027t responded with your thoughts on my \"let\u0027s call ifunc resolvers earlier in static binaries\" suggestion :-P )",
+      "range": {
+        "startLine": 756,
+        "startChar": 5,
+        "endLine": 757,
+        "endChar": 9
+      },
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58078ff4_cdc79139",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-04-04T22:14:20Z",
+      "side": 1,
+      "message": "Oh, I think I forgot to reply. I suppose my current inclination is to move the static ifuncs earlier to match dynamic binaries, but I don\u0027t have a strong opinion currently.",
+      "parentUuid": "39b477c8_6cb471c7",
       "range": {
         "startLine": 756,
         "startChar": 5,
@@ -112,6 +160,24 @@
       "writtenOn": "2024-04-04T16:34:09Z",
       "side": 1,
       "message": "(should this move into relocate_relr()?)",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51027cc5_b3efe430",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-04-04T22:14:20Z",
+      "side": 1,
+      "message": "I think it\u0027s clearer to keep the DEBUG() line here. AFAICT it would be a no-op when relocate_linker calls relocate_relr, but I\u0027m not sure that\u0027s obvious.\n\nIn principle, DEBUG() has unwanted dependencies for the relocate_linker call site: the logging is enabled using an environment variable, and DEBUG() writes to logcat/stderr using libasync_safe, some of whose functions have implicit memset calls to clear local buffers. (For example, async_safe_format_log_va_list has a `char buffer[1024]` variable. memset may be unavailable because it needs ifuncs resolved first.)\n\nHowever, technically the DEBUG() call would be OK because it wouldn\u0027t do anything. DEBUG() would read the hidden global g_ld_debug_verbosity variable, which would be 0, because it\u0027s not initialized until linker_main. The variable is initialized using getenv, and the environment itself also isn\u0027t initialized until linker_main calls __libc_init_AT_SECURE.",
+      "parentUuid": "fa7de6f3_304ec5f8",
       "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
