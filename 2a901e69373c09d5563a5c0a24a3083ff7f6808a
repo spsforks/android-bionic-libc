@@ -33,6 +33,87 @@
       "message": "nit: if hoisting these is not necessary for the fix then maybe we can split this into a separate one?",
       "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfece089_41ade7ef",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T16:34:09Z",
+      "side": 1,
+      "message": "well, he\u0027s added new code that would have even more duplication of these, so that way he\u0027d have to make the code even less readable and then come back and clean it up, which doesn\u0027t make much sense :-) (and i was reading this function the other day for unrelated reasons and found it hard to read then!)",
+      "parentUuid": "71beefee_65115c43",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "192d8cc9_99703888",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T16:34:09Z",
+      "side": 1,
+      "message": "+1 to keeping this motivation in, but this is a bug we should fix for any architecture we care about...",
+      "range": {
+        "startLine": 754,
+        "startChar": 45,
+        "endLine": 755,
+        "endChar": 49
+      },
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39b477c8_6cb471c7",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T16:34:09Z",
+      "side": 1,
+      "message": "(you still haven\u0027t responded with your thoughts on my \"let\u0027s call ifunc resolvers earlier in static binaries\" suggestion :-P )",
+      "range": {
+        "startLine": 756,
+        "startChar": 5,
+        "endLine": 757,
+        "endChar": 9
+      },
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa7de6f3_304ec5f8",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T16:34:09Z",
+      "side": 1,
+      "message": "(should this move into relocate_relr()?)",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
