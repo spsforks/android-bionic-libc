@@ -809,6 +809,11 @@ bool ElfReader::LoadSegments() {
       continue;
     }
 
+    if (phdr->p_align < 0x4000) {
+      DL_ERR_AND_LOG("\"%s\": is not 16kB-aligned", name_.c_str());
+      std::abort();
+    }
+
     ElfW(Addr) p_memsz = phdr->p_memsz;
     ElfW(Addr) p_filesz = phdr->p_filesz;
     _extend_load_segment_vma(phdr_table_, phdr_num_, i, &p_memsz, &p_filesz, should_pad_segments_);
