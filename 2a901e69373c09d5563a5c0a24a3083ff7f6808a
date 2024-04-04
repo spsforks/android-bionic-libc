@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "96a1d934_a4dddebe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T23:24:21Z",
+      "side": 1,
+      "message": "i guess i should ask my high level comment since i feel like our stated motivation \"riscv64 is using a global for stack protector\" is weak, because that\u0027s a bug we should fix... \"how does this compare to other dynamic linkers?\" \"should i expect that i can use GOT accesses in ifunc resolvers?\" it doesn\u0027t sound _un_reasonable, but i\u0027m curious (especially in the context of \"enh would like to enable ifunc resolvers early enough in all static binaries to be able to use ifuncs for string/memory routines in static binaries\" :-) ).",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71beefee_65115c43",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
