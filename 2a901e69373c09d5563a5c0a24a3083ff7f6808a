@@ -164,6 +164,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37f9a564_53a236ca",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T23:25:46Z",
+      "side": 1,
+      "message": "heh, in that case i\u0027ll send you a patch at some point :-)",
+      "parentUuid": "58078ff4_cdc79139",
+      "range": {
+        "startLine": 756,
+        "startChar": 5,
+        "endLine": 757,
+        "endChar": 9
+      },
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa7de6f3_304ec5f8",
