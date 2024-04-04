@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e36deca0_fe3769e3",
+        "filename": "libc/arch-arm64/dynamic_function_dispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-04T18:43:46Z",
+      "side": 1,
+      "message": "(i\u0027ve added a new name for the \"just the cpu part of midr\" to hopefully make it clearer that the function isn\u0027t actually constructing midr values, so it\u0027s right that the shifts are \"wrong\".)",
+      "revId": "08a79d838c97647a5778ea0cf97ab247ddf10f42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
