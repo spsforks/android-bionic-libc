@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "174434ec_38bcf963",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-05T19:06:15Z",
+      "side": 1,
+      "message": "\u003e We could conceivably switch arm32 to using TLS accesses, motivated by the desire to make it look like all the others. That might be easier if -mtp\u003dcp15 was the default for Android Clang rather than __aeabi_read_tp.\n\nffs ... we have a pre-armv6 default still? /facepalm\n\n\u003e I think the trade-off is running ifuncs earlier so string functions are ready before Bionic needs them -versus- running them later so that non-Bionic ifuncs can depend on parts of Bionic.\n\nexactly.\n\ni think if you made me defend myself against \"aren\u0027t you just biased as the libc guy, thinking only your ifuncs matter?\", i\u0027d argue that \"to a first appoximation, no-one else uses ifuncs anyway\". i certainly didn\u0027t find any in a random sample of top apps\u0027 native code when i was curious for riscv64, and none of the libraries i see commonly used in or on Android use ifuncs (usually because they _also_ care about macOS/iOS, which doesn\u0027t have ifuncs, and prefer to just have the same codepath for everyone).\n\n\u003e Currently it\u0027s hard for ifuncs to call into libc because we don\u0027t have strong guarantees about non-relative relocation processing order.\n\nyeah... my knee-jerk reaction to \"the freebsd idea\" was \"i can\u0027t afford an extra pass, somewhere that\u0027s on the app startup critical path!\" ... but then if i apply my \"meh, only libc really uses ifuncs anyway\" argument from above, as long as we don\u0027t cost you more than an `if` for any library that _doesn\u0027t_ use ifuncs, the fancy freebsd solution is probably fine?\n\n\u003e About this CL in general: I think it\u0027s a good idea bootstrapping-wise to limit the amount of code that the \"don\u0027t use the GOT\" rule applies to. Previously, the \"don\u0027t use the GOT\" rule applied to soinfo::prelink_image, soinfo::link_image, and soinfo::relocate. Now it\u0027s mostly just __libc_init_main_thread_early. I think we could split the RELR relocations out and run them before __libc_init_main_thread_early if we wanted to. TLS should still be setup before calling ifunc resolvers, so that they can make system calls.\n\nsgtm.\n\n\u003e FWIW, I think the (linker_addr \u003d\u003d 0) code isn\u0027t really necessary, because the linker\u0027s first PT_LOAD is basically guaranteed to have a 0 p_vaddr, so the linker\u0027s load_bias and linker_addr are just \u0026__ehdr_start, which we\u0027re already using above in relocate_linker.\n\nthe call to relocate_linker() is _below_ that, not above?",
+      "parentUuid": "7f6603a6_b8bcbd53",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71beefee_65115c43",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
