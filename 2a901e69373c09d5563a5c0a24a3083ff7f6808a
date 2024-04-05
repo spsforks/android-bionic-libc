@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7f6603a6_b8bcbd53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-04-05T00:51:55Z",
+      "side": 1,
+      "message": "The GOT usage is a bug for RISC-V, but we also still need to produce a working arm32 dynamic linker until all Android ARM devices are 64-bit only. I did confirm that the new toolchain was crashing the arm32 linker too, probably for the same underlying reason. We _could_ conceivably switch arm32 to using TLS accesses, motivated by the desire to make it look like all the others. That might be easier if `-mtp\u003dcp15` was the default for Android Clang rather than __aeabi_read_tp.\n\n\u003e should i expect that i can use GOT accesses in ifunc resolvers?\n\nAt least for RELR, there\u0027s no reason not to resolve RELR before the other relocation sections, within a single ELF file. I\u0027m not sure what other linkers are doing.\n\nWe did recently decide that a loaded DSO\u0027s RELR relocations should be applied before its other relocation sections, for the sake of ifuncs.\n\n\u003e enh would like to enable ifunc resolvers early enough in all static binaries to be able to use ifuncs for string/memory routines in static binaries\n\nI think the trade-off is running ifuncs earlier so string functions are ready before Bionic needs them -versus- running them later so that non-Bionic ifuncs can depend on parts of Bionic. Currently it\u0027s hard for ifuncs to call into libc because we don\u0027t have strong guarantees about non-relative relocation processing order.\n\nAbout this CL in general: I think it\u0027s a good idea bootstrapping-wise to limit the amount of code that the \"don\u0027t use the GOT\" rule applies to. Previously, the \"don\u0027t use the GOT\" rule applied to soinfo::prelink_image, soinfo::link_image, and soinfo::relocate. Now it\u0027s mostly just __libc_init_main_thread_early. I think we could split the RELR relocations out and run them before __libc_init_main_thread_early if we wanted to. TLS should still be setup before calling ifunc resolvers, so that they can make system calls.\n\nFWIW, I think the `(linker_addr \u003d\u003d 0)` code isn\u0027t really necessary, because the linker\u0027s first PT_LOAD is basically guaranteed to have a 0 p_vaddr, so the linker\u0027s load_bias and linker_addr are just `\u0026__ehdr_start`, which we\u0027re already using above in relocate_linker.",
+      "parentUuid": "96a1d934_a4dddebe",
+      "revId": "2a901e69373c09d5563a5c0a24a3083ff7f6808a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71beefee_65115c43",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
