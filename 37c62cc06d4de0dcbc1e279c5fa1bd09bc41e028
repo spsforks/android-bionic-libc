@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9be1781_9bf82b56",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1727050
+      },
+      "writtenOn": "2024-04-06T03:29:29Z",
+      "side": 1,
+      "message": "This is boarderline WIP, but I figured its best to get feedback now that testing can proceed.\n\nThe removal of Android.mk can never land, but is required to test w/ LLVM_NEXT. I\u0027m not sure if the change to __cxa_guard.cpp is necessary, in fact I\u0027m almost certain, but I\u0027ve left it in on the chance someone wants to download the patch and try out my set up.\n\nThis also requires a toolchain with aosp/3010633 reverted(e.g. with the toolchain\u0027s TLSDESC support back in place).",
+      "revId": "37c62cc06d4de0dcbc1e279c5fa1bd09bc41e028",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
