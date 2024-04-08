@@ -46,6 +46,30 @@
       },
       "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40930ea6_eda1b873",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-04-08T21:09:34Z",
+      "side": 1,
+      "message": "I could go either way on it. I wrote the NDK side of things for r27 like this as well, but since developers have to build both lp32 and lp64, I don\u0027t know that we\u0027re really doing them much of a favor. They don\u0027t have to port arm32/x86/rv64 specific code, but otoh it\u0027s yet another arch-specific behavior they need to be aware of.\n\nIf we\u0027ve already accepted that we\u0027re breaking source compat for arm64/x86_64, I don\u0027t know how much it helps developers to limit the breakage to only those ABIs. Maybe there are some projects out there with abandoned arm32 specific code they don\u0027t want to touch and this would help them.",
+      "parentUuid": "ee66b011_c504362f",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
