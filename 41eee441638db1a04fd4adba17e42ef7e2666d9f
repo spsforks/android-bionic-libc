@@ -22,6 +22,30 @@
       },
       "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcadb226_30c6f713",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-08T20:59:01Z",
+      "side": 1,
+      "message": "if anyone has arm32/x86-only code, does anyone benefit from the disruption of them having to change that? i\u0027d just ignore it until we come through and _remove_ 32-bit somewhere between now and 2038-\u003chowever long before that date people think it\u0027s okay to sell a device that will die then\u003e.\n\n(that said, the fact that we don\u0027t have PAGE_SIZE for x86-64 seems the most likely to cause trouble, since glibc/musl _do_ have that. but that would affect OS developers more than app developers, and there are orders of magnitude less of them.)\n\nif we do remove these, probably best to do them separately after everything we actually care about has landed, rather than tie something that doesn\u0027t matter (and is more likely to affect _unmaintained_ code) with something that does?",
+      "parentUuid": "ee66b011_c504362f",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
