@@ -16,6 +16,87 @@
       "message": "This is boarderline WIP, but I figured its best to get feedback now that testing can proceed.\n\nThe removal of Android.mk can never land, but is required to test w/ LLVM_NEXT. I\u0027m not sure if the change to __cxa_guard.cpp is necessary, in fact I\u0027m almost certain, but I\u0027ve left it in on the chance someone wants to download the patch and try out my set up.\n\nThis also requires a toolchain with aosp/3010633 reverted(e.g. with the toolchain\u0027s TLSDESC support back in place).",
       "revId": "37c62cc06d4de0dcbc1e279c5fa1bd09bc41e028",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ef103df_e8f9fff2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-08T16:41:34Z",
+      "side": 1,
+      "message": "\u003e I\u0027m not sure if the change to __cxa_guard.cpp is necessary, in fact I\u0027m almost certain, but I\u0027ve left it in on the chance someone wants to download the patch and try out my set up.\n\nwasn\u0027t that fixed for you by rprichard\u0027s dynamic linker change? (try `repo sync . \u0026\u0026 repo rebase .` to get those changes.)",
+      "parentUuid": "d9be1781_9bf82b56",
+      "revId": "37c62cc06d4de0dcbc1e279c5fa1bd09bc41e028",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a78cb65a_3bbee3a7",
+        "filename": "linker/arch/riscv64/tlsdesc_resolver.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-08T16:41:34Z",
+      "side": 1,
+      "message": "maybe s/on/foreach/ or something?",
+      "range": {
+        "startLine": 74,
+        "startChar": 7,
+        "endLine": 74,
+        "endChar": 9
+      },
+      "revId": "37c62cc06d4de0dcbc1e279c5fa1bd09bc41e028",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1999108c_8c7e7452",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-08T16:41:34Z",
+      "side": 1,
+      "message": "and riscv64 :-)",
+      "range": {
+        "startLine": 442,
+        "startChar": 52,
+        "endLine": 442,
+        "endChar": 57
+      },
+      "revId": "37c62cc06d4de0dcbc1e279c5fa1bd09bc41e028",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "502719b9_7e339565",
+        "filename": "tests/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-08T16:41:34Z",
+      "side": 1,
+      "message": "oops :-)",
+      "revId": "37c62cc06d4de0dcbc1e279c5fa1bd09bc41e028",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
