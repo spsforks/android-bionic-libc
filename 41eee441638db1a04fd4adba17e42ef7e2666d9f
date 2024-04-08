@@ -70,6 +70,30 @@
       },
       "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f16dd1d_8a1a8763",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-04-08T21:51:20Z",
+      "side": 1,
+      "message": "The main benefit is if you build/test on 32-bit, then you need to move to 64-bit. If you start with getpagesize(), it\u0027s one less thing that could bother you. Though it is also more bothering to begin with.\n\nThat being said, I figure land this like this, and if you want the other architectures cleaned up (or the other architectures cleaned up in Android platform but not the NDK), I can start doing that as well. Thanks!",
+      "parentUuid": "40930ea6_eda1b873",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
