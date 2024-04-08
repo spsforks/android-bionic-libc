@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee66b011_c504362f",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-04-08T20:25:05Z",
+      "side": 1,
+      "message": "Elliott/Dan, I\u0027d like to remove these as well, for code portability. Though, it\u0027s a bit of work, so first, what do you think? All other suggestions appreciated.",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
