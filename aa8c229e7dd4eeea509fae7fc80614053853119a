@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecfccace_da1e800a",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2024-04-09T21:18:44Z",
+      "side": 1,
+      "message": "AFAIK we should not mention future release numbers, and it\u0027s not clear what intermediate releases it will be merged too. Maybe invert this statement to talk about Android \u003c\u003d 14?",
+      "revId": "aa8c229e7dd4eeea509fae7fc80614053853119a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
