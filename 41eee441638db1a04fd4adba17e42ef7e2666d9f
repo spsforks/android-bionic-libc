@@ -94,6 +94,30 @@
       },
       "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26e7fe38_3e50b3a4",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-09T00:55:43Z",
+      "side": 1,
+      "message": "\u003e The main benefit is if you build/test on 32-bit, then you need to move to 64-bit.\n\ni don\u0027t think that way round happens any more. the emulator default is x86-64 now. and *that\u0027s* the one that i think is most likely to cause \"wtf?\" issues, since our emulator is the only place anyone will ever come across x86-64 pretending to have non-4KiB pages!\n\n\u003e That being said, I figure land this like this, and if you want the other architectures cleaned up (or the other architectures cleaned up in Android platform but not the NDK), I can start doing that as well. Thanks!\n\nfor most of this 32-bit shit, the end is sufficiently nigh that unless it\u0027s _actively_ causing pain, everyone\u0027s best off just ignoring it.\n\ni think you may as well leave `__riscv` off the exclusion list though? there\u0027s no extant Android/riscv64 code, and glibc/musl for riscv64 don\u0027t define PAGE_SIZE, so there\u0027s not likely to be any _other_ extant code that cares.\n\n(you may then feel that \"who cares about ILP32?\" is clearer as `!defined(__LP64__)`, but i think either\u0027s fine.)",
+      "parentUuid": "2f16dd1d_8a1a8763",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "41eee441638db1a04fd4adba17e42ef7e2666d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
