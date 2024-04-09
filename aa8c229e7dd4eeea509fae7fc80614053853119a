@@ -16,6 +16,24 @@
       "message": "AFAIK we should not mention future release numbers, and it\u0027s not clear what intermediate releases it will be merged too. Maybe invert this statement to talk about Android \u003c\u003d 14?",
       "revId": "aa8c229e7dd4eeea509fae7fc80614053853119a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f21d62e3_eccf48b8",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-09T21:23:10Z",
+      "side": 1,
+      "message": "meh, this seems safe enough --- there are no intervening api levels anyway, so even if it were to go out via \"trunk stable\", there would be no way to refer to that /facepalm\n\nrewording it just makes it harder to read.\n\n(if you were going to change something, i\u0027d always include an api level, but that\u0027s not a regression given the \"Android 14\" above. personally i shy away from the \"marketing names\" [even though they\u0027re numbers right now] because they can and do change at short notice. i\u0027d worked on key lime pie for a year before i found out the same day as the general public that i\u0027d _actually_ been working on kitkat :-) )",
+      "parentUuid": "ecfccace_da1e800a",
+      "revId": "aa8c229e7dd4eeea509fae7fc80614053853119a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
