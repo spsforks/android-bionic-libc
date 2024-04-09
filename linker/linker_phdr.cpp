@@ -29,6 +29,7 @@
 #include "linker_phdr.h"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
@@ -707,8 +708,39 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   return true;
 }
 
+/*
+ * Returns true if the kernel supports page size migration, else false.
+ */
+bool page_size_migration_supported() {
+  const char *path = "/sys/kernel/mm/pgsize_migration/enabled";
+  int fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY|O_CLOEXEC));
+
+  if (fd == -1) {
+    DL_WARN("failed to open: \"%s\": %m", path);
+    return false;
+  }
+
+  char val;
+  ssize_t bytes = TEMP_FAILURE_RETRY(read(fd, &val, 1));
+
+  close(fd);
+
+  if (bytes != 1) {
+    DL_WARN("failed to read: \"%s\": bytes expected = 1, bytes read = %zd: %m", path, bytes);
+    return false;
+  }
+
+  return val == '1';
+}
+
 // Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
 bool ElfReader::ReadPadSegmentNote() {
+  if (!page_size_migration_supported()) {
+    // Don't attempt to read the note, since segment extension isn't
+    // supported; but return true so that loading can continue normally.
+    return true;
+  }
+
   // The ELF can have multiple PT_NOTE's, check them all
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
