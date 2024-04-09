@@ -29,6 +29,7 @@
 #include "linker_phdr.h"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
@@ -155,6 +156,28 @@ static const size_t kPageSize = page_size();
  */
 static const size_t kPmdSize = (kPageSize / sizeof(uint64_t)) * kPageSize;
 
+/*
+ * Returns true if the kernel supports page size migration, else false.
+ */
+static bool PageSizeMigrationSupported() {
+  int fd = open("/sys/kernel/mm/pgsize_migration/enabled", O_RDONLY);
+
+  if (fd == -1) {
+    return false;
+  }
+
+  char val;
+  ssize_t bytes = read(fd, &val, 1);
+
+  close(fd);
+
+  if (bytes != 1) {
+    return false;
+  }
+
+  return val == '1';
+}
+
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
       phdr_table_(nullptr), shdr_table_(nullptr), shdr_num_(0), dynamic_(nullptr), strtab_(nullptr),
@@ -175,8 +198,13 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
       VerifyElfHeader() &&
       ReadProgramHeaders() &&
       ReadSectionHeaders() &&
-      ReadDynamicSection() &&
-      ReadPadSegmentNote()) {
+      ReadDynamicSection()) {
+    if (PageSizeMigrationSupported()) {
+      ReadPadSegmentNote();
+    } else {
+      should_pad_segments_ = false;
+    }
+
     did_read_ = true;
   }
 
