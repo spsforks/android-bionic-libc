@@ -52,6 +52,24 @@
       "parentUuid": "f21d62e3_eccf48b8",
       "revId": "aa8c229e7dd4eeea509fae7fc80614053853119a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6942e32_c2bb9f9d",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2024-04-10T09:30:46Z",
+      "side": 1,
+      "message": "I\u0027d also like to actually rename these constants to be caller-identifying rather than intent-identifying. I think it makes more sense there and is basically the way that it\u0027s done anyway.\n\nReally, the enum is for:\n\n - TURN_ON_FOR_APP -\u003e app: gwpAsanMode\u003don\n - TURN_ON_WITH_SAMPLING -\u003e system process / system app\n - DONT_TURN_ON_UNLESS_OVERRIDDEN -\u003e app: gwpAsanMode\u003doff\n - TURN_ON_FOR_APP_SAMPLED_NON_CRASHING -\u003e app: gwpAsanMode\u003ddefault (or unspecified)\n \nI\u0027ll send a follow up to rename them.",
+      "parentUuid": "244b2193_19973bf3",
+      "revId": "aa8c229e7dd4eeea509fae7fc80614053853119a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
