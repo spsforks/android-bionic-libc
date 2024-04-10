@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb473204_b4fef9cb",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-10T18:36:36Z",
+      "side": 1,
+      "message": "where does 64 come from?",
+      "range": {
+        "startLine": 776,
+        "startChar": 46,
+        "endLine": 776,
+        "endChar": 50
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52556e2f_681c6cf7",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-10T18:36:36Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 777,
+        "startChar": 45,
+        "endLine": 777,
+        "endChar": 56
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dce51fd0_ea06207b",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-10T18:36:36Z",
+      "side": 1,
+      "message": "millibytes?\n\ni suspect you mean KiB and MiB here :-)",
+      "range": {
+        "startLine": 777,
+        "startChar": 16,
+        "endLine": 777,
+        "endChar": 19
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
