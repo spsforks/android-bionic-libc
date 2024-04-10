@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70721f5e_afc37f58",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-10T22:12:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da2a29e0_82017674",
+      "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dcdc0dcd_e66a8c39",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-04-10T18:34:48Z",
       "side": 1,
       "message": "TEMP_FAILURE_RETRY",
+      "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddd1edc7_3a7db4da",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-10T22:12:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcdc0dcd_e66a8c39",
       "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -66,6 +102,24 @@
       "side": 1,
       "message": "https://android-review.git.corp.google.com/c/platform/bionic/+/3038712",
       "parentUuid": "eaa34a9c_a4be3da3",
+      "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95801649_4eb603d2",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-10T22:12:59Z",
+      "side": 1,
+      "message": "Thanks, I tried to avoid piping a new field to soinfo and ElfReader since it still controls segment padding.",
+      "parentUuid": "794f4e38_7b649a28",
       "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
