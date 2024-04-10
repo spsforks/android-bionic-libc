@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da2a29e0_82017674",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-10T18:34:48Z",
+      "side": 1,
+      "message": "O_CLOEXEC",
+      "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcdc0dcd_e66a8c39",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-10T18:34:48Z",
+      "side": 1,
+      "message": "TEMP_FAILURE_RETRY",
+      "revId": "17afdb1b2eefb3d673d08a516437f6b081fef19c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
