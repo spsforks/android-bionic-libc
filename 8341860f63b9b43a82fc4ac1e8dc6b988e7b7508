@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0631a419_4f512e68",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-10T22:11:01Z",
+      "side": 1,
+      "message": "It comes from the fact that some vendors did 64KiB and some did 16KiB, so we support the maximum.\n\nIf you meant \"why couldn\u0027t we support 2MiB (\u003e64KiB) alignment for compatibility?\"\n\nThe kernel ABI is frozen. To support 64KiB (up to 60KiB padding) we needed only to reuse 4bits (to represent 15 4kB pages) from a field in the vm_area_struct. Larger padding would require more bits that we can\u0027t afford with the frozen ABI.",
+      "parentUuid": "bb473204_b4fef9cb",
+      "range": {
+        "startLine": 776,
+        "startChar": 46,
+        "endLine": 776,
+        "endChar": 50
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52556e2f_681c6cf7",
@@ -60,6 +84,54 @@
       "writtenOn": "2024-04-10T18:36:36Z",
       "side": 1,
       "message": "millibytes?\n\ni suspect you mean KiB and MiB here :-)",
+      "range": {
+        "startLine": 777,
+        "startChar": 16,
+        "endLine": 777,
+        "endChar": 19
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "991f56f2_a38160a2",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-10T22:11:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52556e2f_681c6cf7",
+      "range": {
+        "startLine": 777,
+        "startChar": 45,
+        "endLine": 777,
+        "endChar": 56
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "709cfac9_3dd62e1e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-10T22:11:01Z",
+      "side": 1,
+      "message": "Done :)",
+      "parentUuid": "dce51fd0_ea06207b",
       "range": {
         "startLine": 777,
         "startChar": 16,
