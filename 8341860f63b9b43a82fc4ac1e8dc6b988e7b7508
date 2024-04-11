@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4662788_565b3511",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-11T19:40:29Z",
+      "side": 1,
+      "message": "\u003e some vendors did what, where? Android is only supporting 16KiB pages, no?\n\nI meant to say some vendor code aligned to 64kB before the requirement was only 16kB.\n\n\u003e it sounds like this \"64\" really comes from a kernel change you\u0027ve made, and that\u0027s what should be documented here?\n\nI agree, you are right -- updated the comment and patch description.",
+      "parentUuid": "33a2fd1d_6f199937",
+      "range": {
+        "startLine": 776,
+        "startChar": 46,
+        "endLine": 776,
+        "endChar": 50
+      },
+      "revId": "8341860f63b9b43a82fc4ac1e8dc6b988e7b7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52556e2f_681c6cf7",
