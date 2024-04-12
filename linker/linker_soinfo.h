@@ -369,8 +369,9 @@ struct soinfo {
   }
   bool should_pad_segments() const { return should_pad_segments_; }
 
- private:
   bool is_image_linked() const;
+
+ private:
   void set_image_linked();
 
   const ElfW(Sym)* gnu_lookup(SymbolName& symbol_name, const version_info* vi) const;

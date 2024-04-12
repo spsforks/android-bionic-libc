@@ -1542,6 +1542,57 @@ static void shuffle(std::vector<LoadTask*>* v) {
   }
 }
 
+// The dynamic linker relocates ELF objects in batches. Log each batch,
+// including all of the libraries that are searched for that batch, in
+// lookup order.
+static void log_dlopen_batch(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                             android_namespace_t* local_group_ns) {
+  // We might want to consider omitting a batch if all the ELF objects in it
+  // are already linked (or otherwise not being relocated, because they cross
+  // a namespace boundary), but there's also some value in showing how the
+  // linker works.
+  //
+  // Include the counts of local and global objects to guard against logcat
+  // dropping a line if there's too much output all at once.
+  const size_t global_group_size = global_group.size();
+  const size_t local_group_size = local_group.size();
+  LD_LOG(kLogDlopen, "Relocating batch: %zu libs in ns %s [%zu globals in ns]", local_group_size,
+         local_group_ns->get_name(), global_group_size);
+  size_t idx = 0;
+  for (soinfo* lib : global_group) {
+    LD_LOG(kLogDlopen, "global %02zu/%02zu: %-15s %s", idx + 1, global_group_size, "[lookup-only]",
+           lib->get_realpath());
+    ++idx;
+  }
+  idx = 0;
+  for (soinfo* lib : local_group) {
+    std::string kind;
+    std::string extra;
+    auto add_kind = [&](const char* to_add) {
+      if (!kind.empty()) kind.push_back(',');
+      kind.append(to_add);
+    };
+    if (lib->get_primary_namespace() != local_group_ns) {
+      add_kind("x-ns");  // crosses a namespace boundary
+      extra = std::string(" [ns=") + lib->get_primary_namespace()->get_name() + "]";
+    }
+    if (lib->has_DT_SYMBOLIC) {
+      add_kind("sym");
+    }
+    if (lib->is_linked() || lib->is_image_linked()) {
+      add_kind("done");
+    }
+    if (!kind.empty()) {
+      kind = "[" + kind + "]";
+    }
+    // Use the string "root" to emphasize that the first local is actually the
+    // root of a BFS-ordered walk of the dependency.
+    LD_LOG(kLogDlopen, "%-6s %02zu/%02zu: %-15s %s%s", (idx == 0 ? "root" : "local"), idx + 1,
+           local_group_size, kind.c_str(), lib->get_realpath(), extra.c_str());
+    ++idx;
+  }
+}
+
 // add_as_children - add first-level loaded libraries (i.e. library_names[], but
 // not their transitive dependencies) as children of the start_with library.
 // This is false when find_libraries is called for dlopen(), when newly loaded
@@ -1790,6 +1841,10 @@ bool find_libraries(android_namespace_t* ns,
     soinfo_list_t global_group = local_group_ns->get_global_group();
     SymbolLookupList lookup_list(global_group, local_group);
     soinfo* local_group_root = local_group.front();
+
+    if (g_linker_logger.IsEnabled(kLogDlopen)) {
+      log_dlopen_batch(global_group, local_group, local_group_ns);
+    }
 
     bool linked = local_group.visit([&](soinfo* si) {
       // Even though local group may contain accessible soinfos from other namespaces
