@@ -1,6 +1,86 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b479c4a0_94449ba0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-12T15:54:26Z",
+      "side": 1,
+      "message": "is this a question anyone actually has?\n\natm we have the LD_DEBUG [integer /facepalm] option to say \"show me where _all_ the relocations come from\". i haven\u0027t used that in a decade because it\u0027s _way_ too spammy.\n\nmaybe what we want is a way to specify the symbols [or library?] we\u0027re interested in? that could keep the spam under control, but let us give all the information? (and shouldn\u0027t be more costly unless it\u0027s on --- we already have the \"are we logging symbol resolution?\" flag, and this is just an \"okay, we are, but is this the symbol we care about?\" check _after_ that succeeds [in the vanishingly rare cases where it succeeds].)",
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d477beb2_e8defaa4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-12T15:54:26Z",
+      "side": 1,
+      "message": "this is quite verbose, and quite hard to understand. i\u0027m not sure this doesn\u0027t warrant a _new_ flag...\n\nare any of the glibc LD_DEBUG options similar to this? [http://b/309528372].\n\ni feel like one of the (many) problems with our LD_DEBUG is that we had too much in any given option, which made them _less_ useful. it got very \"all or nothing\", to the point where we basically started again here.",
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bbd1fcf_6eae27b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-12T15:54:26Z",
+      "side": 1,
+      "message": "is this useful given the `[ns\u003d...]` at the end of the line?",
+      "range": {
+        "startLine": 19,
+        "startChar": 14,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf38500f_c5a898a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-12T15:54:26Z",
+      "side": 1,
+      "message": "what (if anything) does it mean that there\u0027s no `[done]` line for this?",
+      "range": {
+        "startLine": 31,
+        "startChar": 30,
+        "endLine": 31,
+        "endChar": 76
+      },
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b42185dc_703e176d",
@@ -14,6 +94,30 @@
       "writtenOn": "2024-04-12T14:57:59Z",
       "side": 1,
       "message": "If you did this as part of the investigation of b/333438055 then I think it\u0027s fair to mention it here. Even though it isn\u0027t the subject matter of the ticket it can still provide some context. But just my ¢2.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 9
+      },
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b186a5a_bbc6aa63",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-12T15:54:26Z",
+      "side": 1,
+      "message": "yeah, if this has actually been useful in practice, _definitely_ note that, if only so whoever writes our _next_ attempt at this will be able to reason about whether that would have addressed this problem too!",
+      "parentUuid": "b42185dc_703e176d",
       "range": {
         "startLine": 49,
         "startChar": 0,
