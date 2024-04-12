@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b42185dc_703e176d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-04-12T14:57:59Z",
+      "side": 1,
+      "message": "If you did this as part of the investigation of b/333438055 then I think it\u0027s fair to mention it here. Even though it isn\u0027t the subject matter of the ticket it can still provide some context. But just my ¢2.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 9
+      },
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41952ef1_081395c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-04-12T14:57:59Z",
+      "side": 1,
+      "message": "I\u0027ve usually got what I needed in the existing `dlopen` verbose debug, but this may show it in a more concise way. (My problem is rather that kLogDlopen debug is almost always absent in reports and then it\u0027s hard to track down problems - b/325245046.)",
+      "revId": "e798adce404b58dadb2bdd7908c15e04a7ac1583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
