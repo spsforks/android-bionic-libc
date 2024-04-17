@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "370c0a89_a1ae62d5",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T21:54:33Z",
+      "side": 1,
+      "message": "\u003e might be less bad to make total unsigned long, lose the cast here, and get a free \"conversion\" in the fread() and __check_buffer_access() calls?\n\nYeah, that looks better and works. Let me upload a new patchset.",
+      "parentUuid": "8a41ecaf_0f3fd271",
+      "range": {
+        "startLine": 104,
+        "startChar": 48,
+        "endLine": 104,
+        "endChar": 80
+      },
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ed9aaf9_cc4f5115",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
