@@ -152,6 +152,24 @@
       "message": "is there a python change to go with this, or was this a manual change?",
       "revId": "b39f6640d08a4043619af91d77d189998af498fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3d1bc77_7744c835",
+        "filename": "libc/kernel/uapi/linux/ipv6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2024-04-17T21:53:43Z",
+      "side": 1,
+      "message": "Yes, but I don\u0027t think it should have affected this code.",
+      "parentUuid": "454b145a_11484e57",
+      "revId": "b39f6640d08a4043619af91d77d189998af498fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
