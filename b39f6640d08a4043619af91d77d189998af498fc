@@ -170,6 +170,24 @@
       "parentUuid": "454b145a_11484e57",
       "revId": "b39f6640d08a4043619af91d77d189998af498fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64241189_345a4595",
+        "filename": "libc/kernel/uapi/linux/ipv6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T23:32:12Z",
+      "side": 1,
+      "message": "do you still see this change if you re-run the script? (gerrit claims this change happened in the last few patchsets, without a corresponding .py change, which seems odd?)",
+      "parentUuid": "b3d1bc77_7744c835",
+      "revId": "b39f6640d08a4043619af91d77d189998af498fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
