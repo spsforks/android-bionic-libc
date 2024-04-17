@@ -327,8 +327,7 @@
 #define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
 #endif
 #else
-extern inline __always_inline __attribute__((gnu_inline))
-int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result) {
+static inline __always_inline int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result) {
     *result = a * b;
     static const __SIZE_TYPE__ mul_no_overflow = 1UL << (sizeof(__SIZE_TYPE__) * 4);
     return (a >= mul_no_overflow || b >= mul_no_overflow) && a > 0 && (__SIZE_TYPE__)-1 / a < b;
