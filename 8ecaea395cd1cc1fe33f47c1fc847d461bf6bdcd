@@ -113,6 +113,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a77ea27_4345635c",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T21:56:24Z",
+      "side": 1,
+      "message": "(i hate c programmers. `size_t` is a useful concept, damn it --- just ask java!)",
+      "parentUuid": "370c0a89_a1ae62d5",
+      "range": {
+        "startLine": 104,
+        "startChar": 48,
+        "endLine": 104,
+        "endChar": 80
+      },
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ed9aaf9_cc4f5115",
