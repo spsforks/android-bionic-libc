@@ -52,6 +52,24 @@
       "parentUuid": "1736e27e_90b90bb9",
       "revId": "9ce66f7875fb93a64b8c4533d55187238d9b2749",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ff8d91a_87e57dfc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-04-17T21:45:54Z",
+      "side": 1,
+      "message": "Oh now I see. The kernel has a hack that overloads the meaning of madvise(MADV_DONTNEED) to split the reported VMA in /proc/*/{maps,smaps}, but not the actual kernel VMA. The new semantics of MADV_DONTNEED are defined by the function `madvise_vma_pad_pages` in aosp/3032411 (I3421de32ab38ad3cb0fbce73ecbd8f7314287cde on Gerrit). Roughly, an MADV_DONTNEED covering the last 1 to 15 pages of a VMA, for a file ending in \".so\", also splits the reported-VMA into \"data\" and \"pad\" VMAs.",
+      "parentUuid": "bc4715d6_e3a2eb40",
+      "revId": "9ce66f7875fb93a64b8c4533d55187238d9b2749",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
