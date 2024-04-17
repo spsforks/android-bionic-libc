@@ -162,6 +162,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e6cd935_4ef633a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T23:30:05Z",
+      "side": 1,
+      "message": "\u003e There\u0027s also __builtin_mul_overflow_p. Maybe that can be used here?\n\nwe do use the result... but i guess clang is probably clever enough to reuse the multiplication it did for that check in the _actual_ multiplication we do in the safe case?",
+      "parentUuid": "deda211d_71a49a15",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "018cc37e_1565bcc6",
