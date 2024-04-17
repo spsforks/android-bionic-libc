@@ -34,6 +34,24 @@
       "parentUuid": "fbc510ce_10439d9f",
       "revId": "d468530377d80f6c63f0ce60833a2f228ecea226",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7dd4ae75_fc3e3e72",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T17:49:49Z",
+      "side": 1,
+      "message": "it\u0027s not _just_ Nanotime() -- there\u0027s a few functions in headers too -- but, yes, you are correct that i didn\u0027t realize we had so much stuttering already.\n\ni\u0027d still rather go with the second option (remove duplicate `inline` from `__always_inline` functions for clarity), but if you fix the commit message to talk about _consistency_ rather than gcc support, this is fine too...",
+      "parentUuid": "92007154_e74dc67e",
+      "revId": "d468530377d80f6c63f0ce60833a2f228ecea226",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
