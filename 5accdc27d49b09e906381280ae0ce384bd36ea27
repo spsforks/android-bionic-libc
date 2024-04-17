@@ -34,6 +34,24 @@
       "parentUuid": "340e8568_d3dd56a7",
       "revId": "5accdc27d49b09e906381280ae0ce384bd36ea27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76e88faa_4a4b5110",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T18:45:41Z",
+      "side": 1,
+      "message": "\u003e If I remove #define __size_mul_overflow from include/sys/cdefs.h, would that potentially break users?\n\nit\u0027s possible, yes. if we were writing this code afresh today, we\u0027d call this `__bionic_size_mul_overflow()` instead ... but _still_ probably put it back if it actually caused breakage.\n\n\u003e It is nice that we handle non-LP64 and dispatch to __builtin_umul_overflow vs __builtin_umull_overflow.\n\nyeah, though for _our_ `size_t` use cases, \"unsigned long\" is always appropriate.",
+      "parentUuid": "d424078d_7f0f514c",
+      "revId": "5accdc27d49b09e906381280ae0ce384bd36ea27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

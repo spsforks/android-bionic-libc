@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86dbad2d_80d34fb0",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T18:45:41Z",
+      "side": 1,
+      "message": "interestingly, despite the comment above, _this_ is still used in our \u003cstdio.h\u003e...\n\n(though tbh i\u0027m not sure the comment is right --- at least for arm64 and riscv64 you implement the __builtin overflow check by doing the multiply twice. ah, no --- since this is _unsigned_ that\u0027s not true, and the intrinsic\u0027s single multiply perhaps is cheaper than the alternative\u0027s single divide...)",
+      "revId": "8cd285c56b56a91c2179d03f302faa60ab2081a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
