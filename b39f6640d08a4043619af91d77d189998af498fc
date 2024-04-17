@@ -206,6 +206,24 @@
       "parentUuid": "64241189_345a4595",
       "revId": "b39f6640d08a4043619af91d77d189998af498fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8393702f_3ea633d9",
+        "filename": "libc/kernel/uapi/linux/ipv6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T23:42:23Z",
+      "side": 1,
+      "message": "this removal is still showing up for me in ps5? oh, you\u0027re saying you manually _added_ it, and the \"removal\" is just going back to the real file. (/me checks ... yeah, that seems to correspond to upstream, where this is _used_ in this file but _defined_ in a uapi stddef.h.)",
+      "parentUuid": "a1ead929_f0587b2f",
+      "revId": "b39f6640d08a4043619af91d77d189998af498fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
