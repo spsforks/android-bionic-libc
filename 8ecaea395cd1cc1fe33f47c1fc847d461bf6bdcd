@@ -137,6 +137,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55caba9e_3c00d424",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T21:57:31Z",
+      "side": 1,
+      "message": "\u003e i hate c programmers.\n\nWell, I hate to break it to you...\n\n/me holds up mirror",
+      "parentUuid": "6a77ea27_4345635c",
+      "range": {
+        "startLine": 104,
+        "startChar": 48,
+        "endLine": 104,
+        "endChar": 80
+      },
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ed9aaf9_cc4f5115",
