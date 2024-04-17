@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8a41ecaf_0f3fd271",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T21:52:58Z",
+      "side": 1,
+      "message": "```\nbionic/libc/bionic/fortify.cpp:113:61: error: cannot initialize a parameter of type \u0027unsigned long *\u0027 with an rvalue of\n type \u0027size_t *\u0027 (aka \u0027unsigned int *\u0027)\n  113 |   if (__predict_false(__builtin_umull_overflow(size, count, \u0026total))) {\n      |                                                             ^~~~~~\nbionic/libc/include/sys/cdefs.h:138:48: note: expanded from macro \u0027__predict_false\u0027\n  138 | #define __predict_false(exp)    __builtin_expect((exp) !\u003d 0, 0)\n      |                                                   ^~~\n```\notherwise",
+      "parentUuid": "018cc37e_1565bcc6",
+      "range": {
+        "startLine": 104,
+        "startChar": 48,
+        "endLine": 104,
+        "endChar": 80
+      },
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ed9aaf9_cc4f5115",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
