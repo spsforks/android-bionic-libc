@@ -180,6 +180,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0177d9c8_7bddb78a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T23:47:34Z",
+      "side": 1,
+      "message": "Dunno, but I think it does make sense to move __unsafe_check_mul_overflow from sys/cdefs.h to libc/include/bits/fortify/stdio.h and rename it. aosp/3047973",
+      "parentUuid": "9e6cd935_4ef633a3",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "018cc37e_1565bcc6",
