@@ -16,6 +16,46 @@
       "message": "TBH, I don\u0027t understand what the comment above __unsafe_check_mul_overflow is getting at.\n\nThis patch is an alternative to aosp/3047054.",
       "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "018cc37e_1565bcc6",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T21:50:12Z",
+      "side": 1,
+      "message": "we actually need this? might be less bad to make `total` unsigned long, lose the cast here, and get a free \"conversion\" in the fread() and __check_buffer_access() calls?\n\n(why did they get `__builtin_*_overflow_p()` right [type-generic], but but `__builtin_*_overflow()`?)",
+      "range": {
+        "startLine": 104,
+        "startChar": 48,
+        "endLine": 104,
+        "endChar": 80
+      },
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ed9aaf9_cc4f5115",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T21:50:12Z",
+      "side": 1,
+      "message": "by virtue of being _u_ mul, i\u0027d argue it definitely does make an assumption about its arguments being positive. or is this really making the positive vs non-negative distinction? oh, this is actually `((-1 / x) \u003c y)`?\n\ni\u0027ll be honest i don\u0027t know why _this_ macro isn\u0027t just replaceable with `__builtin_mul_overflow_p()`... hopefully gbiv will either give us the comment we should write, or say \"yeah, this has outlived its purpose now\" :-)",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
