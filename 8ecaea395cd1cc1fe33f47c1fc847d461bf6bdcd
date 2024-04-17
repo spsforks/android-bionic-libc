@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eebd7bc4_9e416c65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T22:47:42Z",
+      "side": 1,
+      "message": "It\u0027s been a recurring theme in C++ generally of \"should this function have been constexpr?\" but especially for the compiler builtins which IIRC need to be explicitly marked as such in clang (so if no one does so, users get confusing error messages about their functions not being evaluateable in constexpr contexts).  Clang produces a error when using this builtin in constexpr contexts.",
+      "parentUuid": "8c3792ba_fa29b1bd",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "018cc37e_1565bcc6",
