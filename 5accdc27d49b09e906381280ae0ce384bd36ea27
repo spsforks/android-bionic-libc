@@ -16,6 +16,24 @@
       "message": "interestingly, this seems like it\u0027s only used out of line in fortify.cpp now :-(\n\nand all this should just be deleted and replaced with direct use of `__builtin_umul_overflow()` anyway?",
       "revId": "5accdc27d49b09e906381280ae0ce384bd36ea27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d424078d_7f0f514c",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T18:11:14Z",
+      "side": 1,
+      "message": "If I remove `#define __size_mul_overflow` from include/sys/cdefs.h, would that potentially break users? It is nice that we handle non-LP64 and dispatch to __builtin_umul_overflow vs __builtin_umull_overflow.",
+      "parentUuid": "340e8568_d3dd56a7",
+      "revId": "5accdc27d49b09e906381280ae0ce384bd36ea27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
