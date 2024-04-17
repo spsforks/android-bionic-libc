@@ -34,6 +34,24 @@
       "parentUuid": "b5e75574_5b00f206",
       "revId": "a69e5af7ee56875508a750be0ac1eaba92b4a2c0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd38454a_448189a8",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T22:41:30Z",
+      "side": 1,
+      "message": "\u003e but i argued that it wasn\u0027t worth causing any disruption to folks with arm32-/x86-only code\n\n(but to be clear: i don\u0027t have a strong opinion on this either way. if smoreland hadn\u0027t started off with exclusions, i doubt i\u0027d have asked for them to be introduced.)",
+      "parentUuid": "f3501bfd_c1775ed6",
+      "revId": "a69e5af7ee56875508a750be0ac1eaba92b4a2c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
