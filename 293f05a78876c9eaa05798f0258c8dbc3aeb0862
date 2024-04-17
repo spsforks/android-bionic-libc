@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "452b759f_c5396c9d",
+        "filename": "libc/include/bits/fortify/stdio.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T23:53:49Z",
+      "side": 1,
+      "message": "I\u0027ll check this more tomorrow, but I think we might want to use __builtin_mul_overflow for L118 and L101, rather than __would_mul_overflow which is necessary for the calls to __clang_error_if",
+      "revId": "293f05a78876c9eaa05798f0258c8dbc3aeb0862",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
