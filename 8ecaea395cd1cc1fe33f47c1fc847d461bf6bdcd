@@ -90,6 +90,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f6de43c_deb3eadf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T23:27:33Z",
+      "side": 1,
+      "message": "not in this cl (and i can do it if you have other stuff to get back to!) but maybe we should move it into \u003cstdio.h\u003e (since we don\u0027t expect it to be generally useful anyway) and change the comment to something more like \"you can\u0027t use __builtin_ in constexpr contexts, so here\u0027s a constexpr-safe hack\" (and #undef it at the end of \u003cstdio.h\u003e)?",
+      "parentUuid": "a5894d74_1a6d08cc",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "018cc37e_1565bcc6",
