@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbc510ce_10439d9f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T17:33:01Z",
+      "side": 1,
+      "message": "no, let\u0027s not bother with cruft like that when it makes things _less_ readable like here...",
+      "revId": "d468530377d80f6c63f0ce60833a2f228ecea226",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
