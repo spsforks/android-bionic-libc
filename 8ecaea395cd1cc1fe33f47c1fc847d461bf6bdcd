@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5894d74_1a6d08cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T23:23:35Z",
+      "side": 1,
+      "message": "Ah ctrl+z saved me!\n\nhttps://godbolt.org/z/aE1dE9a81 demonstrates the issue George is referring to.  I haven\u0027t tried replacing it to see what breaks but I\u0027m guessing we don\u0027t want to break `if constexpr (strlen(...`.  Though there is a builtin for \"are we being evaluated in constexpr context...might be able to use that here.",
+      "parentUuid": "eebd7bc4_9e416c65",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "018cc37e_1565bcc6",
