@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "340e8568_d3dd56a7",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T17:53:04Z",
+      "side": 1,
+      "message": "interestingly, this seems like it\u0027s only used out of line in fortify.cpp now :-(\n\nand all this should just be deleted and replaced with direct use of `__builtin_umul_overflow()` anyway?",
+      "revId": "5accdc27d49b09e906381280ae0ce384bd36ea27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
