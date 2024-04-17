@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a8d46f7_21c8a05c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T17:36:27Z",
+      "side": 1,
+      "message": "without :-)",
+      "range": {
+        "startLine": 7,
+        "startChar": 19,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "344bae398f4ee7e9c1872424d13c41eff940cb16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3531fc10_52e5f2b2",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T17:36:27Z",
+      "side": 1,
+      "message": "i don\u0027t _think_ there\u0027s a reason for any of these headers ones? probably just copy and paste from BSD headers that _did_ pre-date `inline`?",
+      "revId": "344bae398f4ee7e9c1872424d13c41eff940cb16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd74d7e9_9cefd1ad",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T17:36:27Z",
+      "side": 1,
+      "message": "do we really still need all three of these?",
+      "range": {
+        "startLine": 330,
+        "startChar": 7,
+        "endLine": 330,
+        "endChar": 57
+      },
+      "revId": "344bae398f4ee7e9c1872424d13c41eff940cb16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
