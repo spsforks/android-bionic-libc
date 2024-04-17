@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "455be1b3_e6328310",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T17:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a8d46f7_21c8a05c",
+      "range": {
+        "startLine": 7,
+        "startChar": 19,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "344bae398f4ee7e9c1872424d13c41eff940cb16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "3531fc10_52e5f2b2",
         "filename": "libc/include/android/api-level.h",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2024-04-17T17:36:27Z",
       "side": 1,
       "message": "do we really still need all three of these?",
+      "range": {
+        "startLine": 330,
+        "startChar": 7,
+        "endLine": 330,
+        "endChar": 57
+      },
+      "revId": "344bae398f4ee7e9c1872424d13c41eff940cb16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd2c09ca_60ff30e0",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-17T17:47:57Z",
+      "side": 1,
+      "message": "oh, gnu_inline, my favorite subject.\n\ninline __always_inline makes sense.\n\nextern __attribute__((gnu_inline)) looks sus.  You\u0027d want to remove extern in addition to removing gnu_inline, otherwise libc.a will contain a globally visible function symbol for __size_mul_overflow (if you just removed the gnu_inline bit).\n\nI\u0027ll send another patch on top for that? aosp/3047054",
+      "parentUuid": "fd74d7e9_9cefd1ad",
       "range": {
         "startLine": 330,
         "startChar": 7,
