@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c3792ba_fa29b1bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2024-04-17T21:59:52Z",
+      "side": 1,
+      "message": "IIRC, I wrote `__unsafe_check_mul_overflow` for use in contexts where `__size_mul_overflow` wouldn\u0027t work at all (read: `diagnose_if` conditions, which had to be 100% handled in clang\u0027s constexpr evaluator, regardless of lang/standard).\n\nThe best explanation I can offer for \"what did it _mean_,\" is \"meh, if an intrinsic is available, it\u0027s probably going to do a better job. Also it\u0027s potentially easy to mishandle this. Just ask people to use the `__size_mul_overflow` thing.\"",
+      "parentUuid": "480afad2_d50ce43e",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "018cc37e_1565bcc6",
