@@ -16,6 +16,24 @@
       "message": "FYI, since I\"m currently looking at the code next to it, this is not the behavior of `APP_SUPPORT_FLEXIBLE_PAGE_SIZES` in r27. It does it for all ABIs. I can change that if that\u0027s preferable.",
       "revId": "a69e5af7ee56875508a750be0ac1eaba92b4a2c0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3501bfd_c1775ed6",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-17T22:39:56Z",
+      "side": 1,
+      "message": "up to you --- iirc we\u0027re applying this to all architectures in the _platform_, but i argued that it wasn\u0027t worth causing any disruption to folks with arm32-/x86-only code. (as opposed to folks with _shared_ code, who\u0027ll have to update anyway.)\n\nobviously without shipping, i have no idea how much such code exists. but since smoreland had already excluded the unaffected platforms here ... (though i did talk him out of excluding riscv64, since no code yet exists for riscv64, i couldn\u0027t think of any benefit to letting them write new page size assumptions into their code, even though the riscv64 spec doesn\u0027t have space for any page sizes that could be interesting to us.)",
+      "parentUuid": "b5e75574_5b00f206",
+      "revId": "a69e5af7ee56875508a750be0ac1eaba92b4a2c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
