@@ -118,7 +118,6 @@ enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT = 16,
   PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT = 17,
   PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT = 18,
-  PERF_SAMPLE_BRANCH_COUNTERS_SHIFT = 19,
   PERF_SAMPLE_BRANCH_MAX_SHIFT
 };
 enum perf_branch_sample_type {
@@ -141,7 +140,6 @@ enum perf_branch_sample_type {
   PERF_SAMPLE_BRANCH_TYPE_SAVE = 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
   PERF_SAMPLE_BRANCH_HW_INDEX = 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
   PERF_SAMPLE_BRANCH_PRIV_SAVE = 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
-  PERF_SAMPLE_BRANCH_COUNTERS = 1U << PERF_SAMPLE_BRANCH_COUNTERS_SHIFT,
   PERF_SAMPLE_BRANCH_MAX = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
 };
 enum {
@@ -504,7 +502,6 @@ struct perf_branch_entry {
   __u64 to;
   __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, type : 4, spec : 2, new_type : 4, priv : 3, reserved : 31;
 };
-#define PERF_BRANCH_ENTRY_INFO_BITS_MAX 33
 union perf_sample_weight {
   __u64 full;
 #ifdef __LITTLE_ENDIAN_BITFIELD
