@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4411fee7_41cf4855",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-18T15:10:30Z",
+      "side": 1,
+      "message": "while you\u0027re here ... give some idea of what the values _mean_?\n\n(i\u0027m guessing 0 and 1 were \"never\" and \"sometimes\", but (a) good to be explicit and (b) i still don\u0027t know what -1 would be. is it specifically -1, not 0 vs non-0? is it true of jemalloc as well as scudo? even if you _can_ use -1, do we want to _advertise_ that, or are we better off if everyone just keeps using 0 and 1?)",
+      "revId": "b991e27c830aa34371e07df516c2f45b31a81949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
