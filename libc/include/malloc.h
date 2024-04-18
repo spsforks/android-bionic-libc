@@ -186,7 +186,10 @@ struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
 int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
- * mallopt() option to set the decay time. Valid values are 0 and 1.
+ * mallopt() option to set the decay time. Valid values are -1, 0 and 1.
+ *   -1 : Disable the releasing of unused pages.
+ *    0 : Release the unused pages immediately if possible.
+ *    1 : Release the unused pages at the max configured interval.
  *
  * Available since API level 27.
  */
