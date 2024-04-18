@@ -356,6 +356,24 @@
       "message": "by virtue of being _u_ mul, i\u0027d argue it definitely does make an assumption about its arguments being positive. or is this really making the positive vs non-negative distinction? oh, this is actually `((-1 / x) \u003c y)`?\n\ni\u0027ll be honest i don\u0027t know why _this_ macro isn\u0027t just replaceable with `__builtin_mul_overflow_p()`... hopefully gbiv will either give us the comment we should write, or say \"yeah, this has outlived its purpose now\" :-)",
       "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eec2303a_76cba02f",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2024-04-18T16:08:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ed9aaf9_cc4f5115",
+      "revId": "8ecaea395cd1cc1fe33f47c1fc847d461bf6bdcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
