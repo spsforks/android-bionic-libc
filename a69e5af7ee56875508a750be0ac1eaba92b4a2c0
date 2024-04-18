@@ -52,6 +52,24 @@
       "parentUuid": "f3501bfd_c1775ed6",
       "revId": "a69e5af7ee56875508a750be0ac1eaba92b4a2c0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e0852f0_fa13f646",
+        "filename": "libc/include/bits/page_size.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2024-04-18T20:48:11Z",
+      "side": 1,
+      "message": "Since NDK users currently have to opt-in to this behavior, I think I\u0027ll keep it strict for now so we can dig up as many issues as we can now before we try to make it the default. When it becomes the default, maybe we\u0027ll change that.",
+      "parentUuid": "fd38454a_448189a8",
+      "revId": "a69e5af7ee56875508a750be0ac1eaba92b4a2c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
