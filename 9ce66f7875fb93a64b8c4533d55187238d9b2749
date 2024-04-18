@@ -70,6 +70,24 @@
       "parentUuid": "bc4715d6_e3a2eb40",
       "revId": "9ce66f7875fb93a64b8c4533d55187238d9b2749",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f91570d_86e3443a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2024-04-18T00:12:09Z",
+      "side": 1,
+      "message": "Hi Ryan. Your understanding is correct; with addition that only if the DONTNEED range is contained in a single VMA.",
+      "parentUuid": "2ff8d91a_87e57dfc",
+      "revId": "9ce66f7875fb93a64b8c4533d55187238d9b2749",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
