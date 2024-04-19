@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aebe3955_2e3e77cc",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2024-04-19T00:27:38Z",
+      "side": 1,
+      "message": "The allocator will accumulate certain amount of free pointers before trying to release unused pages. This is allocator specific heuristic, maybe we can just remove \"if possible\"? (I remove it in the latest patch. Let me know if it\u0027s better to keep it and add more comment on that)",
+      "parentUuid": "fcb2d9b8_6ca092f5",
+      "range": {
+        "startLine": 191,
+        "startChar": 47,
+        "endLine": 191,
+        "endChar": 58
+      },
+      "revId": "1667e83f692649782510d3e0477586f56df8e4e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "93839290_a7dc248f",
         "filename": "libc/include/malloc.h",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2024-04-18T23:22:30Z",
       "side": 1,
       "message": "configured where/how?",
+      "range": {
+        "startLine": 192,
+        "startChar": 42,
+        "endLine": 192,
+        "endChar": 56
+      },
+      "revId": "1667e83f692649782510d3e0477586f56df8e4e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3358b189_4b39cc3c",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2024-04-19T00:27:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93839290_a7dc248f",
       "range": {
         "startLine": 192,
         "startChar": 42,
