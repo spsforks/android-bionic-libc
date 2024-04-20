@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "932881eb_fa17f077",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-20T00:07:07Z",
+      "side": 1,
+      "message": "ah, might be worth mentioning this as an example on L9 above --- i was about to ask you \"when does this happen?\" before i saw this :-)",
+      "revId": "cd0485eaf6527107a858f05e910e502b81766448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f1cddf_52b7b386",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-20T00:07:07Z",
+      "side": 1,
+      "message": "otherwise lgtm, unless rprichard thinks there\u0027s a reason why we used readlink() instead? (i assume it was just premature optimization on my part?)",
+      "revId": "cd0485eaf6527107a858f05e910e502b81766448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac7df7bd_0521bc3a",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-20T00:07:07Z",
+      "side": 1,
+      "message": "(this should go with the libc #includes up between L31 and L32...)",
+      "revId": "cd0485eaf6527107a858f05e910e502b81766448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da6a80d0_96811bbb",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-04-20T00:07:07Z",
+      "side": 1,
+      "message": "i don\u0027t think we want strnlen()? that would imply a truncated path?",
+      "range": {
+        "startLine": 228,
+        "startChar": 40,
+        "endLine": 228,
+        "endChar": 47
+      },
+      "revId": "cd0485eaf6527107a858f05e910e502b81766448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
