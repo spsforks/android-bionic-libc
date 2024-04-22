@@ -106,6 +106,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "906a5bdd_300c5c94",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1964686
+      },
+      "writtenOn": "2024-04-22T06:50:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17b56299_1d646a97",
+      "revId": "cd0485eaf6527107a858f05e910e502b81766448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da6a80d0_96811bbb",
@@ -143,6 +161,30 @@
       "side": 1,
       "message": "You\u0027re right, the array size that inside realpath is \u0027PATH_MAX\u0027 also, so the result is trusted. will changed to strlen as what \u0027exe_path\u0027 do.\n\nAnd the question 2, it just a habit to using more \u0027safety\u0027 API. lol\n\nChanges was published on Patchset 3.",
       "parentUuid": "da6a80d0_96811bbb",
+      "range": {
+        "startLine": 228,
+        "startChar": 40,
+        "endLine": 228,
+        "endChar": 47
+      },
+      "revId": "cd0485eaf6527107a858f05e910e502b81766448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f2ce04e_4b4e017b",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1964686
+      },
+      "writtenOn": "2024-04-22T06:50:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df002d9f_0fb90cea",
       "range": {
         "startLine": 228,
         "startChar": 40,
